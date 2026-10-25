@@ -1,0 +1,87 @@
+% !TeX document-id = {fe1f9a5d-9972-4d34-a1ec-65a66cf43fb4}
+%%%%%%
+%
+% $Autor: Srikanth Nanda $
+% $Datum: 2020-01-18 11:15:45Z $
+% $Version: 4620 $
+%
+%
+% !TeX encoding = utf8
+% !TeX root = CornerBlending
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%
+
+
+\documentclass[12pt,a4paper]{scrbook}
+
+% Auswahl der Sprache
+% Die nicht gewünschte Sprache muss auskommentiert werden:
+%\def\isGerman{1}
+\def\isEnglish{1}
+
+
+\include{General/Packages}
+\include{General/commands}
+\include{General/tikzdefs}
+
+\input{General/acronyms}
+\input{General/Hyphenations}%
+
+\addbibresource{../MLbib/literature.bib}
+\addbibresource{../MLbib/MyLiterature.bib}
+
+\begin{document}
+ 
+
+\InputLanguage{Chapters/}{Titlepage} 
+\newpage
+
+\pagenumbering{roman}
+
+\tableofcontents
+\cleardoublepage
+
+\addcontentsline{toc}{chapter}{\TRANS{Abbildungsverzeichnis}{List of figures}}
+\listoffigures
+\cleardoublepage
+
+\addcontentsline{toc}{chapter}{\TRANS{Tabellenverzeichnis}{List of tables}}
+\listoftables
+\cleardoublepage
+ 
+ 
+\addcontentsline{toc}{chapter}{Acronyms}
+\printacronyms
+\cleardoublepage
+ 
+\pagenumbering{arabic}
+
+
+\InputLanguage{Chapters/}{Idea}
+\InputLanguage{Chapters/}{FolderStructure}
+\InputLanguage{Chapters/}{Files}
+\InputLanguage{Chapters/}{Hints}
+\InputLanguage{Chapters/}{Assembly}
+\InputLanguage{Chapters/}{Maintenance}
+\InputLanguage{Chapters/}{SafetyGuidelines}
+\InputLanguage{Chapters/}{Troubleshooting}
+\InputLanguage{Chapters/}{AddOns}
+
+
+
+
+
+
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\TRANS{Literaturverzeichnis}{Bibliography}}
+\printbibliography
+
+
+\cleardoublepage
+
+%\renewcommand{\indexname}{\TRANS{Stichwortverzeichnis}{Index}}
+%\addcontentsline{toc}{chapter}{\TRANS{Stichwortverzeichnis}{Index}}
+%\printindex
+
+\end{document}

@@ -1,0 +1,949 @@
+%%%%%%
+%
+% $Author: Sadegh Naderi $
+% $Datum: 2023-10-15  $
+% $Pfad: ML23-01-Keyword-Spotting-with-an-Arduino-Nano-33-BLE-Sense\Presentations\SadeghNaderi\LiteratureReview\slides\ContentLiteratureReview.tex $
+% $Version: 3.0 $
+% $Review Date: 2023-12-16 $
+%
+%
+% !TeX encoding = utf8
+% !TeX root = Rename
+%
+%%%%%%
+
+
+%\Mysection{Design of a Speech Anger Recognition System on Arduino Nano 33 BLE Sense}
+%
+%\STANDARD{Description}
+%{ 
+%	The article \cite{Waqar:2021} discusses the creation of a Speech Anger Recognition System (a branch of Speech Emotion Recognition (SER) systems) on an Board Arduino Nano 33 BLE Sense using Tiny Machine Learning (TinyML) and a Convolutional Neural Network (CNN) architecture. The article describes the methodology, software design, hardware design, the proposed CNN architecture and the process of converting the model into TensorFlow Lite format for deployment. The article concludes with a prototype validation: system's ability to detect not angry, about to be angry, and angry emotions in speech signals.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} while the article provides valuable insights into using the Board Arduino Nano 33 BLE Sense and implementing machine learning models, it does not address the challenges or considerations related to keyword spotting.
+%	
+%	\scriptsize{\textbf{Keywords:} Speech Anger Recognition System, Speech Emotion Recognition (SER), Arduino Nano 33 BLE Sense, Tiny Machine Learning (TinyML), Convolutional Neural Network (CNN), Software Design, Hardware Design, TensorFlow Lite}
+%}
+%
+%
+%\Mysection{On-Device Training of Machine Learning Models on Microcontrollers with Federated Learning}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Gimenez:2022a} examines federated learning for on-device training in Tiny Machine Learning (TinyML) on microcontrollers, focusing on a keyword spotting task. It evaluates trade-offs between federated learning rounds, resource usage, model accuracy, and training time using real microcontroller boards. The results reveal the advantages of on-device federated learning, along with challenges like bandwidth usage, energy consumption, and data distribution issues in real-world scenarios. The article offers practical insights and future directions for on-device training in IoT and TinyML.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} The results and insights presented in the article do not generalize well to different microcontroller models or scenarios, which could limit the broader applicability of the findings. 
+%	
+%	\scriptsize{\textbf{Keywords:} Federated Learning, TinyML, Microcontrollers, Keyword Spotting, Bandwidth Usage, Energy Consumption, Data Distribution, IoT}
+%}
+%
+%
+%\Mysection{TinyML Meets IoT: A Comprehensive Survey}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Dutta:2021} offers a comprehensive overview of Tiny Machine Learning (TinyML) in the context of the Internet of Things (IoT). TinyML allows the implementation of machine learning on low-power IoT devices. The article highlights TinyML's advantages, like low latency, data safety, and cost reduction. It also discusses the role of 5G, recent research, challenges, and opportunities in TinyML. The authors suggest that TinyML can enhance IoT by enabling on-device processing, reducing cloud dependence, and addressing connectivity issues, emphasizing the need for benchmarking in different IoT environments.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One negative aspect of the article is that it focuses on the broader concept of TinyML in the context of IoT, providing a comprehensive overview of the technology and its applications. While it discusses the benefits and potential of TinyML, it may lack specific implementation details or insights relevant to our project.
+%	
+%	\scriptsize{\textbf{Keywords:} TinyML, Internet of Things (IoT), Machine Learning, On-Device Processing, Benchmarking}
+%}
+%
+%
+%\Mysection{A Review on TinyML: State-of-the-art and Prospects}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Ray:2022} provides a comprehensive review of TinyML, a cutting- paradigm in machine learning that focuses on deploying machine learning models on resource-constrained embedded devices at the edge of the network. It discusses the background of TinyML, the tools and enablers required for its implementation, state-of-the-art frameworks, and various use cases in which TinyML can be applied. The article also highlights the challenges and proposes a roadmap for the future development of TinyML, emphasizing its potential to bring machine learning capabilities to devices with limited resources in the context of edge computing and IoT.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} A potential limitation of the article is that it lacks specific technical details related to implementing TinyML on an Arduino Nano 33 BLE Sense device.
+%	
+%	\scriptsize{\textbf{Keywords:} TinyML, Machine Learning, Resource-Constrained Embedded Devices, Edge Computing, IoT}
+%}
+%
+%
+%\Mysection{Comparison of Two Microcontroller Boards for On-Device Model Training in a Keyword Spotting Task}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Gimenez:2022b} discusses a comparison of two microcontroller boards, Arduino Nano 33 BLE Sense and Arduino Portenta H7, for on-device model training in a keyword spotting task. The authors use feedforward neural networks with a single hidden layer for their models. The Arduino Portenta H7 outperforms the Arduino Nano 33 BLE Sense, achieving significantly higher inference accuracy and faster training. The article highlights the potential of on-device training for resource-constrained devices, emphasizing the benefits of the Arduino Portenta H7's larger memory capacity for more complex models. 
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} It primarily focuses on the comparison between the two microcontroller boards without discussing in depth the broader implications, challenges, or drawbacks of on-device training in a real-world scenario.
+%	
+%	\scriptsize{\textbf{Keywords:} Microcontroller, Arduino Nano 33 BLE Sense, Arduino Portenta H7, On-device Model Training, Keyword Spotting, Feedforward Neural Networks, On-Device Training, Resource-Constrained Devices}
+%}
+%
+%
+%\Mysection{Neural Network Exploration for Keyword Spotting on Edge Devices}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Bushur:2023} delves into optimizing neural network architectures for keyword spotting on edge devices, which is crucial for digital assistants. Six neural network models are implemented using the Google Speech Commands dataset. The study assesses their performance based on factors like model size, memory consumption, inference latency, and accuracy. The research showcases the deployment of a DS-CNN model on both an Arduino Nano 33 BLE microcontroller board and a Digilent Nexys 4 FPGA board. These findings provide insights into choosing the right neural network and quantization method for resource-constrained edge devices, with applications beyond keyword spotting.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} It lacks a comprehensive discussion on the potential ethical implications and privacy concerns associated with deploying keyword spotting systems.
+%	
+%	\scriptsize{\textbf{Keywords:} Neural Network Architectures, Keyword Spotting, Edge Devices, Digital Assistants,  Google Speech Commands Dataset,  DS-CNN Model, Arduino Nano 33 BLE, Digilent Nexys 4 FPGA, Neural Network}
+%}
+%
+%
+%\Mysection{TinyML - Machine Learning with TensorFlow Lite on Arduino and Ultra-Low-Power Microcontrollers}
+%\STANDARD{Description}
+%{ 
+%	This book \cite{Warden:2019} focuses on the field of Tiny Machine Learning (TinyML), which is about running machine learning models on extremely resource-constrained devices (edge computers) like Arduino and other microcontrollers. It provides insights into how to deploy TensorFlow Lite models on such platforms for various applications that require low-power and real-time processing, such as IoT devices. The book covers topics related to training, converting, and running machine learning models on these devices.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One of the drawbacks of the book is that it assumes a certain level of prior knowledge and doesn't serve as an introductory resource to machine learning.
+%	
+%	\scriptsize{\textbf{Keywords:} Tiny Machine Learning (TinyML), Arduino, Microcontrollers, TensorFlow Lite, IoT Devices}
+%}
+%
+%
+%\Mysection{The KDD Process for Extracting Useful Knowledge from Volumes of Data}
+%\STANDARD{Description}
+%{ 
+%	\textbf{Limitation:} This article \cite{Fayyad:1996} delves into the challenges and potential of knowledge discovery in databases (KDD) and data mining. It addresses issues like data overload, user interaction, and the extraction of valuable knowledge from massive datasets. The authors discuss the KDD process, emphasizing challenges such as overfitting, missing data, and pattern recognition. They also highlight research areas, including integration with databases and handling nonstandard and multimedia data. While acknowledging successes, the report stresses the responsibility of managing expectations and recognizes the ongoing evolution of this dynamic field.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} The report lacks sufficient emphasis on real-world applications, making it challenging for readers to bridge the gap between theoretical discussions and practical implementations in knowledge discovery in databases.
+%	
+%	\scriptsize{\textbf{Keywords:} Knowledge Discovery in Databases (KDD), Data Overload, User Interaction, Overfitting, Missing Data, Pattern Recognition, Multimedia Data}
+%}
+%
+%
+%\Mysection{Recent Advances in Convolutional Neural Networks}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Gu:2018} offers an overview of CNNs, delving into their components and exploring advancements in layer design, activation functions, loss functions, regularization, optimization, and fast computation. Also, the paper examines the applications of CNNs across tasks such as image classification, object detection, pose estimation, text detection, and more in computer vision, speech, and natural language processing. Despite these achievements, the article highlights challenges in CNNs and outlines potential avenues for future research.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} Even though the title of the article is "Recent Advances in Convolutional Neural Networks," The date of the publication is 2018 and it seems to be outdated. Therefore, readers should be cautious about the timeliness of the information provided.
+%	
+%	\scriptsize{\textbf{Keywords:} Convolutional Neural Network (CNN), Layer Design, Activation Function, Loss Function, Regularization, Optimization, Fast Computation, Applications, Image Classification, Object Detection, Pose Estimation, Text Detection, Computer Vision, Speech, Natural Language Processing, Challenges, Future Research}
+%}
+%
+%
+%\Mysection{A Survey of Convolutional Neural Networks: Analysis, Applications, and Prospects}
+%\STANDARD{Description}
+%{ 
+%	This review \cite{Li:2021} aims to provide a fresh perspective on CNN by introducing novel ideas and prospects. Covering not only 2-D but also 1-D and multidimensional convolutions, it delves into the network's history, various convolution types, classic and advanced models, experimental analysis, applications, and hardware implementation. The review concludes with promising directions for future CNN research.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One potential negative aspect of this article is the lack of a critical examination of limitations or challenges associated with convolutional neural networks (CNNs). A more balanced approach would involve discussing potential drawbacks, challenges, or areas where CNNs may not perform optimally
+%	
+%	\scriptsize{\textbf{Keywords:} Convolutional Neural Network(CNN), 1-D and 2-D and Multidimensional Convolutions, History, Convolution Types, Classic and Advanced Models, Experimental Analysis, Applications, Hardware Implementation}
+%}
+%
+%
+%\Mysection{Practical Convolutional Neural Networks: Implement Advanced Deep Learning Models Using Python}
+%\STANDARD{Description}
+%{ 
+%	A guide to cutting-edge CNN architectures for tasks like image classification, transfer learning, object detection, and Generative adversarial networks. The book \cite{Sewak:2018} includes real-world examples, explores advanced use-cases such as image captioning and reinforcement learning, and covers topics like recurrent attention models. Beginning with an overview of deep neural networks, it leads readers through building CNNs, transfer learning, and auto-encoders for powerful models with limited labeled data. The book is also filled with Python examples.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} The book does not sufficiently cover troubleshooting strategies, debugging techniques, or discussions on potential issues that practitioners might face when working on complex projects. 
+%	
+%	\scriptsize{\textbf{Keywords:} Convolutional Neural Network, Deep Learning Model, Python, Image Classification, Transfer Learning, Object Detection, Generative Adversarial Network, Image Captioning, Reinforcement Learning, Recurrent Attention Models, Deep Neural Networks, Auto-Encoders}
+%}
+%
+%
+%\Mysection{WaveNet: A Generative Model for Raw Audio}
+%\STANDARD{Description}
+%{ 
+%	
+%	This paper \cite{Oord:2016} introduces WaveNet, a deep neural network for generating high-quality audio waveforms. Despite being fully probabilistic and autoregressive, it efficiently trains on datasets with high sample rates. In text-to-speech, it outperforms parametric and concatenative systems in English and Mandarin, impressing human listeners with its natural sound. WaveNet excels at capturing diverse speaker characteristics and seamlessly switching between them. In music modeling, it produces realistic and novel musical fragments. Additionally, it serves as a discriminative model, showing promise in phoneme recognition.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One potential limitation of the paper is the lack of detailed discussion or exploration of computational efficiency and real-time applications. This aspect is crucial for practical applications, such as interactive systems or live implementations, where low latency is often a critical factor. 
+%	
+%	\scriptsize{\textbf{Keywords:} WaveNet, Deep Neural Network, Audio Waveform, Text-to-Speech, Music Modeling, Phoneme Recognition}
+%}
+%
+%
+%\Mysection{Get Started With Machine Learning on Arduino}
+%\STANDARD{Description}
+%{ 
+%	
+%	
+%	This webpage \cite{Arduino:2023} guides users through initiating machine learning on Board Arduino Nano 33 BLE Sense. It showcases the collaboration between Arduino and TensorFlow Lite Micro. The guide covers installation, running pre-trained models for speech and gesture recognition, and explores TinyML fundamentals. It emphasizes the role of microcontrollers in IoT, utilizing onboard sensors for various applications. The guide encourages hands-on experimentation, providing concise steps for capturing sensor data, training custom models, and deploying them on the Arduino board. Suitable for both beginners and experienced developers, it serves as a valuable resource in the emerging field of TinyML.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} This is a webpage and is not regarded as a reliable source for a scientific report.
+%	
+%	\scriptsize{\textbf{Keywords:} Machine Learning, Board Arduino Nano 33 BLE Sense, TensorFlow Lite Micro, Installation, Speech and Gesture Recognition, TinyML, IoT, Sensors}
+%}
+%
+%
+%\Mysection{Getting started with Arduino}
+%\STANDARD{Description}
+%{ 
+%	
+%	The book \cite{Banzi:2022} serves as an introductory guide to Arduino, covering the basics of electronics and programming using the Arduino platform. It's a popular resource for beginners who are new to the world of microcontrollers and want to learn how to create interactive projects with Arduino. The book typically covers fundamental concepts, basic projects, and provides hands-on examples to help readers get started with their own Arduino projects.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One potential limitation is that it may focus more on introductory concepts and projects. As readers advance in their Arduino knowledge, they might find that the book doesn't delve deeply into more advanced topics or intricate project development. 
+%	
+%	\scriptsize{\textbf{Keywords:} Arduino, Electronics, Programming, Microcontrollers}
+%}
+%
+%
+%\Mysection{Python for Machine Learning}
+%\STANDARD{Description}
+%{ 
+%	
+%	The webpage \cite{Bhargav:2023} highlights Python's advantages in machine learning, emphasizing its readability, simplicity, scalability, and integration capabilities. The tutorial introduces key Python machine learning frameworks and explores alternatives like C/C++, Matlab, R, and Node.js. It concludes by emphasizing Python's suitability for coding machine learning solutions due to its simplicity, flexibility, rich library support, and an active community.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} This is a webpage and is not regarded as a reliable source for a scientific report.
+%	
+%	\scriptsize{\textbf{Keywords:} Python, Machine Learning, C/C++, Matlab, R, Node.js}
+%}
+%
+%
+%\Mysection{Anomaly Detection with Machine Learning: An Introduction}
+%\STANDARD{Description}
+%{ 
+%	
+%	This webpage \cite{Johnson:2023} introduces the role of anomaly detection in distributed software systems, emphasizing both manual and machine learning-based approaches. It explores three settings—supervised, clean, and unsupervised—based on the data condition. The article underscores the need for large datasets and skilled machine learning engineers for effective anomaly detection. It briefly touches on benchmarking and provides resources for those interested in starting with machine learning anomaly detection, making it a concise guide for individuals in this domain.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} This is a webpage and is not regarded as a reliable source for a scientific report.
+%	
+%	\scriptsize{\textbf{Keywords:} Anomaly Detection, Distributed Software Systems, Machine Learning, Supervised, Unsupervised, Benchmarking}
+%}
+%
+%
+%\Mysection{TensorFlow Lite: Real-Time Computer Vision on Edge Devices}
+%\STANDARD{Description}
+%{ 
+%	This webpage \cite{Boesch:2021} explores TensorFlow Lite (TFLite), a toolkit by Google designed for converting and optimizing TensorFlow models for mobile and edge devices, enabling on-device machine learning. It addresses TFLite's advantages, including model conversion, low latency, user-friendliness, and offline inference. The piece outlines steps for generating TFLite models, using existing models, and creating custom ones. It emphasizes the importance of lightweight AI models for scalable computer vision solutions on edge devices and mentions Viso Suite as a platform for deploying TensorFlow Lite in real-world applications.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} This is a webpage and is not regarded as a reliable source for a scientific report.
+%	
+%	\scriptsize{\textbf{Keywords:} TensorFlow Lite, Google, Model, Mobile, On-device Machine Learning, Model Conversion, Low Latency, User-Friendliness, Offline Inference, Computer Vision, Edge Devices, Viso Suite}
+%}
+%
+%
+%\Mysection{How to Detect Outliers in Machine Learning: 4 Methods for Outlier Detection}
+%\STANDARD{Description}
+%{ 
+%	This webpage \cite{C:2022} is a guide on detecting outliers in machine learning using methods such as standard deviation, Z-score, interquartile range (IQR), and percentiles. It emphasizes the significance of data cleaning and preprocessing in the machine learning pipeline and stresses the need for domain expertise in outlier detection. The methods are explained with practical code examples using a student scores dataset. The article concludes with best practices, cautioning against mislabeling data due to a wide distribution and advocating awareness of evolving trends and domain knowledge.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} This is a webpage and is not regarded as a reliable source for a scientific report.
+%	
+%	\scriptsize{\textbf{Keywords:} Outlier, Outlier Detection, Machine Learning, Standard Deviation, Z-score, Interquartile Range (IQR), Percentile, Data Cleaning, Preprocessing, Pipeline, Domain Expertise, Domain Knowledge, Code Examples}
+%}
+%
+%
+%\Mysection{Pro Git}
+%\STANDARD{Description}
+%{ 
+%	The book \cite{Chacon:2014} is a comprehensive guide, offering a thorough exploration of the Git version control system. Ideal for beginners and seasoned developers, the book covers fundamental concepts, practical commands, and advanced features like branching, merging and collaboration strategies. With clear explanations and practical examples, it serves as an essential reference for mastering Git workflows in software development projects.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} Written in 2014, one potential limitation is that it might not always keep up with the latest updates or changes in the Git system. 
+%	
+%	\scriptsize{\textbf{Keywords:} Git, Version Control System, Branching, Merging, Collaboration Strategy}
+%}
+%
+%
+%\Mysection{Improving Audio Anomalies Recognition Using Temporal Convolutional  Attention Network}
+%\STANDARD{Description}
+%{ 
+%	The article \cite{Huang:2021} introduces the Temporal Convolutional Attention Network (TCAN) as a novel approach to enhance audio anomaly recognition in speech recordings. TCAN combines temporal convolutional networks (TCN) with attention mechanisms, addressing issues like voice distortion and external noise. Evaluation on the TIMIT dataset with various audio distortions shows TCAN outperforming strong baseline methods by $3\sim10\%$. The study emphasizes the importance of classifying audio anomalies for applications in anomaly detection and audio quality improvement across industries.
+%	
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} A limitation of the article is that it does not extensively discuss potential challenges or drawbacks associated with the proposed Temporal Convolutional Attention Network (TCAN)
+%	
+%	\scriptsize{\textbf{Keywords:} Temporal Convolutional Attention Network (TCAN), Audio Anomaly Recognition, Speech Recordings, Temporal Convolutional Networks (TCN),  Attention Mechanisms, Voice Distortion, External Noise, TIMIT Dataset}
+%}
+%
+%
+%\Mysection{5 Anomaly Detection Algorithms to Know}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Kumar:2023} delves into five anomaly detection algorithms—Isolation Forest, Local Outlier Factor, Robust Covariance, One-Class SVM, and One-Class SVM with SGD. The piece explores their applications and assesses their performance using visualizations, emphasizing their importance in addressing data corruption and errors. Kumar highlights their effectiveness in fraud and disease detection, especially in scenarios with imbalanced class distributions. The article concludes by underscoring the algorithms' role in improving model performance through the removal of anomalies from training samples.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One limitation of the article is its brevity, as it provides only a concise overview of the discussed anomaly detection algorithms without delving deeply into their intricacies or potential challenges in real-world applications. 
+%	
+%	\scriptsize{\textbf{Keywords:} Anomaly Detection Algorithm, Isolation Forest, Local Outlier Factor, Robust Covariance, One-Class SVM, SGD, Applications, Data Corruption, Fraud and Disease Detection}
+%}
+%
+%
+%\Mysection{LSM9DS1 Data Sheet -- iNEMO Inertial Module: 3D Accelerometer, 3D Gyroscope, 3D Magnetometer}
+%\STANDARD{Description}
+%{ 
+%	The LSM9DS1 is a versatile iNEMO inertial module featuring a 3D accelerometer, 3D gyroscope, and 3D magnetometer. This datasheet \cite{LSM9DS1:2015} provides essential information on its features, including multiple channels for acceleration, angular rate, and magnetic field, adjustable full-scale ranges, SPI/I2C interfaces, and power-saving modes. Applications range from indoor navigation to gaming input devices. The document covers pin descriptions, specifications, and register mappings for easy integration. 
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} None
+%	
+%	\scriptsize{\textbf{Keywords:} LSM9DS1, Data Sheet, iNEMO, 3D Accelerometer, 3D Gyroscope, 3D Magnetometer, SPI/I2C Interfaces, Power-Saving Mode}
+%}
+%
+%
+%\Mysection{Tutorial: How to Calibrate a Compass (and Accelerometer) with Arduino}
+%\STANDARD{Description}
+%{ 
+%	This webpage \cite{Mallon:2015} offers a tutorial on calibrating a compass and accelerometer with Arduino for a flow sensor. The author shares their experiences, highlighting challenges like hard-iron and soft-iron interference. They discuss calibration methods, reference external sources, and demonstrate the use of tools like Plotly, FreeIMU, and Magneto v1.2. Emphasizing the importance of calibration in the final operating environment, the tutorial concludes with insights on testing platforms, featuring the 2-Module Classroom data logger for accelerometer evaluation.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One limitation of the text is its extensive technical detail, which may be overwhelming for readers with limited background knowledge in Arduino programming, sensor calibration, or related concepts. Also, this is a webpage and is not regarded as a reliable source for a scientific report.
+%	
+%	\scriptsize{\textbf{Keywords:} Calibrate, Compass, Accelerometer, Arduino, Flow Sensor, Hard-Iron and Soft-Iron Interference, Plotly, FreeIMU, Magneto}
+%}
+%
+%
+%\Mysection{Introduction to TinyML: What is it and Why does it Matter?}
+%\STANDARD{Description}
+%{ 
+%	This webpage \cite{Mishra:2023} provides an introduction to TinyML, a field integrating machine learning into small hardware components. Emphasizing the need for low-power, on-device machine learning, it discusses applications and relevance, citing the Board Arduino Nano 33 BLE Sense and TensorFlow Lite for Microcontrollers as key components.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} The text lacks specific examples or illustrations of TinyML applications and projects, making it challenging for readers to visualize or understand practical implementations of the discussed concepts. Also, this is a webpage and is not regarded as a reliable source for a scientific report.
+%	
+%	\scriptsize{\textbf{Keywords:} TinyML, On-Device Machine Learning, Arduino Nano 33 BLE Sense, TensorFlow Lite for Microcontrollers}
+%}
+%
+%
+%\Mysection{Programming Arduino: Getting Started with Sketches}
+%\STANDARD{Description}
+%{ 
+%	
+%	The book \cite{Monk:2016} is a step-by-step guide for programming all Arduino models. It covers Arduino hardware basics, software setup, C language fundamentals, and practical applications such as storing data, interfacing with displays, and connecting to the Internet for IoT projects. Written for beginners, the book includes easy-to-follow explanations, fun examples, and downloadable sample programs. It also provides hands-on coverage of C++, library creation, and programming Arduino for IoT. No prior programming experience is necessary.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} The fast-evolving nature of technology may result in some information becoming outdated over time, requiring readers to seek supplementary resources for the latest updates in Arduino programming.
+%	
+%	\scriptsize{\textbf{Keywords:} Programming, Arduino, Software Setup, C Language, Storing Data, Interfacing with Displays, Internet, IoT, C++}
+%}
+%
+%
+%\Mysection{MP34DT06J: MEMS Audio Sensor Omnidirectional Digital Microphone}
+%\STANDARD{Description}
+%{ 
+%	
+%	The MP34DT06J datasheet \cite{MP34DT06J:2021} is a concise technical document detailing the features and specifications of an ultra-compact digital MEMS microphone. It includes information on acoustic and electrical characteristics, timing, frequency response, and application recommendations. The microphone features a capacitive sensing element and an IC interface, providing omnidirectional sensitivity with low distortion. The datasheet serves as a valuable resource for engineers, designers, and users seeking to understand the microphone's capabilities and application guidelines.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} None
+%	
+%	\scriptsize{\textbf{Keywords:} MP34DT06J, MEMS Microphone, Acoustic Characteristics, Electrical Characteristics, Timing, Frequency Response, Application}
+%}
+%
+%
+%\Mysection{Outliers in Machine Learning}
+%\STANDARD{Description}
+%{ 
+%	
+%	This webpage \cite{Nichani:2020} explores outliers in machine learning, defining them as abnormal observations affecting model accuracy. It covers reasons for their occurrence, detection methods (visualization, z-score, clustering), and emphasizes the importance of treating outliers to avoid skewed results. The webpage offers concise insights into understanding and addressing outliers in machine learning datasets.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} This is a webpage and is not regarded as a reliable source for a scientific report.
+%	
+%	\scriptsize{\textbf{Keywords:} Outliers, Machine Learning, Detection Methods, Visualization, X-score, Clustering}
+%}
+%
+%
+%\Mysection{The Ultimate Guide To Speech Recognition With Python}
+%\STANDARD{Description}
+%{ 
+%	This webpage \cite{Amos:2018} is a comprehensive guide on integrating speech recognition into Python projects. Covering the basics, it explores Python packages, especially focusing on the practical use of SpeechRecognition. The tutorial provides step-by-step instructions for installation, working with audio files, handling noise, and includes a fun example—a "Guess the Word" game. Whether for beginners or experienced developers, the guide simplifies the process of adding speech recognition capabilities to Python applications.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One limitation of the text is its extensive focus on the SpeechRecognition package, potentially overlooking other available speech recognition solutions and limiting the exploration of alternative tools or techniques.
+%	
+%	\scriptsize{\textbf{Keywords:} Speech Recognition, Python, SpeechRecognition Package, Installation, Noise}
+%}
+%
+%
+%\Mysection{Arduino Nano 33 {BLE} Sense Review - What's New and How to Get Started?}
+%\STANDARD{Description}
+%{ 
+%	The webpage \cite{Raj:2019} is a review of the Board Arduino Nano 33 BLE Sense. The board is highlighted for its advanced features, including built-in sensors such as accelerometer, gyroscope, and more. The review covers hardware details, technical specifications, and software improvements with support for ARM Mbed OS. It concludes with instructions for setting up the Arduino IDE and provides a sample code for reading sensor data. The author expresses the intention to explore projects using the board's sensors and Bluetooth Low Energy capabilities.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} 
+%	
+%	\scriptsize{\textbf{Keywords:} Board Arduino Nano 33 BLE Sense, Built-In Sensors, Accelerometer, Gyroscope, Hardware, Software, ARM Mbed OS, Arduino IDE, Bluetooth}
+%}
+%
+%
+%\Mysection{What is TinyML, and Why does it Matter?}
+%\STANDARD{Description}
+%{ 
+%	The webpage \cite{Ribeiro:2020} explores Tiny Machine Learning (TinyML), a technique for deploying optimized machine learning applications on low-energy systems. TinyML enables on-device analytics at the edge of the cloud, with potential widespread adoption in smart Internet of Things (IoT) devices. The piece highlights economic forecasts and introduces tools like TensorFlow Lite for TinyML implementation, concluding with recommendations for resources and anticipating the transformative impact of TinyML on various IoT devices, envisioning widespread integration of intelligent functionalities.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One limitation of the text is that it lacks specific examples or case studies to illustrate real-world applications of TinyML. 
+%	
+%	\scriptsize{\textbf{Keywords:} TinyML, Low-energy Systems, On-Device Analytics, Edge of the Cloud, Internet of Things (IoT), TensorFlow Lite}
+%}
+%
+%
+%\Mysection{Implementation Of Tiny Machine Learning Models On Arduino 33 BLE For Gesture And Speech Recognition}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Viswanatha:2022} explores the implementation of Tiny Machine Learning (TinyML) on Board Arduino 33 BLE Sense for gesture and speech recognition. Using EdgeImpulse and Arduino Nano 33 BLE Sense, the author demonstrates creating models that recognize hand movements and control an RGB LED based on spoken keywords. The benefits of TinyML, such as portability and low power consumption, are highlighted. The article provides a concise overview of the design approach, methodology, tools, and hardware, showcasing successful applications in human-computer interaction.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} The article lacks a critical examination of potential challenges or limitations associated with the implementation of Tiny Machine Learning (TinyML) on Arduino 33 BLE. 
+%	
+%	\scriptsize{\textbf{Keywords:} TinyML, Board Arduino 33 BLE Sense, Gesture and Speech Recognition, EdgeImpulse, RGB LED, Benefits, Design, Methodology, Tools, Hardware}
+%}
+
+
+\Mysection{Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow}
+\STANDARD{Description}
+{ 
+	Discover the power of deep learning in machine learning through practical examples using Scikit-Learn, Keras, and TensorFlow. In this concise guide \cite{Geron:2022}, Aurélien Géron simplifies complex concepts, from linear regression to deep neural networks, making it accessible even for those with minimal programming experience. Learn to track machine-learning projects with Scikit-Learn, leverage TensorFlow for neural network development, and explore various models and architectures, including support vector machines and convolutional nets. With exercises in each chapter, gain hands-on experience in training and scaling deep neural networks.
+	
+	\bigskip
+	
+	\textbf{Limitation:} One limitation of this book is that it may become quickly outdated in the near future due to the rapid evolution of machine learning technologies. 
+	
+	\scriptsize{\textbf{Keywords:} Deep Learning, Machine Learning, Scikit-Learn, Keras, TensorFlow, Linear Regression, Deep Neural Networks, Support Vector Machine}
+}
+
+
+%\Mysection{Inference Speed and Quantisation of Neural Networks with TensorFlow Lite for Microcontrollers Framework}
+%\STANDARD{Description}
+%{ 
+%	This article \cite{Dokic:2020} investigates the inference speed and quantization of neural networks using the TensorFlow Lite for Microcontrollers framework, focusing on the Arduino Nano 33 BLE Sense microcontroller. Microcontrollers' increased power has led to their use in machine learning projects. The study analyzes fully connected neural networks with varying neuron numbers, aiming for a fourfold reduction in model size through quantization. The paper discusses the evolution of microcontrollers over almost fifty years and the recent revolution in implementing machine learning on these devices. Sections cover related work, materials/methods, testing/results, and a discussion of implications and conclusions.
+%	
+%	\bigskip
+%	
+%	\textbf{Limitation:} One limitation of this article is that it primarily focuses on a single microcontroller model.
+%	
+%	\scriptsize{\textbf{Keywords:} Inference Speed, Quantization, Neural Networks, TensorFlow Lite for Microcontrollers, Arduino Nano 33 BLE Sense, Machine Learning, Fully Connected Neural Networks, Implications}
+%}
+
+\Mysection{Image-Based Segmentation of Indoor Corridor Floors
+	for a Mobile Robot}
+\STANDARD{Description}
+{
+	This paper by \cite{Li:2010} presents an image-based method for detecting
+and segmenting the floor region of indoor corridors to support mobile robot navigation.
+The approach uses visual cues to differentiate floor areas from walls and other
+obstacles, enabling reliable identification of traversable space. The system is designed
+to improve both navigation safety and the quality of maps generated in structured
+indoor environments. In corridor-like
+environments, the floor region typically exhibits distinct visual patterns
+and boundaries. By exploiting these constraints, the algorithm delineates
+between navigable free space and vertical obstacles, allowing the robot
+to maintain safe paths and avoid collisions. This segmentation also
+provides valuable information for mapping tasks, as the floor boundary
+can serve as a reference for constructing a structured representation of
+the environment.
+
+\bigskip
+
+\textbf{Limitation:}
+The method is tailored to corridor-like environments and relies on consistent visual
+cues such as floor–wall boundaries. Its performance can degrade under varying
+illumination, reflections, or in spaces lacking clear structural features.
+
+\bigskip
+
+\scriptsize{\textbf{Keywords:} Floor detection, image segmentation, corridor navigation, mobile robots, indoor localization}
+	
+}
+
+
+
+\Mysection{Vision-based localization for mobile robots}
+\STANDARD{Description}
+{
+	Adorni, Cagnoni, Enderle, Kraetzschmar, Mordonini, Plagge, Ritter, Sablatnig, and Zell \cite{Adorni:2001} note that robust self-localization and repositioning strategies are essential capabilities for robots operating in highly dynamic environments, where objects of interest move continuously and quickly and the chances of hitting or getting hit by other robots are significant. Vision system designs for robots used in RoboCup are based on several approaches aimed at fitting both the mechanical characteristics of the players and the strategies that different roles or playing situations may require. The paper reviews three approaches to vision-based self-localization used in the RoboCup middle-size league competition: a method based on an omnidirectional vision system, a method based on comparison between a pair of images from a binocular vision system, and a method based on the Monte Carlo localization technique.
+	
+	\bigskip
+	\textbf{Limitation:} The comparisons are restricted to the structured, marker-rich RoboCup middle-size league environment, so the reported accuracy does not necessarily generalize to unconstrained, wall-free indoor settings.
+	
+	\scriptsize{\textbf{Keywords:} Self-localization, Visual features, Dynamic environments, RoboCup}
+}
+
+\Mysection{Deep learning based wireless localization for indoor navigation}
+\STANDARD{Description}
+{
+	This paper presents DLoc \cite{Ayyalasomayajula:2020}, a deep-learning-based wireless localization algorithm that overcomes the traditional limitations of RF-based localization approaches such as multipath and occlusions. DLoc is augmented with an automated mapping platform, MapFind, which constructs location-tagged maps of the environment and generates training data for DLoc, allowing off-the-shelf Wi-Fi devices like smartphones to access a map of the environment and estimate their position. During evaluation, MapFind collected location estimates of over 105 thousand points under 8 different scenarios with varying furniture positions and people motion across two spaces covering 2000 sq. ft, and DLoc outperformed state-of-the-art methods in Wi-Fi-based localization by 80\% (median and 90th percentile).
+	
+	\bigskip
+	\textbf{Limitation:} The approach depends on Wi-Fi infrastructure and pre-collected, location-tagged training maps, which limits its direct applicability to a monocular-camera-only platform such as the one used in this thesis.
+	
+	\scriptsize{\textbf{Keywords:} WiFi, Path planning, Deep Learning, Wireless Sensing, Indoor Navigation, WiFi Localization}
+}
+
+\Mysection{Measurement and correction of systematic odometry errors in mobile robots}
+\STANDARD{Description}
+{
+	Borenstein and Feng \cite{Borenstein:1996} introduce practical methods for measuring and reducing odometry errors caused by the two dominant error sources in differential-drive mobile robots: uncertainty about the effective wheelbase and unequal wheel diameters. Because these errors stay almost constant over prolonged periods of time, an occasional calibration increases odometric accuracy and reduces operating cost, since an accurate mobile robot requires fewer absolute positioning updates. The systematic method proposed provides near-optimal results without complicated equipment, and experimental results show a consistent improvement of at least one order of magnitude in odometric accuracy for a mobile robot calibrated with this method.
+	
+	\bigskip
+	\textbf{Limitation:} The technique only corrects systematic errors in differential-drive odometry and does not address non-systematic errors such as wheel slippage on uneven surfaces.
+	
+	\scriptsize{\textbf{Keywords:} Error correction, Mobile robots, Satellite navigation systems, Wheels, Frequency measurement, Calibration, Costs, Manufacturing, Monitoring, Intelligent robots}
+}
+
+\Mysection{Past, Present, and Future of Simultaneous Localization and Mapping: Toward the Robust-Perception Age}
+\STANDARD{Description}
+{
+	Cadena, Carlone, Carrillo, Latif, Scaramuzza, Neira, Reid, and Leonard \cite{Cadena:2016} survey the current state of SLAM, describing it as the concurrent construction of a model of the environment and the estimation of the state of the robot moving within it. The paper presents the de-facto standard formulation for SLAM and reviews robustness and scalability in long-term mapping, metric and semantic representations for mapping, theoretical performance guarantees, active SLAM and exploration, and other new frontiers, serving simultaneously as a position paper and tutorial, and addressing the questions "Do robots need SLAM?" and "Is SLAM solved?"
+	
+	\bigskip
+	\textbf{Limitation:} As a survey and position paper, it does not provide a specific implementation or benchmark result for any single SLAM system, including monocular approaches on embedded hardware.
+	
+	\scriptsize{\textbf{Keywords:} Simultaneous Localization And Mapping, Graph theory, Service robots, Robustness, Localization, Mapping, Loop Closure, Factor Graph, Bundle Adjustment}
+}
+
+\Mysection{LSD-SLAM: Large-Scale Direct Monocular SLAM}
+\STANDARD{Description}
+{
+	Engel, Schöps, and Cremers \cite{Engel:2014} propose a direct (feature-less) monocular SLAM algorithm which, in contrast to prior direct methods, allows large-scale, consistent maps of the environment to be built. Highly accurate pose estimation based on direct image alignment is combined with real-time 3D reconstruction as a pose-graph of keyframes with associated semi-dense depth maps, obtained by filtering a large number of pixelwise small-baseline stereo comparisons. The explicitly scale-drift aware formulation, enabled by a novel direct tracking method operating on sim(3) and a probabilistic solution for incorporating noisy depth values into tracking, allows the direct monocular SLAM system to run in real time on a CPU.
+	
+	\bigskip
+	\textbf{Limitation:} The inherent scale-ambiguity of monocular SLAM means the world scale cannot be directly observed and drifts over time, remaining a major error source even with the scale-drift aware formulation.
+	
+	\scriptsize{\textbf{Keywords:} Monocular SLAM, Direct methods, Scale-drift, Pose-graph, Semi-dense depth maps, Real-time CPU tracking}
+}
+
+\Mysection{Monocular Vision Based SLAM for Mobile Robots}
+\STANDARD{Description}
+{
+	Mouragnon, Lhuillier, Dhome, Dekeyser, and Sayd \cite{Lhuillier:2006} describe a new vision-based method for the simultaneous localization and mapping of mobile robots using only video input from a moving calibrated monocular camera. From the detection and matching of interest points in images at video rate, robust estimates of the camera poses are computed in real time and a 3D map of the environment is reconstructed; the computed 3D structure is constantly refined through a fast and local bundle adjustment method that makes the approach particularly accurate and reliable. The method takes benefit from the accuracy of bundle adjustment against Kalman filters and from the speed of incremental methods through the introduction of a local bundle adjustment process carried out each time a new camera is added to the system.
+	
+	\bigskip
+	\textbf{Limitation:} The incremental local bundle adjustment trades some global accuracy for speed, and errors can still accumulate over long trajectories compared with full, off-line global optimization.
+	
+	\scriptsize{\textbf{Keywords:} Simultaneous Localization and Mapping, Monocular camera, Local bundle adjustment, Structure From Motion, Visual odometry}
+}
+
+\Mysection{ORB-SLAM: A Versatile and Accurate Monocular SLAM System}
+\STANDARD{Description}
+{
+	Mur-Artal, Montiel, and Tardós \cite{MurArtal:2015} present ORB-SLAM, a feature-based monocular SLAM system that operates in real time in small and large indoor and outdoor environments. The system is robust to severe motion clutter, allows wide baseline loop closing and relocalization, and includes full automatic initialization; a novel design uses the same features for all SLAM tasks — tracking, mapping, relocalization, and loop closing — and a survival-of-the-fittest strategy that selects the points and keyframes of the reconstruction leads to excellent robustness and a compact, trackable map that only grows if scene content changes, allowing lifelong operation. An exhaustive evaluation in 27 sequences from the most popular datasets shows ORB-SLAM achieves unprecedented performance with respect to other state-of-the-art monocular SLAM approaches, and the source code is made public.
+	
+	\bigskip
+	\textbf{Limitation:} As a purely feature-based monocular system, ORB-SLAM can struggle in textureless environments and, like other monocular approaches, cannot recover absolute scale without additional sensing or a known initialization baseline.
+	
+	\scriptsize{\textbf{Keywords:} Lifelong mapping, Localization, Monocular vision, Recognition, Simultaneous Localization and Mapping (SLAM)}
+}
+
+\Mysection{ORB-SLAM2: An Open-Source SLAM System for Monocular, Stereo and RGB-D Cameras}
+\STANDARD{Description}
+{
+	Mur-Artal and Tardós \cite{MurArtal:2017} present ORB-SLAM2, a complete simultaneous localization and mapping system for monocular, stereo, and RGB-D cameras, including map reuse, loop closing, and relocalization capabilities. The system works in real time on standard CPUs in a wide variety of environments, from small hand-held indoor sequences to drones flying in industrial environments and cars driving around a city; its back-end, based on bundle adjustment with monocular and stereo observations, allows accurate trajectory estimation with metric scale, and a lightweight localization mode leverages visual odometry tracks for unmapped regions with zero-drift localization. Evaluation on 29 popular public sequences shows the method achieves state-of-the-art accuracy, being in most cases the most accurate SLAM solution, and the source code is published for the benefit of the SLAM community.
+	
+	\bigskip
+	\textbf{Limitation:} The monocular configuration inherits scale ambiguity and requires a separate initialization step to recover metric scale, unlike the stereo and RGB-D modes.
+	
+	\scriptsize{\textbf{Keywords:} Simultaneous localization and mapping, Cameras, Optimization, Feature extraction, Tracking loops, Trajectory, Bundle Adjustment, Loop Closure, Visual Odometry, RGB-D, Stereo}
+}
+
+\Mysection{Lost Shopping! Monocular Localization in Large Indoor Spaces}
+\STANDARD{Description}
+{
+	Wang, Fidler, and Urtasun \cite{Wang:2015} propose a novel approach to localization in very large indoor spaces, such as shopping malls with over 200 stores, that takes a single image and a floor plan of the environment as input. The localization problem is formulated as inference in a Markov random field, jointly reasoning about text detection (localizing shop names with precise bounding boxes), shop facade segmentation, and the camera's rotation and translation within the entire shopping mall. Because the approach exploits text detections corresponding to shop names as a cue rather than relying on prior appearance information, it is applicable to a variety of domains and robust to store appearance variation across countries, seasons, and illumination conditions, and is demonstrated on a new dataset spanning two very large shopping malls.
+	
+	\bigskip
+	\textbf{Limitation:} The method depends on the presence of readable shop-name text and an accurate floor plan, so it is not directly applicable to generic indoor environments lacking such text cues.
+	
+	\scriptsize{\textbf{Keywords:} Monocular localization, Indoor spaces, Text detection, Markov random field, Floor plan}
+}
+
+\Mysection{Recent Advances in Indoor Localization: A Survey on Theoretical Approaches and Applications}
+\STANDARD{Description}
+{
+	This survey \cite{Yassin:2017} notes that the availability of location information has become a key factor in today's communications systems, enabling location-based services; while outdoor mobile terminal position is obtained with high accuracy via GPS or standalone cellular systems, the main problem of GPS and cellular systems resides in indoor environments and scenarios with deep shadowing effects where satellite or cellular signals are broken. The paper surveys different technologies and methodologies for indoor and outdoor localization with an emphasis on indoor methodologies and concepts, discusses different localization-based applications, and provides a comprehensive discussion of the challenges in terms of accuracy, cost, complexity, security, and scalability, aiming to provide a comprehensive overview of existing efforts as well as anticipated directions for future work.
+	
+	\bigskip
+	\textbf{Limitation:} As a broad survey, it treats indoor localization primarily from a communications/signal perspective and does not go deeply into vision-based or SLAM-based localization approaches.
+	
+	\scriptsize{\textbf{Keywords:} Indoor Localization, Localization Techniques, Global Positioning System, Mobile Devices, Data Fusion, Location-based services}
+}
+
+\Mysection{A Survey of Indoor Localization Systems and Technologies}
+\STANDARD{Description}
+{
+	This survey \cite{Zafari:2019} observes that indoor localization has recently witnessed increased interest due to the potential wide range of services it can provide by leveraging the Internet of Things (IoT) and ubiquitous connectivity. The paper provides a detailed survey of different indoor localization techniques, such as angle of arrival (AoA), time of flight (ToF), return time of flight (RTOF), and received signal strength (RSS), based on technologies such as WiFi, RFID, ultra-wideband (UWB), and Bluetooth, discussing localization and positioning of human users and their devices. In contrast with existing surveys, it also evaluates systems from the perspective of energy efficiency, availability, cost, reception range, latency, scalability, and tracking accuracy, comparing localization systems rather than just technologies or techniques.
+	
+	\bigskip
+	\textbf{Limitation:} The survey centers on radio-frequency-based indoor localization technologies and systems, and does not cover monocular vision-based localization in comparable depth.
+	
+	\scriptsize{\textbf{Keywords:} Internet of Things, Indoor Localization, Wireless fidelity, Scalability, Wireless sensor networks, Navigation, Bluetooth, Ultra-wideband}
+}
+
+\Mysection{Accurate Image Localization Based on Google Maps Street View}
+\STANDARD{Description}
+{
+	This paper \cite{Zamir:2010} addresses finding an image's exact GPS location, described as a challenging computer vision problem with many real-world applications, aiming for accuracy comparable to hand-held GPS devices. A structured data set of about 100,000 images built from Google Maps Street View is used as reference images, and the SIFT descriptors of detected interest points in the reference images are indexed using a tree; a query image is localized by querying the tree with its SIFT descriptors, a novel GPS-tag-based pruning method removes less reliable descriptors, and a smoothing step with a voting scheme allows each query descriptor to vote for the location of its nearest neighbor, with a Confidence of Localization parameter based on the Kurtosis of the vote distribution determining localization reliability. A novel approach also localizes groups of images accurately in a hierarchical manner.
+	
+	\bigskip
+	\textbf{Limitation:} The technique relies on a large pre-built database of geotagged street-view reference images, making it impractical for an indoor mobile-robot testbed without an equivalent indoor reference dataset.
+	
+	\scriptsize{\textbf{Keywords:} Image localization, Google Street View, SIFT descriptors, GPS, Confidence of Localization}
+}
+
+
+
+\Mysection{A versatile camera calibration technique for high-accuracy 3D machine vision metrology using off-the-shelf TV cameras and lenses}
+\STANDARD{Description}
+{
+	Tsai \cite{Tsai:1987} describes a new two-stage technique for three-dimensional camera calibration for machine vision metrology using off-the-shelf TV cameras and lenses, aimed at efficient computation of camera external position and orientation relative to an object reference coordinate system, as well as the effective focal length, radial lens distortion, and image scanning parameters. The two-stage technique has an advantage in terms of accuracy, speed, and versatility over the existing state of the art at the time; a theoretical framework is established, supported by comprehensive proof, and test results using real data show both accuracy and speed, with the technique amenable to real-time operation with slight modification.
+	
+	\bigskip
+	\textbf{Limitation:} The calibration model targets classical TV camera geometry and does not account for the strong, non-linear wide-angle distortion typical of the low-cost CSI cameras used on the Jetson Nano.
+	
+	\scriptsize{\textbf{Keywords:} Cameras, Calibration, Machine vision, Metrology, TV, Lenses, Robot vision systems, Camera Calibration}
+}
+
+\Mysection{A flexible new technique for camera calibration}
+\STANDARD{Description}
+{
+	Zhang \cite{Zhang:2000} proposes a flexible technique to easily calibrate a camera, requiring only that the camera observe a planar pattern shown at a few (at least two) different orientations; either the camera or the planar pattern can be freely moved, and the motion need not be known. Radial lens distortion is modeled, and the proposed procedure consists of a closed-form solution followed by a nonlinear refinement based on the maximum likelihood criterion. Compared with classical techniques that use expensive equipment such as two or three orthogonal planes, the proposed technique is easy to use and flexible, advancing 3D computer vision from laboratory environments to real-world use, as verified with both computer simulation and real data.
+	
+	\bigskip
+	\textbf{Limitation:} The method assumes a planar calibration pattern observed at only a few orientations, which can be less accurate than calibration rigs using known 3D structure when very high precision is required.
+	
+	\scriptsize{\textbf{Keywords:} Cameras, Calibration, Computer vision, Nonlinear distortion, Closed-form solution, Maximum likelihood estimation, Planar Pattern}
+}
+
+\Mysection{Microsoft Kinect Sensor and Its Effect}
+\STANDARD{Description}
+{
+	Zhang \cite{Zhang:2012} discusses recent advances in 3D depth cameras such as Microsoft Kinect sensors, which have created many opportunities for multimedia computing by letting the computer directly sense the third dimension (depth) of players and the environment. The Kinect sensor also understands when users talk, recognizes who they are when they walk up to it, and interprets their movements, translating them into a format developers can use to build new experiences. While the Kinect sensor incorporates several advanced sensing hardware components, the article focuses on the vision aspect of the sensor and its impact beyond the gaming industry.
+	
+	\bigskip
+	\textbf{Limitation:} The Kinect's active depth-sensing hardware is not available on the single CSI monocular camera interface of the Jetson Nano platform used in this thesis, limiting the direct relevance of RGB-D techniques discussed.
+	
+	\scriptsize{\textbf{Keywords:} Multimedia, Microsoft Kinect, Human-computer interaction, Motion capture, Computer vision}
+}
+
+\Mysection{ROS: an open-source Robot Operating System}
+\STANDARD{Description}
+{
+	This paper gives an overview of ROS \cite{Quigley:2009}, an open-source robot operating system. ROS is not an operating system in the traditional sense of process management and scheduling; rather, it provides a structured communications layer above the host operating systems of a heterogeneous compute cluster. The paper discusses how ROS relates to existing robot software frameworks and briefly overviews some of the available application software which uses ROS.
+	
+	\bigskip
+	\textbf{Limitation:} The paper is an early overview and does not address the real-time performance or resource constraints relevant to deploying ROS-based pipelines on low-power embedded boards such as the Jetson Nano.
+	
+	\scriptsize{\textbf{Keywords:} ROS, Robot Operating System, Middleware, Communications layer, Robot software frameworks}
+}
+
+\Mysection{Batteries and Battery Management Systems for Electric Vehicles}
+\STANDARD{Description}
+{
+	This paper \cite{Tewari:2011} reviews the battery as a fundamental component of electric vehicles, noting that lithium chemistry is now acknowledged as the technology of choice for energy storage in electric vehicles, while several research points remain open, including the best choice of cell materials and the development of electronic circuits and algorithms for more effective battery utilization. The paper reviews modeling approaches for predicting battery performance, discusses requirements and standards for ICs and systems for battery management, and reports a general and flexible architecture for battery management implementation along with the main techniques for state-of-charge estimation and charge balancing, describing the design and implementation of an innovative BMS incorporating an almost fully-integrated active charge equalizer.
+	
+	\bigskip
+	\textbf{Limitation:} The review focuses on large-format electric-vehicle battery packs and management architectures, which only partially transfer to the single-cell battery pack and power budget of a small mobile robot platform.
+	
+	\scriptsize{\textbf{Keywords:} Li-ion batteries, Cell Modeling, Battery Management System, Charge Equalization, State-of-Charge Estimation, Electric Vehicles}
+}
+
+
+
+\Mysection{MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications}
+\STANDARD{Description}
+{
+	Howard, Zhu, Chen, Kalenichenko, Wang, Weyand, Andreetto, and Adam \cite{Howard:2017} present a class of efficient models called MobileNets for mobile and embedded vision applications, based on a streamlined architecture that uses depth-wise separable convolutions to build lightweight deep neural networks. Two simple global hyper-parameters, width multiplier and resolution multiplier, allow the model builder to efficiently trade off between latency and accuracy according to the constraints of the problem. Extensive experiments on resource and accuracy tradeoffs show strong performance compared to other popular models on ImageNet classification, and the effectiveness of MobileNets is demonstrated across applications including object detection, fine-grain classification, face attributes, and large-scale geo-localization.
+	
+	\bigskip
+	\textbf{Limitation:} The accuracy/latency tradeoff still degrades classification performance relative to larger, deeper networks, which constrains how aggressively the model can be shrunk on constrained hardware such as the Jetson Nano before collision-detection accuracy suffers.
+	
+	\scriptsize{\textbf{Keywords:} MobileNets, Depth-wise separable convolutions, Mobile vision, Embedded vision, Latency-accuracy tradeoff, ImageNet}
+}
+
+\Mysection{Selection of Lightweight CNN Models with Limited Computing Resources for Drone Collision Prediction}
+\STANDARD{Description}
+{
+	Zufar and Banjerdpongchai \cite{zufar:2024} describe the Collision Avoidance System (CAS) as a safety system created to identify and prevent collisions, primarily on drones, comprising detection, prediction, and action processes, with the predictive process being crucial since it determines whether a collision will occur. A visual-based prediction involves a convolutional neural network (CNN), which autonomously learns and extracts hierarchical characteristics from input data through convolution, pooling, and fully connected layers; since not all pretrained CNN models are compatible with drones due to computational constraints, the objective is to select a suitable lightweight pretrained CNN model, apply transfer learning with the ColANet dataset, and evaluate accuracy, model size, inference time, and power consumption. The selected model is deployed in real time on a Raspberry Pi 3B+ with data input from a DJI Tello drone camera, and the prediction performance is evaluated.
+	
+	\bigskip
+	\textbf{Limitation:} The evaluation is conducted on a Raspberry Pi 3B+ with a specific drone camera and the ColANet dataset, so the reported accuracy and latency figures may not transfer directly to a Jetson Nano-based ground robot with a different camera and scene distribution.
+	
+	\scriptsize{\textbf{Keywords:} Collision Avoidance System, Lightweight CNN, Transfer learning, Drone, Raspberry Pi}
+}
+
+\Mysection{Optimized Lightweight CNN Architectures for Real-Time Inference on Edge and Embedded Devices}
+\STANDARD{Description}
+{
+	This paper \cite{chaharborj:2023} notes that the edge computing paradigm has become central in bringing AI applications closer to the data source, facilitating quick, energy-efficient real-time decisions, while deploying traditional CNNs to edge and embedded devices remains a major challenge due to high computational and memory requirements. The paper develops an efficient lightweight CNN architecture focused on real-time interpretation on resource-limited devices like the NVIDIA Jetson Nano or Raspberry Pi 4, using a multi-pronged model-compression strategy combining structured pruning, 8-bit quantization, and knowledge distillation with depth-wise separable convolutions and grouped layers. On benchmark datasets like CIFAR-10 and Tiny ImageNet, the proposed models achieve competitive classification accuracy (up to 90.1\%) while achieving up to 65\% latency reduction and up to 45\% energy reduction compared to uncompressed CNNs, validated on actual devices across metrics including model size, memory footprint, throughput, and power consumption.
+	
+	\bigskip
+	\textbf{Limitation:} The reported gains are demonstrated on CIFAR-10/Tiny ImageNet classification and a surveillance case study rather than on the specific collision-avoidance and monocular-vSLAM workload targeted in this thesis.
+	
+	\scriptsize{\textbf{Keywords:} Lightweight CNN, Edge Computing, Real-Time Inference, Model Compression, Embedded Devices, Quantization, Knowledge Distillation}
+}
+
+\Mysection{Advancements in Deep Learning: A Review of Keras and TensorFlow Frameworks}
+\STANDARD{Description}
+{
+	Medavarapu \cite{Jsaer:2024} states that deep learning has revolutionized the field of artificial intelligence, enabling significant advancements in various domains, and provides a comprehensive review of two popular deep learning frameworks, Keras and TensorFlow, highlighting their features, capabilities, and applications. The review covers the latest developments in these frameworks, their performance in different scenarios, and a comparative analysis, aiming to guide researchers and practitioners in selecting the appropriate framework for their deep learning tasks.
+	
+	\bigskip
+	\textbf{Limitation:} The review is a general comparative overview of Keras and TensorFlow and does not benchmark either framework specifically on resource-constrained embedded hardware such as the Jetson Nano.
+	
+	\scriptsize{\textbf{Keywords:} Deep learning, Keras, TensorFlow, Machine learning, Artificial intelligence}
+}
+
+\Mysection{A review on Machine learning aspect in physics and mechanics of glasses}
+\STANDARD{Description}
+{
+	Singh and Singh \cite{Singh:2022} note that glass science and technology is a rapidly developing field focused on developing new glasses with excellent properties; glasses are non-crystalline materials with inherent stoichiometry, i.e., a non-disordered structure of atoms and molecules that is thus inherently unpredictable, and the trial-and-error methods typical of glass design are ineffective. Classical computational methods such as ab initio and classical molecular dynamics simulation techniques are costly, time-consuming, and provide limited data, so machine learning (ML) replaces classical experimental and simulation techniques to produce more precise results; the paper explores recent developments in glass manufacturing and technology through ML, discussing the development of new glass compositions, prediction of glass properties, and various inspection methods.
+	
+	\bigskip
+	\textbf{Limitation:} The review is domain-specific to materials science (glass composition and mechanics) and its ML methodology does not transfer directly to robotic perception or collision-avoidance tasks.
+	
+	\scriptsize{\textbf{Keywords:} Glass, Glass design, Glass composition, Artificial intelligence, Machine learning}
+}
+
+
+\Mysection{Digital Image Processing, 3rd ed.}
+\STANDARD{Description}
+{
+	Gonzalez and Woods \cite{Gonzalez:2008} provide a comprehensive introduction to digital image processing theory and methods, aimed at college seniors and first-year graduate students with a background in mathematical analysis, vectors/matrices, probability, statistics, linear systems, and programming. The book opens with foundational concepts — defining digital images, historical origins, imaging across the electromagnetic spectrum, human visual perception, sampling/quantization, and core mathematical tools — and progresses through spatial-domain intensity transformations and filtering, frequency-domain filtering via the Fourier transform and FFT, image restoration and reconstruction, color image processing, wavelets and multiresolution analysis, image compression, morphological image processing, image segmentation, representation and description, and object recognition.
+	
+	\bigskip
+	\textbf{Limitation:} As a classical, general-purpose digital image processing textbook, it predates and does not cover modern deep-learning-based perception techniques used for collision avoidance and SLAM.
+	
+	\scriptsize{\textbf{Keywords:} Digital image processing, Image enhancement, Spatial filtering, Frequency-domain filtering, Fourier transform, Image restoration, Image segmentation, Object recognition}
+}
+
+\Mysection{Probabilistic Robotics}
+\STANDARD{Description}
+{
+	Thrun, Burgard, and Fox \cite{Thrun:2005} introduce probabilistic robotics as a growing area in robotics concerned with perception and control in the face of uncertainty; building on the field of mathematical statistics, probabilistic robotics endows robots with a new level of robustness in real-world situations. The book introduces a wealth of techniques and algorithms based on a single overarching mathematical foundation, with each chapter providing example implementations in pseudo code, detailed mathematical derivations, discussions from a practitioner's perspective, and extensive exercises and class projects, making it relevant for anyone involved in robotic software development and scientific research.
+	
+	\bigskip
+	\textbf{Limitation:} The probabilistic algorithms presented are largely sensor-agnostic and mathematically general, so the book does not address the specific computational constraints of running such filters and estimators on a monocular-camera-only embedded platform.
+	
+	\scriptsize{\textbf{Keywords:} Probabilistic robotics, Uncertainty, Perception, Control, Robustness, Robotic algorithms}
+}
+
+\Mysection{Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow}
+\STANDARD{Description}
+{
+	Discover the power of deep learning in machine learning through practical examples using Scikit-Learn, Keras, and TensorFlow. In this concise guide \cite{Geron:2022}, Aurélien Géron simplifies complex concepts, from linear regression to deep neural networks, making it accessible even for those with minimal programming experience. Learn to track machine-learning projects with Scikit-Learn, leverage TensorFlow for neural network development, and explore various models and architectures, including support vector machines and convolutional nets. With exercises in each chapter, gain hands-on experience in training and scaling deep neural networks.
+	
+	\bigskip
+	\textbf{Limitation:} One limitation of this book is that it may become quickly outdated in the near future due to the rapid evolution of machine learning technologies.
+	
+	\scriptsize{\textbf{Keywords:} Deep Learning, Machine Learning, Scikit-Learn, Keras, TensorFlow, Linear Regression, Deep Neural Networks, Support Vector Machine}
+}
+
+\Mysection{Deep Learning with Python, Second Edition}
+\STANDARD{Description}
+{
+	This book \cite{Chollet:2021} unlocks the advances of deep learning with an extensively revised, full-color new edition of the bestselling original, letting readers learn directly from the creator of Keras and master practical Python deep learning techniques that are easy to apply in the real world. Topics include deep learning from first principles, image classification and image segmentation, time-series forecasting, text classification and machine translation, text generation, neural style transfer, and image generation; the book introduces deep learning using Python and Keras and is loaded with insights for both novice and experienced ML practitioners, teaching practical techniques alongside important theory for perfecting neural networks.
+	
+	\bigskip
+	\textbf{Limitation:} The book is written by the creator of Keras and is therefore Keras/TensorFlow-centric, with comparatively little coverage of deployment on constrained embedded hardware such as the Jetson Nano.
+	
+	\scriptsize{\textbf{Keywords:} Deep learning, Python, Keras, Image classification, Image segmentation, Timeseries forecasting, Text generation, Neural style transfer}
+}
+
+\Mysection{Designing Machine Learning Systems}
+\STANDARD{Description}
+{
+	This book \cite{Huyen:2022} bridges the gap between academic machine learning and production ML engineering, arguing that most real-world value comes from designing robust systems around models rather than optimizing algorithms in isolation, framing ML systems as fundamentally different from traditional software because they are "part code, part data, part artifacts." Chapters cover data engineering fundamentals, training data curation and sampling, feature engineering, model selection/training/evaluation, deployment strategies (batch vs. online prediction), monitoring and continual learning to detect and correct data/model drift (covariate shift, concept drift), model retraining and fine-tuning strategies, and organizational/human factors, framing ML system design as a cyclical, iterative process rather than a linear pipeline and foregrounding real-world engineering failure modes such as silent model failures, autoscaling outages, biased algorithms, and data poisoning attacks.
+	
+	\bigskip
+	\textbf{Limitation:} The book targets large-scale, production ML systems (e.g., ad-serving, MLOps pipelines) and does not specifically address the resource and reliability constraints of single-board, battery-powered robotics deployments.
+	
+	\scriptsize{\textbf{Keywords:} Machine learning systems design, ML in production, Data engineering, Data drift, Concept drift, Continual learning, Model monitoring, MLOps, Model deployment}
+}
+
+\Mysection{TinyML}
+\STANDARD{Description}
+{
+	This book \cite{Warden:2020} shows how any developer with basic experience using a command-line terminal and code editor can get started building their own projects running machine learning (ML) on embedded devices. The author recounts discovering, at Google, neural networks as small as 14 kilobytes running on the digital signal processors (DSPs) present in most Android phones for continuously listening to the "OK Google" wake words, since these DSPs had only tens of kilobytes of RAM and flash memory and used only a few milliwatts of power; this experience motivated work on TensorFlow and TensorFlow Lite for such low-power chips, alongside other pioneering projects in audio, predictive maintenance, and vision, describing a new class of "peel-and-stick sensor" products that use ML to make sense of noisy sensor data while running on a battery or energy harvesting for years at very low cost.
+	
+	\bigskip
+	\textbf{Limitation:} TinyML targets microcontroller-class DSPs with only tens of kilobytes of RAM, which is far more constrained than the Jetson Nano used in this thesis, so its specific model-size and power-budget guidance does not map one-to-one onto the thesis platform.
+	
+	\scriptsize{\textbf{Keywords:} TinyML, Embedded devices, TensorFlow Lite, Low-power AI, Digital signal processors, On-device inference}
+}
+
+
+
+
+
+
+
+
+\Mysection{The OpenCV Library}
+\STANDARD{Description}
+{
+	Bradski \cite{Bradski:2000} introduces OpenCV, an open-source computer vision library originally released by Intel and documented in Dr. Dobb's Journal of Software Tools. OpenCV provides a large collection of optimized algorithms for image processing, feature detection, camera calibration, and geometric vision, and has since become a de-facto standard toolkit for implementing classical computer vision pipelines in C++ and Python, including the ORB feature detector and matcher used in feature-based monocular SLAM systems such as ORB-SLAM.
+	
+	\bigskip
+	\textbf{Limitation:} As a general-purpose vision library, OpenCV provides the building blocks for calibration and feature extraction used in this thesis but does not itself implement a complete SLAM or collision-avoidance pipeline.
+	
+	\scriptsize{\textbf{Keywords:} OpenCV, Computer vision library, Feature detection, Camera calibration, Open-source software}
+}
+
+\Mysection{Robot Operating System (ROS): The Complete Reference}
+\STANDARD{Description}
+{
+	Koubaa \cite{Koubaa:2016} edits this multi-volume Springer book series that compiles contributed chapters covering the design, implementation, and application of the Robot Operating System (ROS) across a wide range of robotics domains. The volumes extend the original ROS overview with in-depth treatment of navigation stacks, simulation, perception pipelines, and real-world case studies, serving as a practical reference for robotics engineers building ROS-based systems.
+	
+	\bigskip
+	\textbf{Limitation:} The reference targets general ROS development across many robot classes and does not focus specifically on the resource constraints of a single-board Jetson Nano platform running ROS alongside a real-time perception pipeline.
+	
+	\scriptsize{\textbf{Keywords:} ROS, Robot Operating System, Robotics middleware, Navigation stack, Reference book}
+}
+
+\Mysection{TensorFlow Lite: ML for Mobile and Edge Devices}
+\STANDARD{Description}
+{
+	The TensorFlow Developers \cite{Tensorflowlite:2024} document TensorFlow Lite, a lightweight runtime for deploying trained TensorFlow models for inference on mobile, embedded, and edge devices with constrained compute and memory. The framework supports model quantization, hardware acceleration through delegates (including GPU and NNAPI), and a reduced-footprint interpreter, enabling on-device inference for tasks such as image classification and object detection without requiring a full TensorFlow runtime.
+	
+	\bigskip
+	\textbf{Limitation:} TensorFlow Lite's supported operator set and delegate acceleration paths are primarily optimized for mobile SoCs and may not fully exploit the Jetson Nano's CUDA cores compared to NVIDIA-specific runtimes such as TensorRT.
+	
+	\scriptsize{\textbf{Keywords:} TensorFlow Lite, Edge inference, Model quantization, Mobile deployment, On-device machine learning}
+}
+
+\Mysection{Keras Documentation}
+\STANDARD{Description}
+{
+	The Keras Team \cite{Keras:2024} maintains the official documentation for Keras, a high-level neural network API that provides a consistent, user-friendly interface for building, training, and deploying deep learning models, running on top of backends such as TensorFlow. The documentation covers model-building APIs (Sequential and Functional), layers, callbacks, and export utilities used throughout the model development lifecycle, including conversion paths toward TensorFlow Lite for embedded deployment.
+	
+	\bigskip
+	\textbf{Limitation:} As reference documentation rather than a research contribution, it does not benchmark model performance on embedded hardware and requires supplementary tools (e.g., TensorFlow Lite) for on-device deployment.
+	
+	\scriptsize{\textbf{Keywords:} Keras, Deep learning API, Model building, TensorFlow backend, Documentation}
+}
+
+\Mysection{TensorFlow Lite is now LiteRT}
+\STANDARD{Description}
+{
+	The Google AI Edge team \cite{Google:2024a} announces the rebranding of TensorFlow Lite to LiteRT (Lite Runtime), reflecting its evolution into a multi-framework, on-device runtime supporting models originally built in TensorFlow, PyTorch, and JAX. The announcement outlines the motivation for the name change, the continuity of existing TensorFlow Lite APIs and converted models, and the direction of future development under the unified LiteRT branding for edge AI deployment.
+	
+	\bigskip
+	\textbf{Limitation:} The announcement is a product communication rather than a technical evaluation, so it does not provide benchmark data relevant to the Jetson Nano deployment scenario used in this thesis.
+	
+	\scriptsize{\textbf{Keywords:} LiteRT, TensorFlow Lite, Edge AI, Runtime rebranding, On-device inference}
+}
+
+\Mysection{LiteRT: Google's next-gen runtime for on-device AI}
+\STANDARD{Description}
+{
+	Google \cite{Google:2026} documents LiteRT, described as the next-generation on-device AI runtime succeeding TensorFlow Lite, designed to run machine learning models efficiently across mobile, embedded, and IoT devices regardless of their original training framework. The documentation covers model conversion, hardware acceleration delegates, and the unified developer workflow for deploying compact models to resource-constrained targets.
+	
+	\bigskip
+	\textbf{Limitation:} As official product documentation, it emphasizes general cross-platform deployment rather than the specific Jetson Nano CSI-camera and CUDA-acceleration path relevant to this thesis's perception pipeline.
+	
+	\scriptsize{\textbf{Keywords:} LiteRT, On-device AI, Edge runtime, Model conversion, Hardware acceleration}
+}
+
+\Mysection{Production ML Systems: Monitoring Pipelines}
+\STANDARD{Description}
+{
+	Google's Machine Learning Crash Course \cite{Google:2024} covers the practice of monitoring machine learning pipelines in production, explaining how to track model performance, detect data and prediction drift, and set up alerting for silent failures once a model is deployed. The material frames monitoring as an ongoing lifecycle activity rather than a one-time validation step, complementing standard training and evaluation practices with production-facing reliability concerns.
+	
+	\bigskip
+	\textbf{Limitation:} The material addresses large-scale production ML systems with continuous data pipelines and does not address the offline, single-robot evaluation setting used for validating the collision-avoidance model in this thesis.
+	
+	\scriptsize{\textbf{Keywords:} ML monitoring, Model drift, Production ML systems, Pipeline reliability, MLOps}
+}
+
+\Mysection{A Guide to Monitoring Machine Learning Models in Production}
+\STANDARD{Description}
+{
+	The NVIDIA Developer Blog \cite{NVIDIA:2023} provides practical guidance on monitoring deployed machine learning models, covering key metrics such as data drift, model performance degradation, and infrastructure health, along with recommended tooling for building monitoring dashboards and alerting systems. The guide emphasizes the importance of continuous monitoring once a model moves from development into a live production environment.
+	
+	\bigskip
+	\textbf{Limitation:} The guide targets server-scale or cloud-deployed inference workloads and does not address monitoring considerations specific to a single embedded robot running inference locally without a centralized dashboard.
+	
+	\scriptsize{\textbf{Keywords:} Model monitoring, Production ML, Data drift, NVIDIA, Deployment reliability}
+}
+
+\Mysection{Monitoring Machine Learning Models in Production}
+\STANDARD{Description}
+{
+	Klein and Ackling \cite{Klein:2020}, writing on Martin Fowler's engineering blog, discuss the practical challenges of monitoring machine learning models after deployment, distinguishing between traditional software monitoring (uptime, latency, errors) and ML-specific monitoring concerns such as concept drift, data quality degradation, and silent performance decay that do not necessarily trigger conventional error alerts. The post outlines practical strategies software teams can adopt to catch model degradation early.
+	
+	\bigskip
+	\textbf{Limitation:} The blog post is written for general software engineering teams operating continuously-updated production services and does not address monitoring on a standalone, offline-evaluated embedded robotics platform.
+	
+	\scriptsize{\textbf{Keywords:} ML monitoring, Concept drift, Model degradation, Production engineering, Software reliability}
+}
+
+\Mysection{Machine Learning in Production: Testing and Deployment}
+\STANDARD{Description}
+{
+	Le \cite{Kle:2020} discusses practices for testing and deploying machine learning systems in production, covering topics such as validating model behavior before release, deployment strategies (e.g., canary releases, shadow deployments), and the organizational processes needed to safely ship model updates. The piece is written from a practitioner's perspective, drawing on common patterns observed across industry ML deployments.
+	
+	\bigskip
+	\textbf{Limitation:} The guidance targets iterative, continuously-deployed production ML services and does not directly address the fixed, on-device deployment model of a standalone embedded robot such as the JetBot used in this thesis.
+	
+	\scriptsize{\textbf{Keywords:} ML testing, Model deployment, Canary release, Production engineering, MLOps}
+}
+
+\Mysection{Introduction to Autonomous Mobile Robots}
+\STANDARD{Description}
+{
+	Siegwart, Nourbakhsh, and Scaramuzza \cite{Siegwart:2011} provide a comprehensive introduction to the fundamentals of mobile robotics, covering locomotion and kinematics, sensors for mobile robots (including odometry, IMUs, and vision), and the perception and cognition pipeline needed for a robot to localize itself and plan motion. The second edition expands coverage of vision-based methods, probabilistic localization and mapping, and planning under uncertainty, presenting the material with worked examples and exercises suitable for both students and practitioners.
+	
+	\bigskip
+	\textbf{Limitation:} The book covers mobile robotics fundamentals broadly across many platforms and sensor types, and does not focus specifically on the resource-constrained monocular-only configuration and single-board embedded compute used in this thesis.
+	
+	\scriptsize{\textbf{Keywords:} Mobile robotics, Locomotion, Kinematics, Robot perception, Localization and mapping, Motion planning}
+}
+
+\Mysection{TensorFlow for Deep Learning: From Linear Regression to Reinforcement Learning}
+\STANDARD{Description}
+{
+	Ramsundar and Zadeh \cite{Ramsundar:2018} present a practical introduction to deep learning using TensorFlow, progressing from foundational concepts such as linear and logistic regression through fully connected networks, convolutional networks, recurrent networks, and reinforcement learning. The book emphasizes hands-on implementation in TensorFlow, illustrating how core deep learning architectures are constructed, trained, and evaluated using the framework's computational graph and training APIs.
+	
+	\bigskip
+	\textbf{Limitation:} The book is written around an earlier TensorFlow API generation and does not address the model-compression or embedded-deployment considerations (e.g., TensorFlow Lite, quantization) needed to run models on a Jetson Nano.
+	
+	\scriptsize{\textbf{Keywords:} TensorFlow, Deep learning, Convolutional networks, Recurrent networks, Reinforcement learning}
+}
+
+\Mysection{Advanced Deep Learning with TensorFlow 2 and Keras, Second Edition}
+\STANDARD{Description}
+{
+	Atienza \cite{Atienza:2020} covers advanced deep learning architectures and techniques implemented in TensorFlow 2 and Keras, including deep neural networks, convolutional and recurrent architectures, autoencoders, generative adversarial networks (GANs), variational autoencoders (VAEs), deep reinforcement learning, and object detection and semantic segmentation methods. The book is structured around building progressively more sophisticated models using the Keras functional API, with an emphasis on understanding the underlying theory alongside working code implementations.
+	
+	\bigskip
+	\textbf{Limitation:} The book emphasizes model architecture and training techniques on standard GPU/TPU hardware and does not cover the compression, quantization, or latency-focused adaptations required for real-time inference on a Jetson Nano.
+	
+	\scriptsize{\textbf{Keywords:} TensorFlow 2, Keras, Generative Adversarial Networks, Variational Autoencoders, Deep reinforcement learning, Object detection}
+}

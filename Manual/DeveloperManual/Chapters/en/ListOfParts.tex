@@ -1,0 +1,176 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: ListOfParts.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{List Of Parts}
+
+\section{Hardware Components - SparkFun Jetbot}
+
+\subsection{Compute Module}
+\begin{itemize}
+    \item \textbf{NVIDIA Jetson Nano V2}: 128 CUDA cores, 4GB LPDDR4, 5W-10W power
+    \item \textbf{Storage}: microSD card (64GB minimum recommended, UHS-I compatible)
+    \item \textbf{Power Input}: USB-C (5V/3A) or barrel connector (5V recommended)
+\end{itemize}
+
+\subsection{Drive System}
+\begin{itemize}
+    \item \textbf{Motors}: 2x TT-motors (12V DC nominal, 100 RPM at rated)
+    \item \textbf{Motor Current Draw}: Approximately 250mA per motor at rated load
+    \item \textbf{Encoders}: Dual quadrature encoders (48 PPR, 7.5\textsuperscript{o} resolution)
+    \item \textbf{Encoder Frequency}: Up to 2.56 kHz per motor at maximum speed
+    \item \textbf{Motor Driver}: L298N or DRV8833 H-Bridge (2A rated minimum)
+    \item \textbf{Gearing Ratio}: 32:1 reduction (motor shaft to wheel)
+    \item \textbf{Wheels}: 66mm diameter (practical 10mm ground clearance)
+    \item \textbf{Track Width}: 90mm center-to-center
+\end{itemize}
+
+\subsection{Sensor Package}
+\begin{itemize}
+    \item \textbf{Camera}: USB UVC-compliant webcam (640x480 @ 30fps typical)
+    \item \textbf{Camera FOV}: Approximately 90\textsuperscript{o} (varies by lens)
+    \item \textbf{USB Hub}: 4-port hub recommended for camera + future sensors
+    \item \textbf{Optional IMU}: Qwiic I2C connector for 9-DOF IMU (LSM9DS1)
+    \item \textbf{Optional Lidar}: 2D or 3D Lidar via USB or GPIO Serial
+\end{itemize}
+
+\subsection{Power Distribution}
+\begin{itemize}
+    \item \textbf{Battery Option 1}: 4xAA alkaline/rechargeable (6V nominal)
+    \item \textbf{Battery Option 2}: USB power adapter (5V/3A minimum)
+    \item \textbf{Motor Supply}: Separate 5V rail from Jetson power
+    \item \textbf{Current Budget}: Jetson (5W) + Motors (0.5A each) + Camera (0.5A) = ~2A total
+\end{itemize}
+
+\subsection{Chassis and Mechanical}
+\begin{itemize}
+    \item \textbf{Chassis}: SparkFun JetBot robot platform (SKU ROB-16417)
+    \item \textbf{Mounting Hardware}: M3 screws, standoffs for Jetson mounting
+    \item \textbf{Cable Management}: USB cables, GPIO jumper wires
+    \item \textbf{Protective Case}: Optional 3D-printed bumpers or acrylic chassis
+\end{itemize}
+
+\section{Software Dependencies}
+
+\subsection{Vision and Image Processing}
+\begin{itemize}
+    \item \textbf{OpenCV 3.3+}: Core library for feature detection, matching, calibration
+    \item \textbf{Algorithms Included}: ORB (Oriented FAST and Rotated BRIEF) detector
+    \item \textbf{Installation}: Pre-compiled for Jetson via \texttt{libopencv-dev}
+\end{itemize}
+
+\subsection{Pose Graph Optimization}
+\begin{itemize}
+    \item \textbf{g2o}: General framework for optimizing graph-based SLAM
+    \item \textbf{Build Time}: 15-20 minutes on Jetson Nano with -j2
+    \item \textbf{Dependencies}: Eigen 3.x (linear algebra), Cholmod (sparse matrix)
+    \item \textbf{CUDA Acceleration}: Maxwell GPU support (-DCUDA\_ARCH\_BIN=5.2)
+\end{itemize}
+
+\subsection{Linear Algebra}
+\begin{itemize}
+    \item \textbf{Eigen 3.x}: Header-only library for matrix operations
+    \item \textbf{SuiteSparse}: Optional sparse matrix optimization
+    \item \textbf{LAPACK/BLAS}: Underlying numerical compute (via system packages)
+\end{itemize}
+
+\subsection{Middleware and ROS}
+\begin{itemize}
+    \item \textbf{ROS Melodic or Noetic}: Message passing and module coordination
+    \item \textbf{catkin}: Build system and dependency management
+    \item \textbf{python-catkin-tools}: Alternative build front-end
+    \item \textbf{rospy/roscpp}: Python and C++ client libraries
+\end{itemize}
+
+\subsection{GPU Acceleration}
+\begin{itemize}
+    \item \textbf{CUDA 10.2}: GPU compute toolkit (pre-installed on JetPack)
+    \item \textbf{cuDNN}: Optimized primitives for deep learning (optional)
+    \item \textbf{TensorRT}: Model optimization for inference (optional)
+\end{itemize}
+
+\section{Development Tools}
+
+\subsection{Compilers and Build System}
+\begin{itemize}
+    \item \textbf{GCC 7+}: ARMv8 compiler with NEON SIMD support
+    \item \textbf{CMake 3.10+}: Cross-platform build configuration
+    \item \textbf{Make}: Parallel job execution (limit to -j2 on Jetson)
+    \item \textbf{Autotools}: Legacy project support
+\end{itemize}
+
+\subsection{Version Control and Collaboration}
+\begin{itemize}
+    \item \textbf{Git}: Distributed version control system
+    \item \textbf{GitHub/GitLab}: Remote repository hosting
+    \item \textbf{SSH Keys}: For secure GitHub access
+\end{itemize}
+
+\subsection{Debugging and Profiling}
+\begin{itemize}
+    \item \textbf{gdb}: GNU debugger for step-through debugging
+    \item \textbf{Valgrind}: Memory profiler and leak detector
+    \item \textbf{perf}: Linux performance analysis tools
+    \item \textbf{ROS tools}: rosbag, rostopic, rosnode utilities
+\end{itemize}
+
+\subsection{Visualization}
+\begin{itemize}
+    \item \textbf{RViz}: 3D visualization tool for poses and maps
+    \item \textbf{Python matplotlib}: 2D trajectory and error plotting
+    \item \textbf{OpenCV imshow}: Real-time feature and match visualization
+\end{itemize}
+
+\section{Testing and Validation}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		node distance=2.5cm,
+		cycle/.style={circle, draw=orange!80, fill=orange!10, thick, text width=2.8cm, text centered, minimum size=3cm},
+		arrow/.style={thick, ->, >=stealth, bend right=30}
+		]
+		\node[cycle] (p1) {\textbf{Profile Code}\\\texttt{perf} \& \texttt{callgrind}};
+		\node[cycle, right=of p1] (p2) {\textbf{Monitor Resources}\\Jetson CPU/GPU usage};
+		\node[cycle, below=of p2] (p3) {\textbf{Track Timing}\\Optimization convergence};
+		\node[cycle, left=of p3] (p4) {\textbf{Compare Trajectories}\\ATE / RPE Metrics};
+		
+		\draw[arrow] (p1) to (p2);
+		\draw[arrow] (p2) to (p3);
+		\draw[arrow] (p3) to (p4);
+		\draw[arrow] (p4) to (p1);
+	\end{tikzpicture}
+	\caption{Iterative performance monitoring cycle covering profiling, resource tracking, timing, and trajectory error comparison}
+	\label{fig:performance-cycle}
+\end{figure}
+\subsection{Benchmarking}
+\begin{itemize}
+    \item \textbf{Absolute Trajectory Error (ATE)}: Metric for global accuracy
+    \item \textbf{Relative Pose Error (RPE)}: Metric for local consistency
+    \item \textbf{Feature Detection Speed}: frames/second benchmark
+    \item \textbf{Optimization Timing}: g2o convergence and timing analysis
+\end{itemize}
+
+\subsection{Test Datasets}
+\begin{itemize}
+    \item \textbf{Indoor Sequences}: Custom recordings from SparkFun Jetbot
+    \item \textbf{Standard Benchmarks}: TUM, KITTI dataset compatibility (optional)
+    \item \textbf{Synthetic Data}: OpenGL-rendered sequences for algorithm testing
+\end{itemize}
+
+\subsection{Validation Scripts}
+\begin{itemize}
+    \item \textbf{Python Stack}: numpy, scipy, pandas for data analysis
+    \item \textbf{Evaluation Utilities}: Scripts computing ATE/RPE metrics
+    \item \textbf{Plotting Tools}: Trajectory visualization and comparison
+\end{itemize}
+

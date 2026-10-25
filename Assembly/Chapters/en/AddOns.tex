@@ -1,0 +1,110 @@
+%%%%%%%%%%%%
+%
+% $Autor: Srikanth Nanda $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: AddOns.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Add Ons}
+
+\section{Optional Sensor Expansions}
+
+\subsection{9-DOF IMU Module (LSM9DS1)}
+\begin{itemize}
+    \item Provides accelerometer, gyroscope, magnetometer data
+    \item Enables heading estimation independent of visual features
+    \item Improves odometry during rapid rotations
+    \item Connection: I2C pins on Jetson Nano GPIO (pins 3, 5)
+\end{itemize}
+
+\subsection{Stereo Camera Setup (Dual Camera)}
+\begin{itemize}
+    \item Enables depth estimation for 3D mapping
+    \item Provides baseline for triangulation-based localization
+    \item Higher computational cost but better accuracy in textured environments
+    \item Requires separate CSI camera interface or USB hub
+\end{itemize}
+
+\section{Computing Upgrades}
+
+\begin{itemize}
+    \item \textbf{Jetson Xavier NX}: 8x more performance, enables heavier algorithms
+    \item \textbf{Jetson Orin Nano}: Latest architecture, ~4x faster than Nano
+    \item Note: Code compatibility maintained across Jetson family
+\end{itemize}
+
+\section{Power Enhancement}
+
+\begin{itemize}
+    \item Upgrade to higher-capacity battery (20000 mAh) for extended runtime
+    \item Add on-robot charging dock for autonomous recharging
+    \item Enable continuous operation for multi-hour deployments
+\end{itemize}
+
+\subsection{JetPack 4.5 Additions over JetPack 4.2}
+
+JetPack~4.5 (based on L4T~32.5) introduces a number of components and features that
+were not present in JetPack~4.2 (L4T~32.1), several of which are directly relevant to
+the monocular camera pipeline and onboard perception stack used on the SparkFun
+JetBot's Jetson Nano.
+
+\begin{itemize}
+	\item \textbf{VPI (Vision Programming Interface) 1.0} -- first production release
+	of NVIDIA's hardware-accelerated computer vision library, offering CPU, GPU, and
+	PVA backends as an alternative or complement to OpenCV for feature extraction.
+	\item \textbf{Extended Multimedia API (V4L2) for CSI cameras} -- improved direct
+	control over encoding, decoding, latency, bit-rate, and image quality for
+	CSI-connected cameras such as the JetBot's front-mounted camera.
+	\item \textbf{Enhanced secure boot and disk encryption} -- encryption extended to
+	kernel, kernel-dtb, and initrd images, with added at-rest disk encryption.
+	\item \textbf{Redundant filesystem management} -- support for maintaining and
+	updating two redundant root filesystems for safer over-the-air style updates.
+	\item \textbf{New NFS-based flashing method} -- enables flashing eMMC, SD, USB, and
+	NVMe storage devices over a network filesystem.
+	\item \textbf{Updated U-Boot (v2020.04)} -- along with general boot-performance
+	improvements.
+	\item \textbf{Jetson Nano bootloader relocation} -- boot firmware moved to onboard
+	QSPI-NOR flash, freeing the microSD card for OS and application storage only.
+	\item \textbf{DeepStream 5.0 support} added to the SDK component stack.
+\end{itemize}
+
+The underlying software stack was also substantially upgraded between the two
+releases:
+
+\begin{table}[H]
+	\centering
+	\caption{Core library versions: JetPack 4.2 vs. JetPack 4.5}
+	\label{tab:jetpack_comparison}
+	\begin{tabular}{lll}
+		\toprule
+		\textbf{Component} & \textbf{JetPack 4.2} & \textbf{JetPack 4.5} \\
+		\midrule
+		L4T      & 32.1.0            & 32.5              \\
+		CUDA     & 10.0.166          & 10.2.89           \\
+		cuDNN    & 7.3.1             & 8.0.0             \\
+		TensorRT & 5.0.6.3           & 7.1.3.0           \\
+		OpenCV   & 3.3.1 (no CUDA)   & 4.1.1             \\
+		VPI      & Not available     & 1.0               \\
+		Docker   & Not standard      & 19.03             \\
+		DeepStream & Not supported   & 5.0               \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+JetPack~4.5 introduces several components absent in JetPack~4.2, including the first
+production release of NVIDIA's Vision Programming Interface (VPI~1.0), an extended
+V4L2 Multimedia API for CSI camera control, enhanced secure boot with disk encryption,
+redundant filesystem management, a new NFS-based flashing method, an updated U-Boot
+(v2020.04), and relocation of the Jetson Nano bootloader to onboard QSPI-NOR flash.
+The underlying stack was also upgraded, moving from CUDA~10.0/cuDNN~7.3/TensorRT~5.0/
+OpenCV~3.3 in JetPack~4.2 to CUDA~10.2/cuDNN~8.0/TensorRT~7.1.3/OpenCV~4.1.1 in
+JetPack~4.5~\cite{JetPackOS:2021}.
+
+
+

@@ -1,0 +1,53 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: Troubleshooting.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Troubleshooting}
+
+\section{Camera Issues}
+
+\begin{tabular}{|p{4cm}|p{4cm}|p{5cm}|}
+\hline
+\textbf{Problem} & \textbf{Cause} & \textbf{Solution} \\
+\hline
+No video stream & Loose CSI ribbon cable & Reseat cable in Jetson connector \\
+\hline
+Blurry images & Lens out of focus or dirty & Clean lens; adjust focus ring \\
+\hline
+Video freezes & Driver issue or overheating & Reboot system; check temperature \\
+\hline
+Discolored frame & Cable bent or damaged & Replace CSI cable carefully \\
+\hline
+\end{tabular}
+
+\section{Motor Problems}
+
+\begin{itemize}
+    \item \textbf{No motor response}: Check battery voltage; verify GPIO connections
+    \item \textbf{Jerky motion}: Loose wheel; recheck fasteners
+    \item \textbf{Encoder not counting}: Misaligned encoder; clean optical surfaces
+\end{itemize}
+
+\section{Electrical Issues}
+
+\begin{itemize}
+    \item \textbf{Brown-out}: Battery voltage too low; recharge immediately
+    \item \textbf{Jetson won't boot}: Check power supply continuity
+    \item \textbf{Motors stall}: Reduce load or check for mechanical binding
+\end{itemize}
+
+
+
+
+
+
+

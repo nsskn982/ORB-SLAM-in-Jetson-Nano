@@ -1,0 +1,69 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: MainFunction.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Main Function}
+
+\section{Introduction to the Localization System}
+The mobile robot localization system enables autonomous navigation by continuously estimating the robot's position and orientation within its environment. This manual covers operating the robot, executing localization algorithms, and interpreting results.
+
+\section{Core Operating Modes}
+\begin{enumerate}
+    \item \textbf{Data Collection}: Record environmental images and sensor data for offline processing
+    \item \textbf{Real-time Localization}: Continuous position estimation during navigation
+    \item \textbf{Mapping Mode}: Build environmental maps for reference-based localization
+    \item \textbf{Testing Mode}: Validate localization accuracy against known paths
+\end{enumerate}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		mode/.style={rectangle, draw=blue!60, fill=blue!5, thick, text width=3cm, text centered, rounded corners, minimum height=1.6cm, align=center, font=\small},
+		arrow/.style={thick, ->, >=stealth}
+		]
+		\node[mode] (start) {\textbf{Robot Powered On}};
+		
+		\node[mode, below=2cm of start, xshift=-6cm] (m1) {\textbf{Data Collection}\\Record for offline processing};
+		\node[mode, below=2cm of start, xshift=-2cm] (m2) {\textbf{Real-time Localization}\\Continuous position estimate};
+		\node[mode, below=2cm of start, xshift=2cm] (m3) {\textbf{Mapping Mode}\\Build environmental map};
+		\node[mode, below=2cm of start, xshift=6cm] (m4) {\textbf{Testing Mode}\\Validate against known paths};
+		
+		\draw[arrow] (start) -- (m1);
+		\draw[arrow] (start) -- (m2);
+		\draw[arrow] (start) -- (m3);
+		\draw[arrow] (start) -- (m4);
+	\end{tikzpicture}
+	\caption{Four core operating modes available after robot power-on}
+	\label{fig:operating-modes}
+\end{figure}
+
+
+\section{Typical Workflow}
+Start with environmental setup, initialize the localization system, execute the desired operating mode, and monitor sensor outputs through the provided interface.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		stepbox/.style={rectangle, draw=black!60, fill=green!5, thick, text width=4cm, text centered, rounded corners, minimum height=1.2cm},
+		arrow/.style={thick, ->, >=stealth}
+		]
+		\node[stepbox] (w1) {\textbf{1. Environmental Setup}};
+		\node[stepbox, right=1cm of w1] (w2) {\textbf{2. Initialize System}};
+		\node[stepbox, right=1cm of w2] (w3) {\textbf{3. Execute Operating Mode}};
+		\node[stepbox, below=1cm of w3] (w4) {\textbf{4. Monitor Sensor Outputs}};
+		
+		\draw[arrow] (w1) -- (w2);
+		\draw[arrow] (w2) -- (w3);
+		\draw[arrow] (w3) -- (w4);
+	\end{tikzpicture}
+	\caption{Typical operating workflow from environmental setup to sensor monitoring}
+	\label{fig:typical-workflow}
+\end{figure}

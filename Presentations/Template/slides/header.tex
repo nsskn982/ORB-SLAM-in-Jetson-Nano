@@ -1,0 +1,234 @@
+%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2020-01-18 11:15:45Z $
+% $Pfad: githubtemplate/Template/Presentations/Template/slides/header.tex $
+% $Version: 4620 $
+%
+%
+% !TeX encoding = utf8
+% !TeX root = Rename
+%
+%%%%%%
+
+
+%Packages
+\usepackage[utf8]{inputenc} %Für Umlaute, da BibLaTeX
+\usepackage[german]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{colortbl}
+\usepackage{cancel} %'\cancel{}', '\bcancel{}' und '\xcancel{}'
+
+%%%%%%%%%2-Screen%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pgfpages} 
+%%%%Kommentiert für Beamer
+%%%%Aktiv für Notes
+%\setbeameroption{show notes on second screen=bottom}
+%\setbeameroption{second mode text on second screen=bottom}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Für Grafiken
+\usepackage{tikz}
+\usetikzlibrary{mindmap}
+\usepackage{gnuplottex}
+\usepackage{pgf}
+\usepackage{colortbl} 
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes,arrows} %Für Flowchart
+\usetikzlibrary{shapes.geometric} %Für Flowchart
+\usepackage{scalefnt}
+\usetikzlibrary{decorations.markings} %Für => pfeile
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings}
+%Für urls in Quellen
+\usepackage{url}
+%Für Diagramme (autotools)
+%\usepackage{graphicx}
+%\usepackage{graphviz}
+
+%\usepackage[
+%  backend=biber,
+%  style=alphabetic,
+%  sorting=ynt
+%]{biblatex}
+
+\usepackage[natbib=true,style=alphabetic,backend=bibtex,useprefix=true]{biblatex}
+
+%Formatierungen
+\mode<presentation>
+\setbeamertemplate{headline} 
+{%
+\begin{beamercolorbox}[rounded=true, center]{bgcolor}
+\begin{columns}[T]
+\begin{column}{9cm}
+{\color{gray}\begin{tiny}Hochschule Emden/Leer\end{tiny}} \\ 
+{\color{gray}\begin{tiny}Abteilung Maschinenbau\end{tiny}} \\ 
+{\color{gray}\begin{tiny}MSR-Labor\end{tiny}} \\
+%{\color{gray}\begin{tiny}Innovationsforum MSR\end{tiny}}
+\end{column}
+\begin{column}{2cm}
+\includegraphics[scale=0.25]{img/technik.jpg}
+\end{column}
+\end{columns}
+\end{beamercolorbox}
+ }
+\insertsectionhead
+\insertsubsectionhead
+\usetheme{default}
+\useinnertheme[shadow=true]{rounded}
+\usebackgroundtemplate
+{%
+      \rule{0pt}{\paperheight}%
+      \hspace*{\paperwidth}%
+      \makebox[0pt][r]{\includegraphics[width=\paperwidth]{img/hintergrund2.png}}
+ }
+
+\definecolor{HSELhellblau}{RGB}{138,198,203}
+\definecolor{HSELblau}{RGB}{0,59,95}
+\usecolortheme[named=HSELblau]{structure}
+ \newcommand{\topline}{%
+  \tikz[remember picture,overlay] {%
+    \draw[HSELhellblau] ([yshift=-0.9cm]current page.north west)
+             -- ([yshift=-0.9cm,xshift=\paperwidth]current page.north west);}}
+\setbeamertemplate{section}[numbered]
+
+
+\newcommand{\STANDARD}[2]
+{
+  \mode<presentation>%
+  {%
+     \begin{frame}[allowframebreaks]{#1} #2 \end{frame}
+  }%
+  \mode<article>
+  {
+    \fcolorbox{AliceBlue}%{Bisque} %{BlanchedAlmond}
+    {LightGrey} %{Beige}   %{AliceBlue}
+    {
+      \begin{minipage}{\textwidth}{\bf #1} #2  \end{minipage}
+      
+      
+    }%
+    
+    \medskip
+    \hrulefill
+  }
+}
+
+\newcommand{\MYNOTE}[1]
+{
+  \mode<presentation>%
+  {%
+     %\note{#1}
+     \only<article>{#1}
+  }%
+  \mode<article>
+  {
+    #1
+  }
+}
+
+% ------------
+% sectionframe
+% ------------
+%
+% #1  Der Name der section.
+%
+\newcommand{\sectionframe}[1]%
+{%
+	\begin{frame}
+		\Huge
+		\begin{center}
+			#1 
+		\end{center}
+	\end{frame}%
+}
+
+\newcommand{\Mysection}[1]%
+{%
+  \section{#1}%
+  
+  \sectionframe{#1}%
+}
+
+\usepackage{listings}
+
+% Farben für Syntax-Highlighting
+\definecolor{dkgreen}{rgb}{0,.6,0}
+\definecolor{dkblue}{rgb}{0.655,0.113,.364}
+\definecolor{dkyellow}{cmyk}{0,0,.8,.3}
+
+\definecolor{parameterc}{rgb}{.4,0,.6}
+\definecolor{typec}{rgb}{0,0.525,.702}
+\definecolor{stringc}{rgb}{0,.5019,.5019}
+\definecolor{keywordc}{rgb}{.6549, .1137, .3647}
+\definecolor{commentc}{rgb}{.5882, .5960, .5882}
+\definecolor{textc}{rgb}{.2,.2,.2}
+
+\lstdefinestyle{all}{
+	alsoletter={-},
+	frame=single, 	% top,frame=bottom,
+	numbers=none,
+	numberstyle=\tiny\color{textc},
+	basicstyle=\linespread{0.9}\ttfamily\footnotesize\color{textc},
+	tabsize=4,
+	showstringspaces=false,
+	captionpos=t,
+	rulecolor=\color{lightgray!40},
+	keywordstyle=\color{keywordc},
+	stringstyle=\color{stringc},
+	commentstyle=\color{commentc},
+	breaklines=true,
+	escapechar="!",
+	postbreak=\mbox{\textcolor{green}{$\hookrightarrow$}\space},
+}
+
+\lstdefinestyle{bashstyle}{
+	style=all,
+	keywords=[2]{-y, --no-install-recommends, --allow-change-held-packages, --allow-downgrades, --fetch-keys, -n, --version, --params, -c, -i, -O, --upgrade, --no-cache-dir, --extra-index-url, --show, -s, -m},
+	keywordstyle=[2]\color{parameterc},
+	morekeywords = {ln,choco,pip,pip3,apt,apt-key,apt-get,apt-mark,add-apt-repository,wget,mktemp,dpkg,dpkg-query,echo,>>,rm,tegrastats, systemctl},
+	deletekeywords={local,LOCAL},
+}
+
+\lstdefinestyle{pythonstyle}{
+	style=all,
+	morekeywords={as},
+	keywords=[2]{True, False, None},
+	keywordstyle=[2]\color{typec},
+	alsoletter={_},
+	keywords=[3]{max_workspace_size_bytes, precision_mode, maximum_cached_engines, use_calibration, optimizer, loss, input_shape, from_logits, metrics, batch_size, epochs, validation_data, activation, use_calibration, filters, kernel_size, pool_size, units},
+	keywordstyle=[3]\color{parameterc},
+	deletekeywords={compile,COMPILE},
+}
+
+\lstdefinestyle{inlinestyle}{
+	style=all,
+	breaklines        = true,
+	breakatwhitespace = true,
+	breakindent       = 2ex,
+	escapechar        = *,
+	numbers           = left,
+	postbreak=,
+}
+\lstdefinelanguage{MyBash} {
+	language = Bash,
+	style=bashstyle,
+}
+
+\lstdefinelanguage{MyPython} {
+	language = Python,
+	style=pythonstyle,
+}
+
+
+\definecolor{PythonColor}{rgb}{0,0.5,1.}
+\newcommand{\PYTHON}[1]{\textcolor{PythonColor}{\texttt{#1}}}
+\definecolor{PythonColorHighLite}{rgb}{0.5,0,1.}
+\newcommand{\PYTHONHL}[1]{\textcolor{PythonColorHighLite}{\texttt{#1}}}
+\definecolor{MapleColor}{rgb}{1,0,0}
+\newcommand{\MapleCommand}[1]{\textcolor{MapleColor}{\texttt{#1}}}
+\definecolor{ShellColor}{rgb}{0,1,1.}
+\newcommand{\SHELL}[1]{\textcolor{ShellColor}{\texttt{#1}}}
+\definecolor{FileColor}{rgb}{1,0,1.}
+\newcommand{\FILE}[1]{\textcolor{FileColor}{\texttt{#1}}}

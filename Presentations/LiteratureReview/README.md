@@ -1,0 +1,3 @@
+Note: 
+- The bibliography of this presentation is the same bibliography file used for the report (in the directory "ML23-01-Keyword-Spotting-with-an-Arduino-Nano-33-BLE-Sense/Documents/MyLiterature.bib"): [MyLiterature.bib](../../../Documents/MyLiterature.bib)
+- The PDF files are in the directory "ML23-01-Keyword-Spotting-with-an-Arduino-Nano-33-BLE-Sense/Documents/Literature": [PDF files](../../../Documents/Literature)

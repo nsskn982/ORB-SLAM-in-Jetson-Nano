@@ -1,0 +1,86 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: MainFunction.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Main Function}
+
+\section{Software Architecture}
+The localization system is built on a modular architecture with clearly separated concerns: sensor interfacing, feature extraction, algorithm execution, and result analysis.
+
+\section{Core Modules}
+\begin{itemize}
+    \item \textbf{Vision Module}: Processes camera frames, extracts features (SIFT, ORB, etc.)
+    \item \textbf{Odometry Module}: Computes relative motion from encoders and visual features
+    \item \textbf{SLAM Engine}: Performs simultaneous localization and map building
+    \item \textbf{Trajectory Manager}: Maintains position history and path records
+    \item \textbf{Sensor Fusion}: Integrates multiple sensor streams for robust estimation
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		node distance=1.5cm,
+		module/.style={rectangle, draw=black!70, fill=gray!10, thick, text width=3.5cm, text centered, rounded corners, minimum height=1.5cm},
+		arrow/.style={thick, ->, >=stealth}
+		]
+		\node[module, fill=green!10] (sensor) {\textbf{Sensor Fusion}\\Integrates multiple streams};
+		
+		\node[module, below left=of sensor] (vision) {\textbf{Vision Module}\\Extracts visual features};
+		\node[module, below right=of sensor] (odom) {\textbf{Odometry Module}\\Relative motion estimates};
+		
+		\node[module, below=of vision, fill=blue!10] (slam) {\textbf{SLAM Engine}\\Simultaneous localization};
+		\node[module, below=of odom, fill=red!10] (traj) {\textbf{Trajectory Manager}\\Position history};
+		
+		\draw[arrow] (sensor) -| (vision);
+		\draw[arrow] (sensor) -| (odom);
+		\draw[arrow] (vision) -- (slam);
+		\draw[arrow] (odom) -- (traj);
+		\draw[arrow, dashed] (slam) -- (traj);
+	\end{tikzpicture}
+	\caption{Core software modules and their data flow within the localization system architecture}
+	\label{fig:core-modules}
+\end{figure}
+
+\section{Algorithm Pipeline}
+
+
+\begin{enumerate}
+    \item Acquire raw sensor data (image, encoder ticks, optional IMU)
+    \item Extract and describe visual features
+    \item Match features between consecutive frames
+    \item Estimate transformation (motion model)
+    \item Update global position estimate
+    \item Manage map representation and loop closures
+\end{enumerate}
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[
+		node distance=0.8cm,
+		stepbox/.style={rectangle, draw=blue!60, fill=blue!5, thick, text width=6cm, text centered, rounded corners, minimum height=1cm},
+		arrow/.style={thick, ->, >=stealth}
+		]
+		\node[stepbox] (s1) {\textbf{1. Acquire Data}\\(Image, Encoder ticks, IMU)};
+		\node[stepbox, below=of s1] (s2) {\textbf{2. Extract Features}\\(SIFT, ORB, etc.)};
+		\node[stepbox, below=of s2] (s3) {\textbf{3. Match Features}\\Between consecutive frames};
+		\node[stepbox, below=of s3] (s4) {\textbf{4. Estimate Transformation}\\(Motion model)};
+		\node[stepbox, below=of s4] (s5) {\textbf{5. Update Global Position}\\Global position estimate};
+		\node[stepbox, below=of s5] (s6) {\textbf{6. Map Management}\\Manage map \& loop closures};
+		
+		\draw[arrow] (s1) -- (s2);
+		\draw[arrow] (s2) -- (s3);
+		\draw[arrow] (s3) -- (s4);
+		\draw[arrow] (s4) -- (s5);
+		\draw[arrow] (s5) -- (s6);
+	\end{tikzpicture}
+	\caption{Six-stage localization algorithm pipeline, from raw sensor acquisition to map and loop-closure management}
+	\label{fig:algo-pipeline}
+\end{figure}

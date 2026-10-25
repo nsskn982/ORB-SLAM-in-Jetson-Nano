@@ -1,0 +1,617 @@
+%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2020-01-18 11:15:45Z $
+% $Pfad: githubtemplate/Template/Presentations/Template/slides/rename.tex $
+% $Version: 4620 $
+%
+%
+% !TeX encoding = utf8
+% !TeX root = Rename
+%
+%%%%%%
+
+
+\Mysection{Robot Operating System (ROS)}
+\STANDARD{Overview}
+{
+	Robot Operating System(ROS) is an open-source, meta-operating system for your robot. It provides the services you would expect from an operating system, including hardware abstraction, low-level device control, implementation of commonly-used functionality, message-passing between processes, and package management. It also provides tools and libraries for obtaining, building, writing, and running code across multiple computers. \cite{Quigley:2009}
+}
+\STANDARD{ROS Runtime}{
+	\begin{itemize}
+	\item The ROS runtime "graph" is a peer-to-peer network of processes (potentially distributed across machines) that are loosely coupled using the ROS communication infrastructure. 
+	\item ROS implements several different styles of communication, including synchronous RPC-style communication over services, asynchronous streaming of data over topics, and storage of data on a Parameter Server. These are explained in greater detail in our Conceptual Overview. \cite{Macenski:2022}
+	\item ROS is not a realtime framework, though it is possible to integrate ROS with realtime code. \cite{Quigley:2009}
+	\end{itemize}
+}
+\STANDARD{Why ROS?}
+{
+	\begin{itemize}
+	\item ROS is a distributed framework of processes (aka Nodes) that enables executables to be individually designed and loosely coupled at runtime. These processes can be grouped into Packages and Stacks, which can be easily shared and distributed. 
+	\item ROS also supports a federated system of code Repositories that enable collaboration to be distributed as well. \cite{Macenski:2022}
+\end{itemize}
+}
+\begin{frame}{ROS Design Principles}
+	\begin{tikzpicture}[
+		font=\footnotesize, % beamer 10pt optimized
+		node distance=3mm and 6mm,
+		box/.style={
+			rectangle,
+			draw,
+			rounded corners,
+			align=left,
+			fill=blue!10,
+			minimum width=1cm,
+			inner sep=3pt
+		},
+		title/.style={
+			rectangle,
+			draw,
+			thick,
+			align=center,
+			fill=blue!20,
+			minimum width=1cm,
+			inner sep=4pt
+		}
+		]
+		
+		% Title
+		\node[title] (ros) {ROS Design Principles};
+		
+		% Nodes
+		\node[box, below left =of ros] (thin)
+		{Thin:\\ No wrapping of \texttt{main()};\\Easy framework integration};
+		
+		\node[box, below =15mmof ros] (agnostic)
+		{ROS-agnostic Libraries:\\Clean functional interfaces};
+		
+		\node[box, below right =of ros] (lang)
+		{Language Independence:\\Python, C++, Lisp,\\ Java*, Lua* (*experimental)};
+		
+		\node[box, below left=8mm and -1mm of agnostic] (testing)
+		{Easy Testing:\\Built-in \texttt{rostest}};
+		
+		\node[box, below right=8mm and -1mm of agnostic] (scaling)
+		{Scaling:\\Large runtime \&\\ development processes};
+		
+		% Connections
+		\draw[->, thick] (ros) -- (thin);
+		\draw[->, thick] (ros) -- (agnostic);
+		\draw[->, thick] (ros) -- (lang);
+		\draw[->, thick] (agnostic) -- (testing);
+		\draw[->, thick] (agnostic) -- (scaling);
+		
+	\end{tikzpicture}
+\end{frame}
+
+\STANDARD{Operating System that ROS2 supports}
+{
+Software for ROS is tested on Ubuntu and Mac OS X systems, though the ROS community has been contributing support for Fedora, Gentoo, Arch Linux and other Linux platforms.\cite{Macenski:2022}
+}
+
+
+
+\STANDARD{ROS 2 Navigation Stack}
+{
+	ROS 2 is a middleware based on a strongly-typed, anonymous publish and subscribe mechanism that allows for message passing between different processes.
+	
+At the core of the ROS 2 system is the ROS graph. The ROS graph refers to the network of nodes in a ROS system and the connections between them by which they communicate\cite{Macenski:2020}.
+}
+
+\STANDARD{Basic of ROS2}
+{
+	These are the concepts that will help you get started understanding the basics of ROS 2.
+\begin{itemize}
+	\item Nodes
+	\item Discovery
+	\item Interfaces
+	\item Topics
+	\item Services
+	\item Actions
+	\item Parameters
+	\item Introspection with command line tools
+	\item Launch
+	\item Client libraries
+\end{itemize}
+}	
+
+\begin{frame}{ROS 2 Concepts Overview}
+	\centering
+	
+	\begin{tikzpicture}[
+		scale=0.7,
+		every node/.style={scale=0.7},
+		node/.style={rectangle, rounded corners, draw=black, thick, align=center,
+			fill=blue!10, minimum width=2.6cm, minimum height=1cm},
+		group/.style={rectangle, rounded corners, draw=black, dashed, inner sep=0.3cm},
+		>=stealth
+		]
+		
+		% Main ROS2 System box
+		\node[group,label=above:{\Large ROS 2 System}] (ros2) {
+			
+			\begin{tikzpicture}[node distance=1cm]
+				
+				% Nodes
+				\node[node] (nodes) {Nodes};
+				
+				% Interfaces group
+				\node[group, below right = 14mm and -5mm of nodes] (if_group) {
+					\begin{tikzpicture}[node distance=0.9cm]
+						\node[node] (topics) {Topics};
+						\node[node, below=of topics] (services) {Services};
+						\node[node, below=of services] (actions) {Actions};
+					\end{tikzpicture}
+				};
+				\node at (if_group.north) [above=0.15cm] {\textbf{Interfaces}};
+				
+				% Discovery
+				\node[node, left=3cm of nodes] (discovery) {Discovery};
+				
+				% Parameters
+				\node[node, right=3cm of nodes] (params) {Parameters};
+				
+				% Client Libraries
+				\node[node, below=5.1cm of nodes] (clients) {Client Libraries};
+				
+				% Launch System
+				\node[node, below=2.2cm of params] (launch) {Launch};
+				
+				% Introspection Tools
+				\node[node, below=2.2cm of discovery] (intro) {Introspection Tools};
+				
+				% Arrows
+				\draw[->, thick] (discovery) -- (nodes);
+				\draw[->, thick] (params) -- (nodes);
+				\draw[->, thick] (clients) -- (nodes);
+				\draw[->, thick] (launch) -- (nodes);
+				\draw[->, thick] (intro) -- (nodes);
+				
+				\draw[->, thick] (nodes) -- (topics);
+				\draw[->, thick] (nodes) -- (services);
+				\draw[->, thick] (nodes) -- (actions);
+				
+			\end{tikzpicture}
+			
+		};
+		
+	\end{tikzpicture}
+	
+\end{frame}
+
+\STANDARD{How ROS2 Communicates?}
+{
+	\begin{itemize}
+	\item Nodes
+	
+	The fundamental computing units in ROS 2.
+	
+	Each node performs a specific task (e.g., sensing, planning, control).
+	
+	\item Discovery
+	
+	ROS 2 automatically discovers other nodes on the network.
+	
+	Allows nodes to find communication partners without manual configuration.
+	
+	\item Interfaces
+	
+	How nodes communicate:
+	\begin{enumerate}
+		\item Topics – For continuous, asynchronous data streams (publish/subscribe).
+		
+		\item Services – For request–response interactions.
+		
+		\item Actions – For long-running tasks with feedback and the ability to cancel.
+	\end{enumerate}
+	
+	\item Parameters
+	
+	Configuration values set on nodes at runtime.
+	
+	Allow modifying node behavior without changing code.
+	
+	\item Client Libraries
+	
+	APIs used to write ROS 2 nodes.
+	
+	Examples: rclcpp (C++), rclpy (Python).
+	
+	\item Launch
+	
+	Used to start multiple nodes together with predefined configuration, parameters, and namespaces.
+	
+	\item Introspection Tools
+	
+	Command-line tools (e.g., ros2 topic list, ros2 node info) used to inspect what is running.
+	
+	Help debug and understand system behavior.
+\end{itemize}
+}
+\STANDARD{Nodes}
+{
+\begin{itemize}
+\item A node is an entity that participates in the ROS 2 graph and uses a client library to interact with other nodes. Communication may occur between nodes running in the same process, in separate processes, or even on different machines.
+
+\item Nodes generally represent the fundamental units of computation in a ROS system, and each one is ideally responsible for a single, well-defined task.
+
+\item Nodes may publish data on named topics for other nodes to receive, or subscribe to topics to obtain data. They may also function as service clients, requesting computations from other nodes, or as service servers, offering capabilities to the rest of the system.
+\end{itemize}
+}
+
+
+\STANDARD{Messages}
+{
+	Messages are a way for a ROS 2 node to send data on the network to other ROS nodes, with no response expected. Messages are described and defined in .msg files in the msg/ directory of a ROS package. .msg files are composed of two parts: fields and constants. \cite{Macenski:2023}
+	
+	Each field consists of a type and a name, separated by a space, i.e:
+\begin{itemize}
+	\item \PYTHONHL{fieldtype1 fieldname1
+	\item fieldtype2 fieldname2
+	\item fieldtype3 fieldname3
+	\item int32 myint
+	\item string mystring}
+\end{itemize}
+
+	
+
+Field types can be:
+\begin{enumerate}
+	\item a built-in-type
+
+	\item names of Message descriptions defined on their own, such as \PYTHON{geometry\_msgs/PoseStamped}
+\end{enumerate}
+}
+
+
+
+
+\STANDARD{ROS 2 AMCL}
+{
+	amcl is a probabilistic localization system for a robot moving in 2D. It implements the adaptive (or KLD-sampling) Monte Carlo localization approach (as described by Dieter Fox), which uses a particle filter to track the pose of a robot against a known map.\cite{Macenski:2022}
+	
+	This node is derived, with thanks, from Andrew Howard's excellent 'amcl' Player driver.
+}
+
+
+\STANDARD{Robot Localization}
+{
+	\href{https://github.com/cra-ros-pkg/robot_localization}[robot\_localization]
+	robot\_localization is a package of nonlinear state estimation nodes. The package was developed by Charles River Analytics, Inc.
+	
+	Fuse the odometry X and Y velocities only, not the poses. Turn off differential. Tune covariances to be proportational to your confidence in that measurement. For VO, decrease your confidence in the XY pose significantly. \cite{Macenski:2023}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 1. WSL INSTALLATION & INITIAL SETUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{WSL welcome interface}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/WSL.png}
+	\footnote
+	Windows Subsystem for Linux startup screen presenting available features and integration capabilities.
+}
+
+\STANDARD{Ubuntu installation from Microsoft Store}{
+	\centering
+	\includegraphics[width=0.5\linewidth]{Images/InstallationUbuntu.png}
+	\footnote{
+	Installing Ubuntu 22.04 LTS from the Microsoft Store for use with WSL.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2. WSL CONFIGURATION & NETWORKING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{WSL DNS configuration file}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/WSLconfiginetcwslconf.png}
+	\footnote{
+	Editing \FILE{/etc/wsl.conf} to disable automatic resolv.conf generation for improved DNS stability.}
+}
+
+\STANDARD{Editing resolv.conf and wsl.conf}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/configfilesWSL.png}
+	\footnote{
+	Commands used to manually adjust WSL resolver settings and networking configuration.}
+}
+
+\STANDARD{Shutting down WSL environment}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/wslshutdown.png}
+	\footnote{
+	Executing \SHELL{wsl --shutdown} in PowerShell to restart the subsystem after configuration changes.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3. UBUNTU PACKAGE MAINTENANCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Updating APT package lists}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/sudoaptupdatepackages.png}
+	\footnote{
+	Refreshing system package indexes before installing ROS~2 and related dependencies.}
+}
+
+\STANDARD{Full system upgrade}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/sudoaptupdateandfullupgrade.png}
+	\footnote{
+	Performing a complete system upgrade to ensure all libraries are current.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 4. ROS 2 INSTALLATION (HUMBLE)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Installing ROS 2 desktop and base packages}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2installationUbuntu.png}
+	\footnote{
+	Output confirming installation of ROS~2 Humble desktop, core, and supporting development tools.}
+}
+
+\STANDARD{Installing rqt and GUI plugins}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2HUMBLErqtInstallation.png}
+	\footnote{
+	Installation of rqt and visualization plugins used for debugging and introspection.}
+}
+
+\STANDARD{Installing ROS dependency tools}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2packageinstalledinWSL.png}
+	\footnote{
+	Additional ROS~2 Humble tools and libraries configured inside the WSL environment.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 5. ROS WORKSPACE & REPO UPDATES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Fetching updated ROS 2 Humble repository file}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/installingnewhumblerepo.png}
+	\footnote{
+	Downloading the latest \texttt{ros2.repos} file for workspace synchronization.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6. ENVIRONMENT SETUP & VERIFICATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{ROS environment variables after setup}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2DevEnv.png}
+	\footnote{
+	Listing ROS-specific environment variables such as paths, Python version, and distro identifier.}
+}
+
+\STANDARD{Checking ROS distribution}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2versioncheck.png}
+	\footnote{
+	Verifying that the distribution variable \SHELL{ROS\_DISTRO} is correctly set to Humble.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 7. ROS MIDDLEWARE & DOMAIN CONFIGURATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Checking active RMW implementation}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2RMWcheck.png}
+	\footnote{
+	Querying the ROS 2 middleware layer using \SHELL{ros2doctor}.}
+}
+
+\STANDARD{Setting a valid \SHELL{ROS\_DOMAIN\_ID}}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2DOMAINIDnew.png}
+	\footnote{
+	Applying and persisting a corrected \SHELL{ROS\_DOMAIN\_ID} to avoid port conflicts.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 8. RUNNING DEMO NODES (TALKER/LISTENER)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{C++ talker node executing}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2Humbledemonodescpptalker.png}
+	\footnote{
+	Demo publisher repeatedly broadcasting messages using the C++ ROS 2 talker example.}
+}
+
+\STANDARD{Python listener node output}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2rundemonodespylistener.png}
+	\footnote{
+	Listening to received messages from the talker node, confirming functional pub/sub transport.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 9. TURTLESIM INSTALLATION & EXECUTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Installing turtlesim package}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/TurtlesimInstallation.png}
+	\footnote{
+	Installing the classic turtlesim simulator used for basic ROS messaging demonstrations.}
+}
+
+\STANDARD{Running turtlesim with rqt integration}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/RunningTurtleSim.png}
+	\footnote{
+	Operating turtlesim alongside rqt\_graph to visualize node connectivity and topic flow.}
+}
+
+\STANDARD{Turtle tele-operation and pen control}{
+	\centering
+	\includegraphics[width=0.6\linewidth]{Images/RunningTurtleSimandRql.png}
+	\footnote{
+	Teleoperation with keyboard input and service calls altering drawing parameters.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 10. RQT & COMMAND-LINE INTROSPECTION TOOLS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Available rqt plugins}{
+	\centering
+	\includegraphics[width=0.6\linewidth]{Images/RqtGUIPluginsDropbox.png}
+	\footnote{
+	Plugin browser showing rqt tools for visualization, debugging, and diagnostics.}
+}
+
+\STANDARD{Topic list with message types}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/RqtGraphusing2Nodestopiclist.png}
+	\footnote{
+	Enumeration of active topics with corresponding message types.}
+}
+
+\STANDARD{ros2 topic command overview}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ros2topiccommands.png}
+	\footnote{
+	Help listing of topic management commands for introspection and publishing.}
+}
+
+\STANDARD{ros2 node command overview}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ros2nodecommands.png}
+	\footnote{
+	Summary of node inspection commands used for graph-level debugging.}
+}
+
+\STANDARD{ros2 service command overview}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ros2servicecommands.png}
+	\footnote{
+	Services-related command suite for querying and invoking server endpoints.}
+}
+
+\STANDARD{ros2 action command overview}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ros2actioncommands.png}
+	\footnote{
+	Commands for listing, inspecting, and executing ROS 2 action goals.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 11. NODE AND GRAPH VISUALIZATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{rqt graph with two nodes}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/RqtGraphusing2Nodes.png}
+	\footnote{
+	Graph representation of a remapped turtlesim node and associated communication channels.}
+}
+
+\STANDARD{Expanded rqt graph full mapping}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/RqtGraphusing2Nodesfullmap.png}
+	\footnote{
+	Complete topic-node map showing all active communication pathways.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 12. ADVANCED ROS 2: ACTIONS & CIRCUIT EXECUTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Circular motion rqt graph}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/CitcularMotionRqtGraph.png}
+	\footnote{
+	Visualization of node interactions during scripted turtle movement in a closed curve.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 13. TURTLE COMMAND TOPICS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Velocity command topic output}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/turtle1cmdvel.png}
+	\footnote{
+	Live data from the \SHELL{/turtle1/cmd\_vel} topic showing commanded velocities.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 14. MIDDLEWARE ALTERNATIVES (ZENOH)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Installing rmw\_zenoh backend}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ros2rmwzenohinstallation.png}
+	\footnote{
+	Adding the Zenoh-based RMW implementation for alternative DDS-free communication.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 15. NAVIGATION & TURTLEBOT3 INSTALLATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Installing TurtleBot3 packages}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROShumbleturtlebot3Installation.png}
+	\footnote{
+	Automatic selection and installation of TurtleBot3 modules for ROS~2 Humble.}
+}
+
+\STANDARD{Installing Navigation 2 (Nav2) stack}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/ROS2NAV2Installation.png}
+	\footnote{
+	Installing Nav2 planners, controllers, lifecycle managers, and supporting libraries.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 16. DOCKER INTEGRATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\STANDARD{Docker Desktop installation progress}{
+	\centering
+	\includegraphics[width=0.8\linewidth]{Images/DockerInstallation.png}
+	\footnote{
+	Docker Desktop installing WSL integration components required for containerized ROS development.}
+}
+\STANDARD{ROS 2 Development Workflow on WSL (Part 1)}{
+	\centering
+	\begin{enumerate}
+		\item Install WSL and Ubuntu
+		\item Fix networking and configure WSL
+		\item Update system packages
+		\item Install ROS~2 Humble
+		\item Validate environment and middleware
+		\item Run talker/listener examples
+		\item Install and run turtlesim
+	\end{enumerate}
+	\footnote
+	Initial setup stages for building a reliable ROS~2 workspace under Windows Subsystem for Linux.
+}
+
+\STANDARD{ROS 2 Development Workflow on WSL (Part 2)}{
+	\centering
+	\begin{enumerate}
+		\setcounter{enumi}{7}
+		\item Visualize ROS graph with rqt
+		\item Inspect topics, nodes, services, actions
+		\item Set \SHELL{ROS\_DOMAIN\_ID} and confirm DDS behavior
+		\item Install Zenoh RMW
+		\item Install TurtleBot3 and Nav2
+		\item Install Docker for containerized ROS workflows
+	\end{enumerate}
+	\footnote
+	Advanced ROS~2 tooling, navigation frameworks, and containerized development under WSL2.
+}
+
+

@@ -1,0 +1,169 @@
+%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2020-01-18 11:15:45Z $
+% $Pfad: githubtemplate/Template/Presentations/Template/slides/rename.tex $
+% $Version: 4620 $
+%
+%
+% !TeX encoding = utf8
+% !TeX root = Rename
+%
+%%%%%%
+
+	
+	\Mysection{Introduction}
+	\STANDARD{Problem Definition}{
+		Ground robots require accurate localization to navigate and map environments autonomously.  
+		This work evaluates the suitability of:
+		\begin{itemize}
+			\item \textbf{Visual SLAM algorithms} (e.g., ORB-SLAM2, ORB-SLAM3), and
+			\item \textbf{IRSNet-based CNN approaches} for acoustic localization.
+		\end{itemize}
+		The platform under consideration uses:
+		\begin{itemize}
+			\item \textbf{NVIDIA Jetson Nano Developer Kit} — embedded GPU for edge AI tasks.
+			\item \textbf{Raspberry Pi Camera Module V2 (Sony IMX219, 8 MP)} — RGB input for visual odometry.
+		\end{itemize}
+	}
+	
+	\Mysection{Hardware Setup}
+	\STANDARD{System Overview}{
+		\begin{itemize}
+			\item Jetson Nano provides GPU acceleration for real-time SLAM.
+			\item Raspberry Pi Camera V2 provides monocular RGB images.
+			\item Lightweight robotics middleware (e.g., ROS Noetic) for data flow.
+		\end{itemize}
+		\vspace{2mm}
+	\begin{center}
+		\begin{tikzpicture}[
+			node distance=6mm,
+			every node/.style={font=\footnotesize},
+			scale=0.7, transform shape
+			]
+			% Node and arrow styles
+			\tikzstyle{block}=[rectangle, draw, rounded corners,
+			minimum width=3.2cm, minimum height=0.8cm, text centered]
+			\tikzstyle{arrow}=[->, thick, >=Stealth]
+			
+			% Nodes (top to bottom)
+			\node[block] (jet) {Jetson Nano Platform};
+			\node[block, below=of jet] (cam) {Raspberry Pi Camera V2};
+			\node[block, below=of cam] (feat) {Feature Extraction (ORB)};
+			\node[block, below=of feat] (slam) {SLAM Mapping \& Pose Estimation};
+			\node[block, below=of slam] (loc) {Ground Localization Output};
+			
+			% Arrows
+			\draw[arrow] (jet) -- (cam);
+			\draw[arrow] (cam) -- (feat);
+			\draw[arrow] (feat) -- (slam);
+			\draw[arrow] (slam) -- (loc);
+		\end{tikzpicture}
+	\end{center}
+	
+	}
+	
+	\Mysection{SLAM-Based Localization}
+	\STANDARD{Feature-Based Visual SLAM}{
+		\textbf{ORB-SLAM2} and \textbf{ORB-SLAM3} are state-of-the-art real-time visual SLAM systems.
+		\begin{itemize}
+			\item Detect and track ORB features across frames.
+			\item Estimate camera pose via bundle adjustment.
+			\item Map 3D landmarks for loop closure and re-localization.
+		\end{itemize}
+		\vspace{2mm}
+		Performance on Jetson Nano has been validated by Krško et al.\ (2025)\cite{Krsko:2025},  
+		demonstrating reliable real-time localization with the Raspberry Pi Camera V2.
+		\begin{itemize}
+			\item \cite{MurArtal:2017} — ORB-SLAM2 core algorithm.  
+			\item \cite{Campos:2021} — ORB-SLAM3 visual-inertial extension.
+		\end{itemize}
+	}
+	
+	\STANDARD{Active SLAM Approaches}{
+		Active SLAM algorithms plan robot motion to reduce map uncertainty while localizing.  
+		Ahmed et al.\ (2023)\cite{Ahmed:2023} review key advances integrating exploration and mapping.  
+		However, computational complexity makes them less suitable for real-time embedded deployment on Jetson Nano without simplification.
+	}
+	
+	\Mysection{IRSNet-Based CNN Localization}
+	\STANDARD{IRSNet Overview}{
+		\textbf{IRSNet}\cite{Sun:2024} is a convolutional neural network for \textit{acoustic} source localization.  
+		It estimates sound source positions using spectrogram features and improved residual structures.
+		\vspace{2mm}
+		\textbf{Limitation for Ground Localization:}
+		\begin{itemize}
+			\item Requires microphone arrays, not camera data.
+			\item Lacks geometric consistency for visual odometry.
+			\item Heavy inference cost on Jetson Nano compared to ORB-SLAM.
+		\end{itemize}
+		Thus, IRSNet is not optimal for vision-based robot localization.
+	}
+	
+	\Mysection{Comparative Evaluation}
+	\STANDARD{Algorithm Comparison}{
+		\begin{table}[h!]
+			\centering
+		\resizebox{0.9\textwidth}{!}{
+			\begin{tabular}{|l|c|c|c|}
+				\hline
+				\textbf{Method} & \textbf{Sensor} & \textbf{Accuracy} & \textbf{Jetson Nano Suitability} \\ \hline
+				ORB-SLAM2 \cite{MurArtal:2017} & Camera (RGB) & High (cm-level) & Excellent (20–30 fps) \\ \hline
+				ORB-SLAM3 \cite{Campos:2021} & Camera + IMU & Very High / Robust & Good (15 fps) \\ \hline
+				Active SLAM \cite{Ahmed:2023} & Camera + Depth & High / Exploratory & Moderate (CPU intensive) \\ \hline
+				IRSNet \cite{Sun:2024} & Microphone Array & Acoustic only & Not applicable \\ \hline
+			\end{tabular}
+		}
+			\caption{Comparison of Localization Methods for Jetson Nano + Raspberry Pi Camera V2.}
+		\end{table}
+	
+	}
+	
+	\Mysection{Flowchart}
+	\STANDARD{Ground Localization Pipeline}{
+		\begin{center}
+			\begin{tikzpicture}[
+				node distance=8mm,
+				every node/.style={font=\footnotesize},
+				scale=0.8, transform shape
+				]
+				\tikzstyle{proc}=[rectangle, draw, rounded corners,
+				minimum width=3.4cm, minimum height=0.8cm, text centered, fill=gray!10]
+				\tikzstyle{arr}=[->, thick, >=Stealth]
+				
+				\node[proc] (cap) {Image Capture (RPi Camera V2)};
+				\node[proc, below=of cap] (feat) {Feature Extraction (ORB)};
+				\node[proc, below=of feat] (pose) {Pose Estimation + Mapping (SLAM)};
+				\node[proc, below=of pose] (map) {Localization / Control Loop Output};
+				
+				\draw[arr] (cap) -- (feat);
+				\draw[arr] (feat) -- (pose);
+				\draw[arr] (pose) -- (map);
+			\end{tikzpicture}
+		\end{center}
+		
+		
+	}
+	
+	\Mysection{Conclusion}
+	\STANDARD{Summary and Recommendation}{
+		\begin{itemize}
+			\item \textbf{IRSNet} excels in acoustic tasks, but not visual localization.
+			\item \textbf{ORB-SLAM2 / ORB-SLAM3} are proven, efficient, and open-source for vision-based ground robots.
+			\item Optimizations for Jetson Nano: reduce frame resolution, enable loop closure at intervals, use GPU-accelerated features.
+			\item Future work: integrate lightweight CNN depth estimation with ORB-SLAM3 for enhanced floor-plane awareness.
+		\end{itemize}
+	}
+	
+	\Mysection{References}
+	\STANDARD{Key References}{
+		\begin{itemize}
+			\item Mur-Artal R. and Tardós J.D., “ORB-SLAM2,” IEEE TRO (2017)\cite{MurArtal:2017}
+			\item Campos C. et al., “ORB-SLAM3,” IEEE TRO (2021)\cite{Campos:2021}
+			\item Ahmed M.F. et al., “Active SLAM: A Review,” Sensors (2023)\cite{Ahmed:2023}
+			\item Sun D. et al., “IRSNet,” Remote Sensing (2024)\cite{Sun:2024}
+			\item Krško J. et al., “Evaluation of ORB-SLAM2 on Jetson Nano,” Sensors (2025)\cite{Krsko:2025}
+		\end{itemize}
+	}
+
+

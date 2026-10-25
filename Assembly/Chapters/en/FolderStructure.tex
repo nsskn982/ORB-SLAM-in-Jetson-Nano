@@ -1,0 +1,243 @@
+%%%%%%%%%%%%
+%
+% $Autor: Srikanth $
+% $Datum: 2026-08-13  08:03:15Z $
+% $Pfad: FolderStructuretex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+\chapter{Folder Structure}
+
+\section{Repository Overview}
+
+The repository is divided into directories for hardware documentation, software, Jetson Nano development, manuals, references, thesis material, presentations, and project management.
+
+\section{Top-Level Structure}
+
+\begin{verbatim}
+	250901-Jetson-Nano-Ground/
+	|-- README.md
+	|-- author.xlsx
+	|-- Assembly/
+	|-- Code/
+	|-- JetsonNano/
+	|-- Manual/
+	|-- MLbib/
+	|-- Thesis/
+	|-- Presentations/
+	|-- Poster/
+	`-- ProjectManagement/
+\end{verbatim}
+
+\section{Assembly Directory}
+
+\subsection{Purpose}
+
+The \texttt{Assembly/} directory contains hardware documentation, assembly instructions, and related \LaTeX{} files.
+
+\section{Code Directory}
+
+\subsection{Purpose}
+
+The \texttt{Code/} directory contains the main software implementations, microcontroller programs, and CAD-related files.
+
+\subsection{Structure}
+
+\begin{verbatim}
+	Code/
+	|-- JetBot/              # Robot control software
+	|-- DomainSystem/        # Domain-specific modules
+	|-- MicroPython/         # MicroPython programs
+	`-- Solidworks/          # CAD models and G-code files
+\end{verbatim}
+
+\subsection{JetBot}
+
+\begin{verbatim}
+	Code/JetBot/
+	|-- CMakeLists.txt
+	|-- package.xml
+	|-- README.md
+	|-- requirements.txt
+	|-- run_jetbot_all.sh
+	|-- config/              # YAML configuration files
+	|-- launch/              # ROS2 launch files
+	|-- models/              # Trained ML models
+	|-- scripts/             # Python and shell scripts
+	`-- src/                 # Optional C++ source files
+\end{verbatim}
+
+\subsection{Solidworks}
+
+\begin{verbatim}
+	Code/Solidworks/
+	|-- RobotBumper.SLDPRT
+	|-- RobotBumper.3mf
+	|-- RobotBumper2.SLDPRT
+	|-- RobotBumper2.3mf
+	|-- RobotBumper_0.2mm_PLA_MK3_45m.gcode
+	`-- RobotBumper2_0.25n_0.1mm_ABS_MK3S_3h13m.gcode
+\end{verbatim}
+
+\section{JetsonNano Directory}
+
+\subsection{Purpose}
+
+The \texttt{JetsonNano/} directory contains Jetson Nano-specific code, system configuration, datasets, images, and experimental results.
+
+\subsection{Structure}
+
+\begin{verbatim}
+	JetsonNano/
+	|-- Code/
+	|   |-- JetsonNano/          # Localization and avoidance code
+	|   |-- Arduino/             # Arduino integration
+	|   |-- TensorFlowLite/      # TFLite inference scripts
+	|   `-- Nano33BLESense/      # Sensor support
+	|-- System/                  # Setup and system configuration
+	|-- Contents/                # Datasets, calibration data, logs
+	|-- Images/                  # Captured images and results
+	|-- General/                 # Documentation
+	`-- tikz/                    # TikZ diagrams
+\end{verbatim}
+
+\section{Manual Directory}
+
+\subsection{Purpose}
+
+The \texttt{Manual/} directory contains instructions for users and developers.
+
+\begin{verbatim}
+	Manual/
+	|-- DeveloperManual/
+	|   |-- Environment_Setup.md
+	|   |-- Building_and_Testing.md
+	|   |-- Debugging_Guide.md
+	|   |-- API_Reference.md
+	|   `-- Contributing.md
+	`-- UserManual/
+	|-- Hardware_Assembly.md
+	|-- Quick_Start.md
+	|-- Operation_Guide.md
+	|-- Calibration.md
+	|-- Safety_Guidelines.md
+	`-- Troubleshooting.md
+\end{verbatim}
+
+\section{MLbib Directory}
+
+\subsection{Purpose}
+
+The \texttt{MLbib/} directory contains Bib\TeX{} references for the thesis, documentation, and presentations.
+
+\begin{verbatim}
+	MLbib/
+	|-- Jetson.bib
+	|-- Literature.bib
+	|-- MyLiterature.bib
+	|-- Localization/
+	|-- ML/
+	|-- MobileRobot/
+	|-- Manuals/
+	`-- SLAM/
+\end{verbatim}
+
+\section{Thesis Directory}
+
+\subsection{Purpose}
+
+The \texttt{Thesis/} directory contains the main thesis document, chapters, images, references, and build files.
+
+\begin{verbatim}
+	Thesis/
+	|-- LocalizationofaMobileRobot.tex
+	|-- LocalizationofaMobileRobot.pdf
+	|-- Contents/              # Thesis chapters
+	|-- General/               # Preamble, packages, commands
+	|-- Images/                # Figures, diagrams, plots, results
+	|-- tikz/                  # TikZ figures
+	`-- [build artifacts]      # .aux, .toc, .lof, etc.
+\end{verbatim}
+
+\section{Presentations Directory}
+
+\subsection{Purpose}
+
+The \texttt{Presentations/} directory contains slides and presentation material.
+
+\begin{verbatim}
+	Presentations/
+	|-- presentationinfo.txt
+	|-- Localization/
+	|-- SLAM/
+	|-- ROS2/
+	|-- NVIDIAJetsonNano/
+	|-- MobileRobot/
+	|-- LiteratureReview/
+	|-- Manual/
+	`-- ThesisColloquiumPresentation/
+\end{verbatim}
+
+\section{Poster Directory}
+
+\subsection{Purpose}
+
+The \texttt{Poster/} directory contains the academic poster source files and generated PDF.
+
+\begin{verbatim}
+	Poster/
+	|-- tikzposter.tex
+	|-- tikzposter.pdf
+	|-- images/
+	`-- [build artifacts]
+\end{verbatim}
+
+\section{Project Management Directory}
+
+\subsection{Purpose}
+
+The \texttt{ProjectManagement/} directory contains planning and organisational documents, such as:
+
+\begin{itemize}
+	\item Project timelines and milestones.
+	\item Meeting notes.
+	\item Task planning and progress reports.
+	\item Resource and schedule documents.
+\end{itemize}
+
+\section{Directory Summary}
+
+\begin{table}[htbp]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|p{3cm}|p{8cm}|}
+		\hline
+		\textbf{Directory} & \textbf{Purpose} \\
+		\hline
+		Assembly & Hardware documentation and assembly material \\
+		\hline
+		Code & Robot software, microcontroller code, and CAD files \\
+		\hline
+		JetsonNano & Jetson Nano code, configuration, datasets, and results \\
+		\hline
+		Manual & User and developer documentation \\
+		\hline
+		MLbib & Bib\TeX{} literature references \\
+		\hline
+		Thesis & Thesis source files, figures, and compiled documents \\
+		\hline
+		Presentations & Presentation slides and supporting material \\
+		\hline
+		Poster & Academic poster source and PDF \\
+		\hline
+		ProjectManagement & Project planning and progress documents \\
+		\hline
+	\end{tabular}
+	\caption{Repository directory overview.}
+	\label{tab:directory-organization}
+\end{table}
+```

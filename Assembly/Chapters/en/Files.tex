@@ -1,0 +1,145 @@
+%%%%%%%%%%%%
+%
+% $Autor: Srikanth $
+% $Datum: 2026-08-13  08:03:15Z $
+% $Pfad: Files.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+```latex
+\chapter{Files}
+
+\section{Overview}
+
+This chapter describes the main files in the repository.
+
+\section{Documentation Files}
+
+\begin{itemize}
+	\item \textbf{README.md}: Main project overview and repository guide.
+	\item \textbf{author.xlsx}: Author and contributor information.
+	\item \textbf{Thesis/LocalizationofaMobileRobot.tex}: Main thesis source file.
+	\item \textbf{Thesis/LocalizationofaMobileRobot.pdf}: Compiled thesis document.
+	\item \textbf{Assembly/MobileRobotAssembly.tex}: Hardware assembly documentation.
+	\item \textbf{Assembly/MobileRobotAssembly.pdf}: Compiled assembly manual.
+	\item \textbf{Poster/tikzposter.tex}: Academic poster source file.
+	\item \textbf{Poster/tikzposter.pdf}: Compiled academic poster.
+\end{itemize}
+
+\section{Software Files}
+
+\subsection{JetBot Software}
+
+The main robot-control software is located in \texttt{Code/JetBot/}.
+
+\begin{itemize}
+	\item \textbf{CMakeLists.txt}: CMake build configuration.
+	\item \textbf{package.xml}: ROS2 package information and dependencies.
+	\item \textbf{requirements.txt}: Required Python packages.
+	\item \textbf{run\_jetbot\_all.sh}: Script to start the robot system.
+	\item \textbf{README.md}: JetBot setup and usage instructions.
+\end{itemize}
+
+\subsection{Configuration and Launch Files}
+
+\begin{itemize}
+	\item \textbf{Code/JetBot/config/}: Robot parameters, calibration values, and sensor settings.
+	\item \textbf{Code/JetBot/launch/}: ROS2 launch files for starting robot nodes.
+	\item \textbf{Code/JetBot/scripts/}: Python and shell scripts for experiments and utilities.
+	\item \textbf{Code/JetBot/models/}: Trained machine-learning models.
+\end{itemize}
+
+\section{Implementation Files}
+
+\begin{itemize}
+	\item \textbf{Code/DomainSystem/Test.py}: Test and validation script.
+	\item \textbf{Code/MicroPython/}: MicroPython programs for microcontrollers.
+	\item \textbf{JetsonNano/Code/JetsonNano/}: Localization and collision-avoidance implementations.
+	\item \textbf{JetsonNano/Code/Arduino/}: Arduino integration code.
+	\item \textbf{JetsonNano/Code/TensorFlowLite/}: TensorFlow Lite inference scripts.
+	\item \textbf{JetsonNano/Code/Nano33BLESense/}: Arduino Nano 33 BLE Sense support code.
+\end{itemize}
+
+\section{Hardware and CAD Files}
+
+The hardware design files are stored in \texttt{Code/Solidworks/}.
+
+\begin{itemize}
+	\item \textbf{RobotBumper.SLDPRT}: Main bumper CAD model.
+	\item \textbf{RobotBumper2.SLDPRT}: Alternative bumper CAD model.
+	\item \textbf{RobotBumper.3mf}: 3D-print model export.
+	\item \textbf{RobotBumper2.3mf}: Alternative 3D-print model export.
+	\item \textbf{RobotBumper\_0.2mm\_PLA\_MK3\_45m.gcode}: G-code for PLA printing.
+	\item \textbf{RobotBumper2\_0.25n\_0.1mm\_ABS\_MK3S\_3h13m.gcode}: G-code for ABS printing.
+\end{itemize}
+
+\section{Bibliography Files}
+
+The bibliography files are stored in \texttt{MLbib/}.
+
+\begin{itemize}
+	\item \textbf{Jetson.bib}: NVIDIA Jetson references.
+	\item \textbf{Literature.bib}: General academic references.
+	\item \textbf{MyLiterature.bib}: Custom bibliography entries.
+	\item \textbf{Literatur.bib}: German-language references.
+	\item \textbf{MLbib/Localization/}: Localization references.
+	\item \textbf{MLbib/ML/}: Machine-learning references.
+	\item \textbf{MLbib/MobileRobot/}: Mobile robotics references.
+	\item \textbf{MLbib/SLAM/}: SLAM-related references.
+	\item \textbf{MLbib/Manuals/}: Hardware and software manuals.
+\end{itemize}
+
+\section{Data and Image Files}
+
+\begin{itemize}
+	\item \textbf{JetsonNano/Contents/}: Datasets, calibration files, logs, and experiment results.
+	\item \textbf{JetsonNano/Images/}: Images and visual results from robot experiments.
+	\item \textbf{Thesis/Images/}: Figures, diagrams, and plots used in the thesis.
+	\item \textbf{Assembly/Images/}: Hardware photographs and assembly diagrams.
+\end{itemize}
+
+\section{Manual Files}
+
+\begin{itemize}
+	\item \textbf{Manual/DeveloperManual/}: Setup, build, debugging, and contribution guides.
+	\item \textbf{Manual/UserManual/}: Assembly, operation, calibration, safety, and troubleshooting guides.
+\end{itemize}
+
+\section{Presentation Files}
+
+\begin{itemize}
+	\item \textbf{Presentations/presentationinfo.txt}: Presentation index and metadata.
+	\item \textbf{Presentations/}: Topic-specific presentation directories.
+	\item \textbf{Thesis/tikz/}: TikZ graphics for the thesis.
+	\item \textbf{JetsonNano/tikz/}: TikZ diagrams for Jetson Nano documentation.
+\end{itemize}
+
+\section{Build Files}
+
+\LaTeX{} creates build files during compilation. These files can usually be deleted and regenerated.
+
+\begin{itemize}
+	\item \textbf{*.aux}: Auxiliary reference information.
+	\item \textbf{*.toc}: Table of contents data.
+	\item \textbf{*.lof}: List of figures data.
+	\item \textbf{*.lot}: List of tables data.
+	\item \textbf{*.bbl}: Generated bibliography.
+	\item \textbf{*.log}: Compilation log file.
+	\item \textbf{*.pdf}: Final compiled document.
+\end{itemize}
+
+\section{File Management}
+
+\begin{itemize}
+	\item Store source code in \texttt{Code/} and \texttt{JetsonNano/Code/}.
+	\item Store documentation in \texttt{Manual/}, \texttt{Assembly/}, and \texttt{Thesis/}.
+	\item Store references in \texttt{MLbib/}.
+	\item Store experimental data and images in \texttt{JetsonNano/Contents/} and \texttt{JetsonNano/Images/}.
+	\item Commit source files to version control and exclude temporary build files where possible.
+\end{itemize}
+```

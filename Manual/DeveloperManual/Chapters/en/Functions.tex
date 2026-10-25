@@ -1,0 +1,78 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: Functions.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Functions}
+
+\section{API Documentation}
+
+\subsection{CameraModule::captureFrame()}
+Acquires a single frame from camera and returns as cv::Mat.
+\begin{itemize}
+    \item Returns: BGR image, 640x480 resolution
+    \item Throws: CameraException on timeout
+\end{itemize}
+
+\subsection{FeatureExtractor::extractKeypoints()}
+Extracts and describes features from image.
+\begin{itemize}
+    \item Parameters: image (cv::Mat), algorithm (string: \texttt{SIFT}/\texttt{ORB})
+    \item Returns: std::vector<KeyPoint>, cv::Mat descriptors
+\end{itemize}
+
+\subsection{OdometryEstimator::computeTransform()}
+Estimates rigid transformation between consecutive frames.
+\begin{itemize}
+    \item Parameters: prev\_descriptors, curr\_descriptors, matches
+    \item Returns: cv::Mat transformation matrix (4x4)
+\end{itemize}
+
+\subsection{SLAMBackend::optimizePoseGraph()}
+Performs pose graph optimization using g2o.
+\begin{itemize}
+    \item Parameters: pose\_graph, constraints
+    \item Returns: optimized poses, final error
+\end{itemize}
+
+\section{Thread Management}
+
+Main threads:
+\begin{itemize}
+    \item Camera capture thread (real-time priority)
+    \item Feature extraction thread
+    \item Pose estimation thread
+    \item Optimization thread (lower priority)
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		node distance=0.5cm,
+		thread/.style={rectangle, draw=black!60, fill=orange!10, thick, text width=7.5cm, rounded corners, minimum height=1cm, align=left}
+		]
+		\node[thread, fill=red!10] (t1) {\textbf{Camera Capture Thread} \\ \textit{Priority: 90 (SCHED\_FIFO)} | Real-time execution};
+		
+		\node[thread, fill=orange!10, below=of t1] (t2) {\textbf{Feature Extraction Thread} \\ \textit{Priority: 80 (SCHED\_FIFO)} | High priority};
+		
+		\node[thread, fill=yellow!10, below=of t2] (t3) {\textbf{Pose Estimation Thread} \\ \textit{Standard Priority} | Standard tracking loop};
+		
+		\node[thread, fill=green!10, below=of t3] (t4) {\textbf{Optimization Thread (g2o)} \\ \textit{Priority: 0 (SCHED\_OTHER)} | Can be interrupted};
+		
+		% Connecting lines
+		\draw[->, thick, dashed, gray] (t1.south) -- (t2.north);
+		\draw[->, thick, dashed, gray] (t2.south) -- (t3.north);
+		\draw[->, thick, dashed, gray] (t3.south) -- (t4.north);
+	\end{tikzpicture}
+	\caption{Real-time thread scheduling priorities for camera capture, feature extraction, pose estimation, and pose graph optimization}
+	\label{fig:thread-priority}
+\end{figure}
+
+

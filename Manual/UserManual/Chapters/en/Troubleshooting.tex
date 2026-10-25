@@ -1,0 +1,74 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: Troubleshooting.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Troubleshooting}
+
+\section{Localization Accuracy Issues}
+
+\begin{itemize}
+    \item \textbf{High position drift}: Increase feature extraction quality or optimize camera calibration
+    \item \textbf{Loop closure fails}: Environment lacks distinctive features; add markers or increase detection sensitivity
+    \item \textbf{Encoder drift dominates}: Visual features may be unreliable; check lighting or add reference landmarks
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		decision/.style={diamond, draw=red!60, fill=red!5, thick, text width=2.8cm, text badly centered, inner sep=2pt},
+		block/.style={rectangle, draw=blue!60, fill=blue!5, thick, text width=3.5cm, text centered, rounded corners, minimum height=1.1cm},
+		arrow/.style={thick, ->, >=stealth}
+		]
+		\node[decision] (issue) {\textbf{Localization Problem?}};
+		\node[block, below=1.8cm of issue] (r1) {\textbf{1. Restart Node}\\\texttt{rosnode kill localization\_node}};
+		\node[block, below=1cm of r1] (r2) {\textbf{2. Clear Cache}\\\texttt{rm -rf \textasciitilde/.ros/localization\_cache}};
+		\node[block, below=1cm of r2] (r3) {\textbf{3. Re-run Calibration}};
+		\node[block, below=1cm of r3, fill=red!10, draw=red!60!black] (r4) {\textbf{4. If Persistent}\\Reflash SD card image};
+		
+		\draw[arrow] (issue) -- (r1);
+		\draw[arrow] (r1) -- (r2);
+		\draw[arrow] (r2) -- (r3);
+		\draw[arrow] (r3) -- (r4);
+	\end{tikzpicture}
+	\caption{Recovery workflow for resolving persistent localization problems}
+	\label{fig:recovery-steps}
+\end{figure}
+\section{Performance Problems}
+
+\begin{itemize}
+    \item \textbf{Slow frame processing}: Too many features extracted; adjust threshold
+    \item \textbf{High CPU usage}: Disable feature visualization or reduce resolution
+    \item \textbf{Memory exhaustion}: Prune old feature maps from memory; consider streaming to disk
+\end{itemize}
+
+\section{Sensor Failures}
+
+\begin{itemize}
+    \item \textbf{Encoder dropout}: Check wheel spin under no load; verify encoder connections
+    \item \textbf{Feature extraction fails}: Inadequate lighting; switch to robust feature detector (ORB vs SIFT)
+    \item \textbf{System crashes}: Log dump file location provided in error message; report to development team
+\end{itemize}
+
+\section{Recovery Steps}
+
+\begin{enumerate}
+    \item Restart localization system: \texttt{rosnode kill localization\_node}
+    \item Clear cached data: \texttt{rm -rf ~/.ros/localization\_cache}
+    \item Re-run calibration procedure
+    \item If persistent, reflash SD card image
+\end{enumerate}
+
+
+
+
+
+
+

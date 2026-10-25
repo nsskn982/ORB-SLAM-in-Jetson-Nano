@@ -1,0 +1,154 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: SetUp.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Set Up}
+
+\section{SparkFun Jetbot Hardware Assembly}
+
+\subsection{Component Verification Before Assembly}
+\begin{itemize}
+    \item \textbf{Jetson Nano Developer Kit V2}: Verify "v2" marking on board silkscreen
+    \item \textbf{SparkFun Chassis}: JetBot robot platform (SKU ROB-16417 or newer)
+    \item \textbf{DC Motors}: 2x TT-motors pre-installed in chassis (3-6V rated)
+    \item \textbf{Quadrature Encoders}: 2x encoders at motor shafts (48 PPR standard)
+    \item \textbf{USB Camera}: Standard webcam with UVC compatibility (640x480 typical)
+    \item \textbf{Power Distribution}: 4xAA battery holder or 5V/3A USB-C adapter minimum
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		box/.style={rectangle, draw=black!70, thick, fill=gray!10, minimum width=2.5cm, minimum height=3.5cm, text centered, align=center, rounded corners},
+		line/.style={thick, -latex, blue!80!black}
+		]
+		\node[box, fill=green!15] (nano) {\textbf{Jetson Nano}\\GPIO Header};
+		\node[box, fill=red!15, right=3.5cm of nano] (driver) {\textbf{Motor Driver}\\(L298N / DRV8833)};
+		\node[box, fill=yellow!20, right=3.5cm of driver] (motor) {\textbf{DC Motors}\\ \& Encoders};
+		
+		% Nano to Driver
+		\draw[line] (nano.east |- 0,1) -- node[above, font=\scriptsize] {PWM (20 kHz)} (driver.west |- 0,1);
+		\draw[line] (nano.east |- 0,0) -- node[above, font=\scriptsize] {Logic (3.3V)} (driver.west |- 0,0);
+		
+		% Driver to Motor
+		\draw[line] (driver.east |- 0,0.5) -- node[above, font=\scriptsize] {Power (12V Max)} (motor.west |- 0,0.5);
+		
+		% Encoder feedback to Nano
+		\draw[line, dashed, purple] (motor.south) -- ++(0,-1) -| node[above right, font=\scriptsize, text=black] {Quadrature A/B Feedback (48 PPR)} (nano.south);
+	\end{tikzpicture}
+	\caption{Signal flow between the Jetson Nano GPIO header, motor driver H-bridge, and DC motors with quadrature encoders}
+	\label{fig:hardware-signal-flow}
+\end{figure}
+
+\subsection{Critical GPIO Pinouts for Motor Control}
+
+Motor encoder and PWM connections to Jetson Nano GPIO Header:
+
+\begin{table}[h]
+    \centering
+    \small
+    \begin{tabular}{|l|c|c|l|}
+        \hline
+        \textbf{Signal} & \textbf{GPIO} & \textbf{Pin} & \textbf{Description} \\
+        \hline
+        Motor L Encoder A & GPIO33 & 15 & Phase A, rising edge forward \\
+        Motor L Encoder B & GPIO88 & 16 & Phase B, 90\textsuperscript{o} offset \\
+        Motor R Encoder A & GPIO56 & 37 & Phase A, rising edge forward \\
+        Motor R Encoder B & GPIO90 & 38 & Phase B, 90\textsuperscript{o} offset \\
+        Motor L PWM & GPIO79 & 18 & PWM output, 20 kHz nominal \\
+        Motor R PWM & GPIO80 & 32 & PWM output, 20 kHz nominal \\
+        I2C Bus SDA & GPIO2 & 3 & 1.8V logic (optional Qwiic) \\
+        I2C Bus SCL & GPIO3 & 5 & 1.8V logic (optional Qwiic) \\
+        \hline
+    \end{tabular}
+    \caption{Jetson Nano GPIO pinout for SparkFun Jetbot motor and encoder interfacing}
+\end{table}
+
+\subsection{Motor Driver H-Bridge Configuration}
+
+Required motor control electronics:
+
+\begin{itemize}
+    \item \textbf{Driver IC}: L298N or DRV8833 dual-channel motor driver recommended
+    \item \textbf{Input Logic Voltage}: 3.3V signals from Jetson GPIO
+    \item \textbf{Motor Supply Voltage}: 5V rail separate from Jetson power
+    \item \textbf{Ground Reference}: Common ground between Jetson and motor driver
+    \item \textbf{PWM Frequency}: 20 kHz (minimize switching losses and acoustic noise)
+    \item \textbf{Dead Time}: Insert 1-2 microseconds between phase transitions
+    \item \textbf{Current Limiting}: Per-motor limit approximately 500mA
+\end{itemize}
+
+\section{Jetson Nano Development Environment Setup}
+
+\subsection{Operating System Foundation}
+
+\begin{itemize}
+    \item JetPack 4.6.1 or newer with Ubuntu 18.04 LTS or 20.04 LTS (Arm64)
+    \item Prepare 2GB minimum free disk space for development tools
+    \item Execute system updates: \texttt{sudo apt-get update \&\& sudo apt-get upgrade -y}
+\end{itemize}
+
+\subsection{Build Tools and Compilers}
+
+Essential packages for compiling SparkFun Jetbot software:
+
+\begin{itemize}
+    \item \textbf{Build Foundation}: GCC 7+ with ARMv8 architecture support
+    \item \textbf{Build System}: CMake 3.10+, Make, autotools
+    \item \textbf{Version Control}: Git with full functionality
+    \item \textbf{Python}: Python 3.6+ with pip, numpy, opencv-python
+\end{itemize}
+
+\subsection{Critical Libraries for SparkFun Jetbot}
+
+\begin{description}
+    \item[OpenCV 3.3+] Pre-compiled for Jetson available via \texttt{sudo apt install libopencv-dev}
+    \item[g2o Optimizer] Pose graph SLAM backend (compile from source, 15-20 minutes on Jetson)
+    \item[Eigen 3.x] Linear algebra library (dependency of g2o)
+    \item[ROS Melodic/Noetic] Full desktop environment with catkin build tools
+    \item[CUDA 10.2] GPU acceleration toolkit (pre-installed on JetPack)
+    \item[cuDNN] Neural network library (optional, for deep learning)
+\end{description}
+
+\subsection{Building on Jetson Nano Hardware Constraints}
+
+Memory and thermal considerations:
+
+\begin{itemize}
+    \item \textbf{Parallel Build Jobs}: Use \texttt{make -j2} ONLY (Jetson has 4GB RAM)
+    \item \textbf{SIMD Optimization}: Enable with \texttt{-march=armv8-a -mfpu=neon}
+    \item \textbf{CUDA GPU Targeting}: Set \texttt{-DCUDA\_ARCH\_BIN=5.2} for Maxwell GPU
+    \item \textbf{Alternative Strategy}: Cross-compile on x86 workstation for faster builds
+    \item \textbf{Thermal Management}: Monitor CPU temperature during compilation
+\end{itemize}
+
+\section{Encoder and Motor Hardware Interface}
+
+\subsection{Quadrature Encoder Reading Specifications}
+
+\begin{itemize}
+    \item \textbf{Resolution}: 48 increments per complete wheel rotation (\textsuperscript{o} per tick)
+    \item \textbf{Phase Logic}: Channel A leads Channel B during forward motion
+    \item \textbf{Maximum Frequency}: 2.56 kHz per encoder at rated motor RPM
+    \item \textbf{Reading Implementation}: GPIO sysfs poller or kernel interrupt handler
+    \item \textbf{Synchronization}: Timestamp all encoder reads with frame captures
+\end{itemize}
+
+\subsection{PWM Motor Control Output}
+
+\begin{itemize}
+    \item \textbf{GPIO Pins}: 18 (GPIO79) for left motor, 32 (GPIO80) for right motor
+    \item \textbf{Frequency}: 20 kHz via \texttt{/sys/class/pwm/pwmchip0}
+    \item \textbf{Duty Cycle}: 0-100\% represented as 0-100000 in sysfs
+    \item \textbf{Ramp Rate}: Avoid abrupt transitions (limit to 100\% per second maximum)
+    \item \textbf{Direction Control}: Separate GPIO pairs for motor polarity selection
+\end{itemize}
+

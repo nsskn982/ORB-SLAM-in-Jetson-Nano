@@ -1,0 +1,14 @@
+<launch>
+  <arg name="camera_topic" default="/camera/image_raw"/>
+  <arg name="pose_topic" default="/pose"/>
+  <arg name="orb_vocab_file" default="$(find orb_slam2_ros)/orb_slam2/Vocabulary/ORBvoc.txt"/>
+  <arg name="orb_settings_file" default="$(find jetbot_vslam)/config/orb_slam.yaml"/>
+
+  <node pkg="orb_slam2_ros" type="orb_slam2_ros_mono" name="orb_slam2_mono" output="screen">
+    <param name="voc_file" value="$(arg orb_vocab_file)"/>
+    <param name="settings_file" value="$(arg orb_settings_file)"/>
+    <param name="queue_size" value="1"/>
+    <remap from="/camera/image_raw" to="$(arg camera_topic)"/>
+    <remap from="/pose" to="$(arg pose_topic)"/>
+  </node>
+</launch>

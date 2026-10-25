@@ -1,0 +1,238 @@
+%%%%%%
+%
+% $Autor: Srikanth $
+% $Datum: 2020-01-18 11:15:45Z $
+% $Pfad: githubtemplate/Template/Presentations/Template/slides/rename.tex $
+% $Version: 4620 $
+%
+%
+% !TeX encoding = utf8
+% !TeX root = Rename
+%
+%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Mysection{Feature-Based Ground Texture Localization}
+
+\STANDARD{Idea}{%
+Ground-texture localization relies on:
+\begin{itemize}
+    \item Detecting stable keypoints on asphalt, concrete, tiles \cite{Agrawal:2008,Bay:2006,Alcantarilla:2013}.
+    \item Extracting descriptors such as SIFT, SURF, AKAZE, BRIEF, ORB \cite{Lowe:2004,Calonder:2010,Rublee:2011}.
+    \item Matching descriptors against a map or between frames \cite{Matas:2004}.
+    \item Pose estimation via RANSAC \cite{Desouza:2002}.
+\end{itemize}
+}
+
+\STANDARD{Hyperparameters}{%
+\begin{itemize}
+    \item Number of keypoints (200–2000) \cite{Schmid:2019}.
+    \item Descriptor size: SIFT (128), ORB (32) \cite{Lowe:2004,Rublee:2011}.
+    \item Matching threshold: Lowe ratio 0.7–0.9 \cite{Lowe:2004}.
+    \item RANSAC iterations (100–1000) \cite{Desouza:2002}.
+\end{itemize}
+}
+
+\STANDARD{Library}{%
+\begin{itemize}
+    \item OpenCV: SIFT, SURF, ORB, BRISK, AKAZE \cite{Bradski:2000}.
+    \item libv4l + OpenCV for downward camera capture.
+\end{itemize}
+}
+
+\STANDARD{Applications}{%
+\begin{itemize}
+    \item Indoor AMRs (autonomous mobile robots) \cite{Kelly:2007}.
+    \item Industrial AGVs without infrastructure \cite{Zhang:2019}.
+    \item Warehouse floor navigation \cite{Chen:2018}.
+\end{itemize}
+
+
+%%% TikZ FIGURE 1
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.5, node distance=0.5cm,
+proc/.style={rectangle, draw, rounded corners, minimum width=1.5cm, minimum height=0.9cm}]
+\node[proc] (img) {Image};
+\node[proc, right=of img] (kp) {Keypoints};
+\node[proc, right=of kp] (desc) {Descriptors};
+\node[proc, right=of desc] (match) {Matching};
+\node[proc, right=of match] (pose) {Pose};
+
+\draw[->] (img) -- (kp);
+\draw[->] (kp) -- (desc);
+\draw[->] (desc) -- (match);
+\draw[->] (match) -- (pose);
+\end{tikzpicture}
+\caption{Feature-based localization pipeline}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Mysection{Appearance-Based Localization}
+
+\STANDARD{Idea}{%
+\begin{itemize}
+    \item Uses correlation or template matching between patches \cite{Kelly:2007,Zaman:2007}.
+    \item Computes pixel displacement using NCC/SSD \cite{Pratt:2007}.
+    \item Converts displacement to metric motion with planar assumption.
+\end{itemize}
+}
+
+\STANDARD{Hyperparameters}{%
+\begin{itemize}
+    \item Patch size (16–64 px) \cite{Aqel:2016}.
+    \item Search window radius (10–50 px).
+    \item NCC/SSD threshold for valid match.
+\end{itemize}
+}
+
+\STANDARD{Library}{%
+\begin{itemize}
+    \item OpenCV: matchTemplate(), NCC/SSD.
+\end{itemize}
+}
+
+\STANDARD{Applications}{%
+\begin{itemize}
+    \item Incremental localization for factory robots \cite{Kelly:2007}.
+    \item Floor tracking for simple AGVs \cite{Zaman:2007}.
+\end{itemize}
+
+
+%%% TikZ FIGURE 2
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.5, node distance=0.5cm,
+proc/.style={rectangle, draw, rounded corners, minimum width=1.5cm, minimum height=0.9cm}]
+\node[proc] (ref) {Reference Patch};
+\node[proc, right=of ref] (search) {Search Window};
+\node[proc, right=of search] (corr) {Correlation};
+\node[proc, right=of corr] (motion) {Motion Estimate};
+
+\draw[->] (ref) -- (search);
+\draw[->] (search) -- (corr);
+\draw[->] (corr) -- (motion);
+\end{tikzpicture}
+\caption{Appearance-based localization flow }
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Mysection{Feature-Based Visual Odometry}
+
+\STANDARD{Idea}{%
+\begin{itemize}
+    \item Detect keypoints in consecutive frames \cite{Agrawal:2008,Alcantarilla:2013}.
+    \item Match descriptors (ORB, BRISK, AKAZE) \cite{Rublee:2011,Leutenegger:2011}.
+    \item Estimate frame-to-frame motion with RANSAC \cite{Desouza:2002}.
+\end{itemize}
+}
+
+\STANDARD{Hyperparameters}{%
+\begin{itemize}
+    \item Keypoint budget per frame (500–1500).
+    \item Hamming distance threshold for binary descriptors.
+    \item RANSAC inlier threshold (1–3 px).
+\end{itemize}
+}
+
+\STANDARD{Library}{%
+\begin{itemize}
+    \item OpenCV: ORB-SLAM2 style pipeline \cite{MurArtal:2017}.
+\end{itemize}
+}
+
+\STANDARD{Applications}{%
+\begin{itemize}
+    \item Short-range floor-based odometry \cite{Nakashima:2019,Kozak:2016}.
+\end{itemize}
+
+
+%%% FIGURE 3
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.85, node distance=1cm,
+proc/.style={rectangle, draw, rounded corners, minimum width=1.5cm, minimum height=0.9cm}]
+\node[proc] (f1) {Frame k};
+\node[proc, below=1cm of f1] (f2) {Frame k+1};
+\node[proc, right=1cm of f1] (match) {Matching};
+\node[proc, right=of match] (ransac) {RANSAC};
+\node[proc, right=of ransac] (upd) {Odometry};
+
+\draw[->] (f1) -- (match);
+\draw[->] (f2) -- (match);
+\draw[->] (match) -- (ransac);
+\draw[->] (ransac) -- (upd);
+\end{tikzpicture}
+\caption{Feature-based visual odometry (scale=0.85)}
+\end{figure}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Mysection{Map-Based Absolute Localization}
+
+\STANDARD{Idea}{%
+\begin{itemize}
+    \item Offline mapping of ground features \cite{Zhang:2019}.
+    \item Online matching of current image to map keypoints \cite{Chen:2018}.
+    \item RANSAC pose recovery \cite{Schmid:2019}.
+\end{itemize}
+}
+
+\STANDARD{Hyperparameters}{%
+\begin{itemize}
+    \item Map feature density (5–20 keypoints/m\(^2\)).
+    \item Descriptor type for map (SIFT/AKAZE) \cite{Zhang:2019}.
+\end{itemize}
+}
+
+\STANDARD{Library}{%
+\begin{itemize}
+    \item OpenCV + FLANN \cite{Bradski:2000}.
+\end{itemize}
+}
+
+\STANDARD{Applications}{%
+\begin{itemize}
+    \item Autonomous warehouse robots \cite{Zhang:2019}.
+    \item Large-area indoor localization \cite{Cornick:2016}.
+\end{itemize}
+
+%%% FIGURE 4
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9, node distance=0.5cm,
+proc/.style={rectangle, draw, rounded corners, minimum width=1.5cm, minimum height=0.9cm},
+db/.style={cylinder, draw, aspect=0.3, minimum height=1cm, minimum width=0.5cm}]
+\node[proc] (map) {Offline Map};
+\node[db, right=of map] (dbx) {DB};
+\node[proc, right=of dbx] (query) {Query Frame};
+\node[proc, right=of query] (retr) {Retrieval};
+\node[proc, right=of retr] (pose) {Pose};
+
+\draw[->] (map) -- (dbx);
+\draw[->] (query) -- (retr);
+\draw[->] (dbx) -- (query);
+\draw[->] (retr) -- (pose);
+\end{tikzpicture}
+\caption{Map-based absolute localization}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Mysection{Example Code for Ground Texture Algorithms}
+
+\STANDARD{Full File}{
+\lstinputlisting[
+  language=Python,
+  style=mystyle,
+  caption={Full Ground Texture Algorithm Module (Ground.py)}
+]{Code/Ground.py}
+}
+
+\STANDARD{Next Steps}
+{
+	\begin{itemize}
+		\item Explore each algorithm and find out its hyperparameters and metrics.
+		\item Find more research paper based on each algorithm. 
+		\item If the JetBot system is facing hardware constraints then find other methods to implement a ground localization algorithm.
+	\end{itemize}
+}

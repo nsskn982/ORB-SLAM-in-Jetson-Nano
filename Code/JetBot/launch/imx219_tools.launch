@@ -1,0 +1,29 @@
+<launch>
+  <arg name="run_test" default="true"/>
+  <arg name="run_calibration" default="false"/>
+
+  <arg name="source" default="csi"/>
+  <arg name="sensor_id" default="0"/>
+  <arg name="capture_width" default="3280"/>
+  <arg name="capture_height" default="2464"/>
+  <arg name="width" default="1280"/>
+  <arg name="height" default="720"/>
+  <arg name="fps" default="30"/>
+  <arg name="flip" default="0"/>
+  <arg name="device" default="0"/>
+
+  <arg name="board_cols" default="9"/>
+  <arg name="board_rows" default="6"/>
+  <arg name="square_size" default="0.024"/>
+  <arg name="num_frames" default="20"/>
+  <arg name="calibration_output" default="$(find jetbot_vslam)/config/imx219_calibration.yaml"/>
+
+  <arg name="test_window_name" default="IMX219_Test"/>
+  <arg name="calibration_window_name" default="IMX219_Calibration"/>
+
+  <node pkg="jetbot_vslam" type="imx219_camera_test.py" name="imx219_camera_test" output="screen" if="$(arg run_test)"
+        args="--source $(arg source) --sensor-id $(arg sensor_id) --capture-width $(arg capture_width) --capture-height $(arg capture_height) --width $(arg width) --height $(arg height) --fps $(arg fps) --flip $(arg flip) --device $(arg device) --window-name $(arg test_window_name)"/>
+
+  <node pkg="jetbot_vslam" type="imx219_camera_calibrate.py" name="imx219_camera_calibrate" output="screen" if="$(arg run_calibration)"
+        args="--source $(arg source) --sensor-id $(arg sensor_id) --capture-width $(arg capture_width) --capture-height $(arg capture_height) --width $(arg width) --height $(arg height) --fps $(arg fps) --flip $(arg flip) --device $(arg device) --board-cols $(arg board_cols) --board-rows $(arg board_rows) --square-size $(arg square_size) --num-frames $(arg num_frames) --output $(arg calibration_output) --window-name $(arg calibration_window_name)"/>
+</launch>

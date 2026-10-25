@@ -1,0 +1,70 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: AddOns.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Add Ons}
+
+\section{Enhanced Localization Features}
+
+\subsection{Multi-Sensor Fusion Mode}
+\begin{itemize}
+    \item When IMU available: Uses gyro for drift-free heading
+    \item When encoders available: Fuses with visual odometry for robustness
+    \item When both available: Achieves best-in-class accuracy
+    \item Enable via config: \texttt{sensor\_fusion: true}
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		box/.style={rectangle, draw=teal!70, fill=teal!5, thick, text width=3.5cm, text centered, rounded corners, minimum height=1.1cm},
+		result/.style={rectangle, draw=green!60!black, fill=green!10, thick, text width=3.5cm, text centered, rounded corners, minimum height=1.1cm},
+		arrow/.style={thick, ->, >=stealth}
+		]
+		\node[box] (imu) {\textbf{IMU Available}\\Gyro for drift-free heading};
+		\node[box, below=1cm of imu] (enc) {\textbf{Encoders Available}\\Fused with visual odometry};
+		\node[result, right=2cm of imu] (both) {\textbf{Both Available}\\Best-in-class accuracy};
+		
+		\draw[arrow] (imu) -- (both);
+		\draw[arrow] (enc) -- (both);
+		\node[below=0.3cm of both, font=\scriptsize\ttfamily] {sensor\_fusion: true};
+	\end{tikzpicture}
+	\caption{Multi-sensor fusion logic combining IMU and encoder data for improved accuracy}
+	\label{fig:sensor-fusion}
+\end{figure}
+\subsection{3D Mapping and Height Awareness}
+\begin{itemize}
+    \item Stereo camera provides depth for each visual feature
+    \item Enables stair and ramp detection
+    \item Improves obstacle avoidance in complex 3D environments
+    \item Requires \texttt{mapping\_3d: true} in config
+\end{itemize}
+
+\subsection{Global Localization (Lidar-based)}
+\begin{itemize}
+    \item Use Lidar scans to match against precomputed map occupancy grids
+    \item Enables position recovery if visual tracking is lost
+    \item Can relocalize robot anywhere in mapped environment
+    \item Access via web dashboard: click \"Global Relocalize\" button
+\end{itemize}
+
+\section{Performance Tuning Options}
+
+\begin{itemize}
+    \item Reduced feature extraction rate for low-power mode (15 Hz instead of 30 Hz)
+    \item Aggressive loop closure for tightening accuracy \texttt{loop\_closure\_aggressiveness: high}
+    \item Conservative mode for safety (requires strong evidence before transitions)
+\end{itemize}
+
+
+
+
+

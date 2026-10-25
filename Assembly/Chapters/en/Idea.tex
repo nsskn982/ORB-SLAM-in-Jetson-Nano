@@ -1,0 +1,532 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: MainFunction.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Idea}
+
+\section{Overview}
+This documentation provides comprehensive instructions for assembling a Jetson Nano-based mobile robot platform and the files and folder structure implementation designed for localization research and testing. The robot integrates visual odometry, sensor fusion, and simultaneous localization and mapping (SLAM) capabilities.
+
+\section{System Architecture}
+The mobile robot consists of:
+\begin{itemize}
+    \item NVIDIA Jetson Nano development platform (compute core)
+    \item Dual-motor transmission system with encoders
+    \item RGB camera for visual odometry and environment mapping
+    \item Motor drivers and power management circuits
+    \item Support for optional \acs{imu} and additional sensors
+\end{itemize}
+
+\section{Key Components}
+Each component plays a critical role in the localization pipeline. The camera provides environmental visual features, motors enable precise movement, and encoders provide odometry feedback for trajectory estimation.
+
+\section{System Architecture Overview}
+
+The mobile robot platform integrates:
+
+\begin{enumerate}
+	\item \textbf{Perception}: \acs{rgb} camera for visual feature extraction
+	\item \textbf{Preconception}: Motor encoders for odometry feedback
+	\item \textbf{Computation}: Jetson Nano \acs{gpu} processing visual and encoder data
+	\item \textbf{Actuation}: Dual motor + encoder system for differential drive
+\end{enumerate}
+
+\begin{tikzpicture}[
+	scale=1.3,
+	>=Stealth,
+	% Wall style
+	wall/.style={draw=black, line width=5pt, fill=gray!15},
+	% Furniture/obstacle style
+	furniture/.style={draw=black, fill=brown!30, pattern=north east lines, pattern color=brown!50, line width=1pt},
+	% Small robot
+	robot/.style={circle, draw=black, fill=blue!30, inner sep=2pt, minimum size=12pt},
+	% Camera lens
+	camera/.style={circle, draw=black, fill=gray!20, inner sep=1pt},
+	% Field of View cone
+	fov/.style={fill=cyan!8, draw=cyan!60!black, dashed, thin},
+	% Visual feature
+	feature/.style={circle, fill=red!70!black, inner sep=1.2pt},
+	% Traversable boundary (outline)
+	boundary/.style={draw=green!60!black, line width=1.8pt, dashed, rounded corners=5pt},
+	]
+	
+	% =============================================
+	% 1. ROOM WALLS
+	% =============================================
+	\draw[wall] (0,0) rectangle (9,7);
+	\node[font=\small, below left] at (0.1,0.1) {Room};
+	
+	% =============================================
+	% 2. INDOOR FURNITURE (OBSTACLES)
+	% =============================================
+	% Table
+	\fill[furniture] (1.5,1.5) rectangle (3.0,2.8);
+	\node[font=\tiny, rotate=0] at (2.25,2.15) {Table};
+	
+	% Bookshelf / Cabinet
+	\fill[furniture] (6.0,4.5) rectangle (7.5,6.5);
+	\node[font=\tiny, rotate=0] at (6.75,5.5) {Cabinet};
+	
+	% Sofa / Couch
+	\fill[furniture] (3.5,5.0) rectangle (5.5,6.2);
+	\node[font=\tiny, rotate=0] at (4.5,5.6) {Sofa};
+	
+	% Plant / small obstacle
+	\fill[green!40!black, draw=black] (7.8,2.0) circle (0.5);
+	\node[font=\tiny, white] at (7.8,2.0) {Plant};
+	
+	% =============================================
+	% 3. SMALL MOBILE ROBOT
+	% =============================================
+	% Robot position (center bottom-left area)
+	\coordinate (robotPos) at (2.5, 4.0);
+	\node[robot] (rbt) at (robotPos) {};
+	% Robot orientation (facing right-up)
+	\draw[->, thick, black!70] (robotPos) -- ($(robotPos) + (0.8,0.6)$) node[above right, font=\tiny] {Front};
+	
+	% Monocular camera on robot (mounted on top/front)
+	\coordinate (camPos) at ($(robotPos) + (0.3,0.2)$);
+	\node[camera] (cam) at (camPos) {};
+	\fill[blue!50] (camPos) circle (0.05);
+	\node[font=\tiny, above] at (camPos) {Camera};
+	
+	% Wheels (small)
+	\fill[black!80] ($(robotPos) + (-0.3,-0.25)$) rectangle ++(0.2,0.1);
+	\fill[black!80] ($(robotPos) + (0.1,-0.25)$) rectangle ++(0.2,0.1);
+	\fill[black!80] ($(robotPos) + (-0.3,0.15)$) rectangle ++(0.2,0.1);
+	\fill[black!80] ($(robotPos) + (0.1,0.15)$) rectangle ++(0.2,0.1);
+	
+	% =============================================
+	% 4. MONOCULAR CAMERA FIELD OF VIEW
+	% =============================================
+	% FOV cone (approx 70° total opening)
+	\coordinate (fovLeft) at ($(camPos) + (2.8, 1.8)$);
+	\coordinate (fovRight) at ($(camPos) + (2.8, -0.4)$);
+	\fill[fov] (camPos) -- (fovLeft) -- (fovRight) -- cycle;
+	\draw[fov] (camPos) -- (fovLeft);
+	\draw[fov] (camPos) -- (fovRight);
+	\node[cyan!70!black, font=\tiny, above right] at ($(camPos)!0.6!(fovLeft)$) {FOV};
+	
+	% =============================================
+	% 5. DETECTED VISUAL FEATURES (from furniture/walls)
+	% =============================================
+	% Points inside FOV that camera would see
+	\coordinate (F1) at (4.8, 5.0);   % on sofa edge
+	\coordinate (F2) at (6.5, 5.8);   % on cabinet corner
+	\coordinate (F3) at (7.2, 4.2);   % on wall/cabinet
+	\coordinate (F4) at (5.5, 3.2);   % on table? (actually near but not exactly)
+	\coordinate (F5) at (3.8, 5.8);   % near sofa
+	\coordinate (F6) at (4.0, 2.8);   % on table edge
+	
+	\foreach \p in {F1,F2,F3,F4,F5,F6} {
+		\node[feature] at (\p) {};
+	}
+	
+	% Connect some features to show tracking
+	\draw[orange, thick, opacity=0.6] (F1) -- (F2) -- (F3);
+	\draw[orange, thick, opacity=0.6, dashed] (F1) -- (F5);
+	\node[orange!80!black, font=\tiny, above] at (F2) {Visual Features};
+	
+	% =============================================
+	% 6. TRAVERSABLE BOUNDARY (OUTLINED BY MONOCULAR VISION)
+	% =============================================
+	% The robot estimates a free‑space boundary based on observed features and depth inference.
+	% This is shown as a dashed closed curve that avoids furniture.
+	\begin{scope}[on background layer]
+		\draw[boundary] plot[smooth cycle, tension=0.8] coordinates {
+			(1.0,3.0) (2.0,2.5) (3.5,2.2) (5.0,2.8) (6.0,3.5) (7.0,3.8)
+			(7.8,3.0) (7.5,5.0) (6.5,5.8) (5.0,6.2) (4.0,6.0) (2.5,6.5)
+			(1.5,5.8) (1.2,4.5) (1.0,3.0)
+		};
+	\end{scope}
+	% Add a label near the boundary
+	\node[green!60!black, font=\small\bfseries, fill=white, inner sep=2pt, rotate=20] at (5.0, 3.8) {Traversable Boundary};
+	
+	% =============================================
+	% 7. ANNOTATIONS
+	% =============================================
+	% Arrow from camera to boundary indicating that vision outlines the area
+	\draw[->, thick, purple!70!black] ($(camPos) + (0.4,0.2)$) to[out=40, in=180] node[midway, above, font=\scriptsize, purple!80!black] {Outlines free space} (4.5,4.0);
+	
+	% Legend box
+	\node[draw, fill=white, rounded corners=2pt, font=\small, align=left, anchor=north west] at (0.2,6.7) {
+		\textbf{Legend:}\\
+		\tikz\draw[green!60!black, dashed, thick] (0,0) -- (0.4,0); Traversable Boundary\\
+		\tikz\fill[cyan!8] (0,0) rectangle (0.4,0.2); \hspace{-0.5pt}Camera FOV\\
+		\tikz\fill[red!70!black] (0,0) circle (1.8pt); Detected Features\\
+		\tikz\fill[brown!30, pattern=north east lines] (0,0) rectangle (0.4,0.2); Furniture
+	};
+	
+	% Title
+	\node[font=\large\bfseries, anchor=south, yshift=3mm] at (current bounding box.north)
+	{Monocular Visual Localization};
+	
+\end{tikzpicture}
+
+
+\section{Data Flow}
+
+\begin{itemize}
+	\item Camera captures 30 frames per second at 640x480 resolution
+	\item Encoders provide tick-based feedback at motor control frequency
+	\item All streams are timestamped and synchronized
+	\item Feature-to-feature correspondences drive motion estimation
+\end{itemize}
+
+\section{Component Placement}
+
+\begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
+	
+	%% =============================================================
+	%%  TOP-DOWN VIEW  —  verified against MBTopView.jpeg
+	%%
+	%%  FRONT  =  BOTTOM  (ball caster, camera)
+	%%  BACK   =  TOP     (Qwiic pHat, motor driver, power wires)
+	%%  LEFT   =  LEFT    (antenna, OLED corner, left wheel)
+	%%  RIGHT  =  RIGHT   (USB ports, Ethernet, right wheel)
+	%%
+	%%  Wheels + motors are in the FRONT half of the chassis.
+	%%  Heatsink fins run left-right, heatsink on LEFT half of Nano.
+	%%  USB/Ethernet ports on RIGHT edge of Nano.
+	%%  Qwiic pHat sits across BACK edge of Nano (GPIO header).
+	%%  Motor driver is a small red board at the BACK between plates.
+	%%  Ball caster at FRONT-CENTRE bottom.
+	%% =============================================================
+	
+	%% ── Shadow ───────────────────────────────────────────────────
+	\fill[black!12, blur shadow={shadow blur steps=5}]
+	(0,0) ellipse (6.2 and 5.5);
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  LOWER CHASSIS PLATE   x∈[-4,4]  y∈[-4.5,4.5]
+	%% ═════════════════════════════════════════════════════════════
+	\fill[chassis, rounded corners=8pt]
+	(-4.0,-4.5) rectangle (4.0,4.5);
+	%% long slots (front-back direction = vertical)
+	\foreach \x in {-2.4,-0.8,0.8,2.4}{
+		\fill[black!55, rounded corners=3pt]
+		(\x-0.35,-3.5) rectangle (\x+0.35,3.5);
+	}
+	%% corner mounting holes
+	\foreach \cx/\cy in {-3.3/-3.8, 3.3/-3.8, -3.3/3.8, 3.3/3.8}{
+		\fill[standoff]  (\cx,\cy) circle (0.20);
+		\fill[black!75]  (\cx,\cy) circle (0.09);
+	}
+	\draw[plateedge, line width=0.5pt, rounded corners=8pt]
+	(-4.0,-4.5) rectangle (4.0,4.5);
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  MOTORS — in the FRONT half, one on each side
+	%%  In top view: rectangular boxes protruding slightly past plate
+	%%  Motors sit between the plates at the FRONT half (y ≈ -0.5 to -2.5)
+	%% ═════════════════════════════════════════════════════════════
+	%% Left motor (at left side, front half)
+	\fill[motorgray, rounded corners=2pt]
+	(-5.1,-2.5) rectangle (-3.9,-0.5);
+	\fill[motoryel, rounded corners=1pt]
+	(-5.0,-2.2) rectangle (-4.0,-0.8);
+	%% motor label
+	\node[font=\fontsize{3}{3}\selectfont, text=white!80, rotate=90]
+	at (-4.5,-1.5) {DC Motor};
+	
+	%% Right motor (at right side, front half)
+	\fill[motorgray, rounded corners=2pt]
+	(3.9,-2.5) rectangle (5.1,-0.5);
+	\fill[motoryel, rounded corners=1pt]
+	(4.0,-2.2) rectangle (5.0,-0.8);
+	\node[font=\fontsize{3}{3}\selectfont, text=white!80, rotate=90]
+	at (4.5,-1.5) {DC Motor};
+	
+	%% Axle shafts connecting motors to wheels
+	\fill[standoff] (-3.9,-1.5) rectangle (-4.1,-1.5); % just a point
+	\draw[standoff, line width=2pt] (-4.0,-1.5) -- (-5.1,-1.5);
+	\draw[standoff, line width=2pt]  (4.0,-1.5) --  (5.1,-1.5);
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  DRIVE WHEELS — FRONT half, left and right
+	%%  Top view: wheels appear as rectangles with hub circle
+	%% ═════════════════════════════════════════════════════════════
+	%% Left wheel
+	\fill[tire, rounded corners=5pt]
+	(-6.5,-2.8) rectangle (-5.0,0.0);
+	\fill[yellow, rounded corners=4pt]
+	(-6.4,-2.7) rectangle (-5.1,-0.1);
+	%% hub + spokes
+	\fill[tire] (-5.75,-1.4) circle (0.55);
+	\foreach \a in {0,60,120,180,240,300}{
+		\draw[tire, line width=0.2cm] (-5.75,-1.4) -- +(\a:0.4);
+	}
+	\fill[yellow!50] (-5.75,-1.4) circle (0.20);
+	\fill[standoff]  (-5.75,-1.4) circle (0.08);
+	%% tread marks
+	\foreach \yy in {-2.5,-2.1,-1.7,-1.3,-0.9,-0.5}{
+		\draw[tire!70, line width=0.6pt] (-6.5,\yy)--(-6.38,\yy);
+		\draw[tire!70, line width=0.6pt] (-5.12,\yy)--(-5.0,\yy);
+	}
+	
+	%% Right wheel
+	\fill[tire, rounded corners=5pt]
+	(5.0,-2.8) rectangle (6.5,0.0);
+	\fill[yellow, rounded corners=4pt]
+	(5.1,-2.7) rectangle (6.4,-0.1);
+	\fill[tire] (5.75,-1.4) circle (0.55);
+	\foreach \a in {0,60,120,180,240,300}{
+		\draw[tire, line width=0.2cm] (5.75,-1.4) -- +(\a:0.4);
+	}
+	\fill[yellow!50] (5.75,-1.4) circle (0.20);
+	\fill[standoff]  (5.75,-1.4) circle (0.08);
+	\foreach \yy in {-2.5,-2.1,-1.7,-1.3,-0.9,-0.5}{
+		\draw[tire!70, line width=0.6pt] (5.0,\yy)--(5.12,\yy);
+		\draw[tire!70, line width=0.6pt] (6.38,\yy)--(6.5,\yy);
+	}
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  BALL CASTER — BACK-CENTRE  (top of drawing)
+	%% ═════════════════════════════════════════════════════════════
+	\fill[plateedge, rounded corners=2pt]
+	(-0.45,4.1) rectangle (0.45,4.5);
+	\shade[ball color=ballgray] (0,4.85) circle (0.38);
+	\draw[ballgray!60, line width=0.3pt] (0,4.85) circle (0.38);
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  UPPER CHASSIS PLATE  (slightly inset)
+	%% ═════════════════════════════════════════════════════════════
+	\fill[chassis!85, rounded corners=7pt]
+	(-3.7,-4.2) rectangle (3.7,4.2);
+	\foreach \x in {-2.4,-0.8,0.8,2.4}{
+		\fill[black!60, rounded corners=2pt]
+		(\x-0.32,-3.2) rectangle (\x+0.32,3.2);
+	}
+	\foreach \cx/\cy in {-3.1/-3.5, 3.1/-3.5, -3.1/3.5, 3.1/3.5}{
+		\fill[standoff]  (\cx,\cy) circle (0.17);
+		\fill[black!75]  (\cx,\cy) circle (0.08);
+	}
+	\draw[plateedge, line width=0.4pt, rounded corners=7pt]
+	(-3.7,-4.2) rectangle (3.7,4.2);
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  MOTOR DRIVER BOARD — BACK of robot (top of drawing)
+	%%  Small red SparkFun board between plates at rear
+	%% ═════════════════════════════════════════════════════════════
+	\fill[sfred, rounded corners=2pt]
+	(-1.8,3.2) rectangle (1.8,3.85);
+	\draw[sfred!60, line width=0.3pt, rounded corners=2pt]
+	(-1.8,3.2) rectangle (1.8,3.85);
+	\node[font=\fontsize{4}{4}\selectfont\bfseries, text=white]
+	at (0,3.53) {Motor Driver};
+	%% screw terminals
+	\fill[connblue, rounded corners=1pt] (-1.5,3.83) rectangle (-0.8,4.08);
+	\fill[connblue, rounded corners=1pt]  (0.8,3.83) rectangle  (1.5,4.08);
+	%% motor wires: from motor driver down to each motor
+	\draw[wireR, line width=1.0pt] (-1.2,3.2) .. controls(-2.0,2.5) and (-2.8,1.5) .. (-3.9,-0.8);
+	\draw[wireK, line width=1.0pt] (-1.0,3.2) .. controls(-1.8,2.4) and (-2.6,1.4) .. (-3.9,-1.0);
+	\draw[wireR, line width=1.0pt]  (1.2,3.2) .. controls( 2.0,2.5) and ( 2.8,1.5) ..  (3.9,-0.8);
+	\draw[wireK, line width=1.0pt]  (1.0,3.2) .. controls( 1.8,2.4) and ( 2.6,1.4) ..  (3.9,-1.0);
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  JETSON NANO PCB
+	%%  Occupies right-centre area of upper plate
+	%%  LEFT half of Nano = heatsink
+	%%  RIGHT edge of Nano = USB/Ethernet ports
+	%%  BACK edge of Nano = GPIO header (where Qwiic pHat plugs in)
+	%% ═════════════════════════════════════════════════════════════
+	\fill[nanopcb, rounded corners=3pt]
+	(-3.2,-3.0) rectangle (3.5,3.0);
+	\draw[nanoedge!55, line width=0.3pt, rounded corners=3pt]
+	(-3.2,-3.0) rectangle (3.5,3.0);
+	\draw[nanoedge!35, line width=0.22pt] (-3.0,-2.8) -- (3.3,-2.8);
+	\draw[nanoedge!35, line width=0.22pt] (-3.0, 2.8) -- (3.3, 2.8);
+	\node[font=\fontsize{4}{4}\selectfont\bfseries, text=nanoedge!80, rotate=0]
+	at (0.0,-0.1) {NVIDIA JETSON NANO};
+	
+	%% GPIO 40-pin header — BACK edge of Nano (top of Nano rectangle)
+	\foreach \xi in {0,...,19}{
+		\fill[standoff!85]
+		(-2.8+\xi*0.27, 2.98) rectangle (-2.66+\xi*0.27, 3.16);
+	}
+	\foreach \xi in {0,...,19}{
+		\fill[standoff!85]
+		(-2.8+\xi*0.27, 3.16) rectangle (-2.66+\xi*0.27, 3.34);
+	}
+	
+	%% ── HEATSINK on LEFT half of Nano ────────────────────────────
+	%% Fins run horizontally (left-right direction)
+	\fill[heatsink, rounded corners=2pt]
+	(-3.1,0.2) rectangle (0.6,2.8);
+	\foreach \yy in {0.36,0.54,0.72,0.90,1.08,1.26,1.44,1.62,1.80,1.98,2.16,2.34,2.52,2.70}{
+		\fill[black!62] (-3.08,\yy) rectangle (0.58,\yy+0.13);
+	}
+	\fill[heatsink!115] (-3.1,2.76) rectangle (0.6,2.88);
+	\draw[black!52, line width=0.3pt, rounded corners=2pt]
+	(-3.1,0.2) rectangle (0.6,2.88);
+	%% thermal warning triangle
+	\fill[yellow!85] (-1.5,0.55) -- (-1.1,0.55) -- (-1.3,0.85) -- cycle;
+	\node[font=\fontsize{3.5}{4}\selectfont, text=black!80] at (-1.3,0.62) {\textbf{!}};
+	
+	%% ── USB 3.0 ×4, HDMI×2, Ethernet — RIGHT edge of Nano ───────
+	%% 4× USB-A (two stacked pairs, blue)
+	\fill[black!78, rounded corners=1pt]
+	(3.48,0.2) rectangle (4.05,2.8);
+	\fill[usbblue, rounded corners=0.5pt]
+	(3.50,1.55) rectangle (4.03,2.75);
+	\fill[black!88] (3.53,1.58) rectangle (4.00,2.12);
+	\fill[black!88] (3.53,2.15) rectangle (4.00,2.72);
+	\fill[usbblue, rounded corners=0.5pt]
+	(3.50,0.22) rectangle (4.03,1.52);
+	\fill[black!88] (3.53,0.25) rectangle (4.00,0.86);
+	\fill[black!88] (3.53,0.88) rectangle (4.00,1.50);
+	\node[font=\fontsize{2.5}{3}\selectfont, text=white, rotate=90]
+	at (3.77,1.5) {USB 3.0 ×4};
+	
+	%% HDMI + DisplayPort — right edge, front area of Nano
+	\fill[black!80, rounded corners=1pt]
+	(3.48,-1.5) rectangle (3.95,0.18);
+	\fill[black!68, rounded corners=0.5pt]
+	(3.50,-1.48) rectangle (3.93,-0.72);
+	\fill[black!68, rounded corners=0.5pt]
+	(3.50,-0.70) rectangle (3.93,0.16);
+	\node[font=\fontsize{2.2}{2.5}\selectfont, text=gray!65, rotate=90]
+	at (3.72,-0.66) {HDMI/DP};
+	
+	%% Gigabit Ethernet — right edge
+	\fill[black!65, rounded corners=1pt]
+	(3.48,-2.5) rectangle (4.05,-1.52);
+	\node[font=\fontsize{2.8}{3}\selectfont, text=gray!70, rotate=90]
+	at (3.77,-2.01) {GbE};
+	
+	%% micro-USB power — right edge, very front
+	\fill[black!72, rounded corners=0.5pt]
+	(3.48,-3.0) rectangle (3.75,-2.52);
+	\node[font=\fontsize{2}{2.5}\selectfont, text=gray!60, rotate=90]
+	at (3.62,-2.76) {uUSB};
+	
+	%% Camera (MIPI CSI) connector — front edge of Nano
+	\fill[black!80, rounded corners=1pt]
+	(0.2,-3.02) rectangle (1.6,-2.88);
+	\node[font=\fontsize{2.5}{3}\selectfont, text=gray!65]
+	at (0.9,-2.95) {CSI};
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  SPARKFUN QWIIC PHAT — plugged onto GPIO at BACK of Nano
+	%%  Extends toward the back (top of drawing)
+	%% ═════════════════════════════════════════════════════════════
+	\fill[sfred, rounded corners=2.5pt]
+	(-2.8,3.35) rectangle (2.6,4.35);
+	\draw[sfred!55, line width=0.3pt, rounded corners=2.5pt]
+	(-2.8,3.35) rectangle (2.6,4.35);
+	\node[font=\fontsize{5}{5}\selectfont\bfseries, text=white]
+	at (-0.1,3.88) {qwiic pHat};
+	\node[font=\fontsize{3}{3}\selectfont, text=white!75]
+	at (-0.1,3.62) {SparkFun};
+	
+	%% reset button
+	\fill[black!88, rounded corners=0.5pt]
+	(0.3,4.05) rectangle (0.85,4.28);
+	\fill[gray!62, rounded corners=0.3pt]
+	(0.38,4.08) rectangle (0.78,4.25);
+	
+	%% Qwiic JST connectors — front edge of pHat (toward Nano)
+	\fill[connblue, rounded corners=0.8pt]
+	(-1.6,3.33) rectangle (-0.9,3.18);
+	\fill[connblue, rounded corners=0.8pt]
+	(-0.5,3.33) rectangle (0.2,3.18);
+	
+	%% Power terminal block — RIGHT side of pHat
+	\fill[connblue, rounded corners=1.5pt]
+	(2.1,3.88) rectangle (2.65,4.35);
+	\node[font=\fontsize{3}{3}\selectfont, text=white]
+	at (2.38,4.12) {PWR};
+	
+	%% Power wires (red + yellow + black) from terminal going right
+	\draw[wireR, line width=1.2pt]
+	(2.65,4.20) .. controls (3.5,4.4) and (4.2,4.0) .. (4.2,3.2)
+	.. controls (4.2,2.4) and (3.9,1.5) .. (3.7,0.8);
+	\draw[wireY, line width=1.2pt]
+	(2.65,4.12) .. controls (3.6,4.3) and (4.3,3.9) .. (4.3,3.1)
+	.. controls (4.3,2.3) and (4.0,1.4) .. (3.8,0.7);
+	\draw[wireK, line width=1.0pt]
+	(2.65,4.04) .. controls (3.4,4.2) and (4.1,3.8) .. (4.1,3.0)
+	.. controls (4.1,2.2) and (3.8,1.3) .. (3.6,0.6);
+	
+	%% Qwiic I2C wires from pHat left side going to motor driver
+	\draw[wireK, line width=0.8pt]
+	(-2.6,3.88) .. controls (-3.0,3.7) and (-2.8,3.5) .. (-1.6,3.53);
+	\draw[wireR, line width=0.8pt]
+	(-2.6,3.80) .. controls (-3.0,3.6) and (-2.8,3.4) .. (-1.6,3.45);
+	\draw[wireY, line width=0.8pt]
+	(-2.6,3.72) .. controls (-2.95,3.5) and (-2.75,3.3) .. (-1.6,3.37);
+	\draw[wireB, line width=0.8pt]
+	(-2.6,3.64) .. controls (-2.9,3.4) and (-2.7,3.2) .. (-1.6,3.29);
+	
+	%% ── OLED display — back-LEFT corner of Qwiic pHat ────────────
+	\fill[black!88, rounded corners=1.5pt]
+	(-2.85,4.05) rectangle (-2.2,4.48);
+	\fill[oledblue, rounded corners=0.8pt]
+	(-2.82,4.08) rectangle (-2.23,4.45);
+	\foreach \py in {4.13,4.21,4.29,4.37}{
+		\foreach \px in {-2.78,-2.71,-2.64,-2.57,-2.50,-2.43,-2.36,-2.29}{
+			\fill[cyan!68] (\px,\py) rectangle (\px+0.05,\py+0.05);
+		}
+	}
+	
+	%% ── Wi-Fi / antenna dongle — LEFT side, sticking out ─────────
+	%% Small USB dongle on left side of chassis
+	\fill[black!72, rounded corners=1pt]
+	(-4.05,-0.4) rectangle (-3.68,0.8);
+	%% antenna stub protruding left
+	\fill[standoff!80] (-4.18,0.3) rectangle (-4.05,0.6);
+	\draw[standoff!70, line width=1.2pt] (-4.18,0.45) -- (-4.7,0.45);
+	\fill[standoff] (-4.7,0.45) circle (0.06);
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  CAMERA FLEX RIBBON — from CSI connector runs toward FRONT
+	%%  (downward in drawing), hangs over front edge
+	%% ═════════════════════════════════════════════════════════════
+	\fill[flex, rounded corners=1pt]
+	(0.25,-3.02) -- (1.55,-3.02) -- (1.55,-5.0) -- (0.25,-5.0) -- cycle;
+	\fill[flexlabel, rounded corners=0.5pt]
+	(0.28,-3.05) -- (1.52,-3.05) -- (1.52,-5.0) -- (0.28,-5.0) -- cycle;
+	\node[font=\fontsize{2.5}{3}\selectfont, text=black!72, rotate=90]
+	at (0.9,-4.0) {IMX219-MIPI-FF-NANO-H136 V1.3};
+	
+	%% Camera module PCB at very front
+	\fill[nanopcb!80, rounded corners=2pt]
+	(-0.4,-5.0) rectangle (2.2,-5.65);
+	\draw[nanoedge!50, line width=0.3pt, rounded corners=2pt]
+	(-0.4,-5.0) rectangle (2.2,-5.65);
+	%% Lens
+	\fill[black!92] (0.9,-5.33) circle (0.24);
+	\fill[black!72] (0.9,-5.33) circle (0.17);
+	\fill[oledblue!55] (0.9,-5.33) circle (0.10);
+	\fill[white, opacity=0.3] (0.9,-5.33) circle (0.05);
+	\draw[standoff!60, line width=0.5pt] (0.9,-5.33) circle (0.26);
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  DIRECTION LABELS
+	%% ═════════════════════════════════════════════════════════════
+	\node[font=\fontsize{6}{6}\selectfont\bfseries, text=black!55]
+	at (0, 5.4) {$\uparrow$ BACK};
+	\node[font=\fontsize{6}{6}\selectfont\bfseries, text=black!55]
+	at (0,-6.5) {$\downarrow$ FRONT (camera)};
+	\node[font=\fontsize{5}{5}\selectfont\bfseries, text=black!55, rotate=90]
+	at (-7.2,-1.4) {LEFT (antenna)};
+	\node[font=\fontsize{5}{5}\selectfont\bfseries, text=black!55, rotate=-90]
+	at ( 5.5,-1.4) {RIGHT (USB/Eth)};
+	
+	%% ═════════════════════════════════════════════════════════════
+	%%  TITLE
+	%% ═════════════════════════════════════════════════════════════
+	\node[font=\large\bfseries, text=black!80] at (0,-7.3)
+	{SparkFun JetBot AI Kit — Top View};
+	
+	
+\end{tikzpicture}

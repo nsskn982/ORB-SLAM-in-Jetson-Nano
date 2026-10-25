@@ -1,0 +1,60 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: SetUp.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Set Up}
+
+\section{System Initialization}
+
+\begin{enumerate}
+    \item Power on the robot and wait for Jetson Nano to boot (30-60 seconds)
+    \item Connect to robot via SSH: \texttt{ssh jetson@<robot\_ip>}
+    \item Launch localization software: \texttt{roslaunch localization system.launch}
+    \item Open web dashboard: \texttt{http://<robot\_ip>:8080}
+\end{enumerate}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		stepbox/.style={rectangle, draw=orange!70, fill=orange!5, thick, text width=5.5cm, text centered, rounded corners, minimum height=1.1cm},
+		arrow/.style={thick, ->, >=stealth}
+		]
+		\node[stepbox] (i1) {\textbf{1. Power On}\\Wait 30--60s for Jetson Nano boot};
+		\node[stepbox, below=of i1] (i2) {\textbf{2. Connect via SSH}\\\texttt{ssh jetson@<robot\_ip>}};
+		\node[stepbox, below=of i2] (i3) {\textbf{3. Launch Software}\\\texttt{roslaunch localization system.launch}};
+		\node[stepbox, below=of i3] (i4) {\textbf{4. Open Dashboard}\\\texttt{http://<robot\_ip>:8080}};
+		
+		\draw[arrow] (i1) -- (i2);
+		\draw[arrow] (i2) -- (i3);
+		\draw[arrow] (i3) -- (i4);
+	\end{tikzpicture}
+	\caption{System initialization sequence from power-on to web dashboard access}
+	\label{fig:system-init}
+\end{figure}
+
+\section{Environment Preparation}
+
+\begin{itemize}
+    \item Place robot in test arena with known dimensions
+    \item Ensure adequate lighting (minimum 500 lux recommended)
+    \item Add visual landmarks or textured features
+    \item Clear obstacles if in autonomous mode
+\end{itemize}
+
+\section{Calibration Procedure}
+
+\begin{enumerate}
+    \item Run camera calibration checkerboard scan
+    \item Perform encoder zero calibration
+    \item Execute test path to verify baseline accuracy
+    \item Adjust feature extraction parameters if needed
+\end{enumerate}
+

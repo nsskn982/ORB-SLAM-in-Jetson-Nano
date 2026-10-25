@@ -1,0 +1,86 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: Troubleshooting.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Troubleshooting}
+
+\section{Debugging Tools and Techniques}
+
+\subsection{Logging and Visualization}
+\begin{itemize}
+    \item Enable debug logging: \texttt{export ROS\_LOG\_LEVEL=debug}
+    \item Visualize pose graph: \texttt{rosrun g2o viewer}
+    \item Plot trajectories with Python scripts in \texttt{scripts/}
+    \item Use \texttt{rqt\_graph} to verify message flow
+\end{itemize}
+
+\subsection{Common Algorithmic Issues}
+\begin{itemize}
+    \item \textbf{Features not detected}: Check image histogram; may need exposure adjustment
+    \item \textbf{Matches appear random}: Feature descriptor mismatch; verify matcher threshold
+    \item \textbf{Pose estimates explode}: Check for numerical instability in transformation estimation
+    \item \textbf{Bundle adjustment diverges}: Initial guess too far from solution; relax convergence tolerance initially
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		decision/.style={diamond, draw=red!60, fill=red!5, thick, text width=2.5cm, text badly centered, inner sep=0pt},
+		block/.style={rectangle, draw=blue!60, fill=blue!5, thick, text width=3.2cm, text centered, rounded corners, minimum height=1.2cm},
+		sol/.style={rectangle, draw=green!60!black, fill=green!10, thick, text width=3.2cm, text centered, rounded corners},
+		arrow/.style={thick, ->, >=stealth}
+		]
+		\node[decision] (issue) {\textbf{Issue Identified}};
+		
+		\node[block, below left=1.5cm and 2.5cm of issue] (fnd) {Features not detected};
+		\node[block, below=1.5cm of issue] (mar) {Matches appear random};
+		\node[block, below right=1.5cm and 2.5cm of issue] (pee) {Pose estimates explode};
+		
+		\node[sol, below=0.8cm of fnd] (sol1) {Check image histogram \& exposure};
+		\node[sol, below=0.8cm of mar] (sol2) {Verify matcher threshold};
+		\node[sol, below=0.8cm of pee] (sol3) {Check numerical instability};
+		
+		\draw[arrow] (issue) -- (fnd);
+		\draw[arrow] (issue) -- (mar);
+		\draw[arrow] (issue) -- (pee);
+		
+		\draw[arrow] (fnd) -- (sol1);
+		\draw[arrow] (mar) -- (sol2);
+		\draw[arrow] (pee) -- (sol3);
+	\end{tikzpicture}
+	\caption{Decision tree for diagnosing common algorithmic issues in feature detection, matching, and pose estimation}
+	\label{fig:troubleshooting-tree}
+\end{figure}
+
+\section{Performance Debugging}
+
+\begin{itemize}
+    \item Profile with \texttt{perf} and \texttt{callgrind} to identify bottlenecks
+    \item Use \texttt{top} to monitor Jetson CPU/GPU/memory during runs
+    \item Check TensorRT optimization if using GPU-accelerated feature extraction
+    \item Consider OpenCV CUDA support for real-time performance
+\end{itemize}
+
+\section{Test Regression Detection}
+
+\begin{itemize}
+    \item Maintain benchmark trajectories in \texttt{test/data/}
+    \item Run \texttt{./test/run\_benchmarks.sh} after major changes
+    \item Compare Absolute Trajectory Error against baseline
+    \item Document acceptable regression thresholds
+\end{itemize}
+
+
+
+
+
+
+

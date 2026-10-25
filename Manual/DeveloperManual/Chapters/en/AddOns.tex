@@ -1,0 +1,70 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: AddOns.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Add Ons}
+
+\section{Extending the Localization Framework}
+
+\subsection{Adding New Feature Extractors}
+\begin{enumerate}
+    \item Implement \texttt{FeatureExtractor} interface in \texttt{src/feature\_extraction/}
+    \item Override \texttt{extractKeypoints()} and \texttt{computeDescriptors()}
+    \item Register in \texttt{FeatureFactory::create()} method
+    \item Add configuration option in \texttt{config/localization.yaml}
+\end{enumerate}
+
+\subsection{Integrating Alternative SLAM Backends}
+\begin{itemize}
+    \item Replace g2o with Ceres Solver, GTSAM, or iSAM2
+    \item Implement \texttt{SLAMBackend} abstract interface
+    \item Maintain pose graph input/output format compatibility
+    \item Benchmark against baseline for validation
+\end{itemize}
+
+\subsection{Adding New Sensor Modalities}
+\begin{enumerate}
+    \item Create new \texttt{SensorModule} derived class
+    \item Implement sensor-specific data acquisition (in separate thread)
+    \item Define constraint type (encoder, IMU, Lidar, Sonar)
+    \item Add to \texttt{SensorFusionEngine}
+\end{enumerate}
+
+\section{Advanced Topics}
+
+\subsection{Switching Between Active Feature Extractors}
+\begin{itemize}
+    \item Load different extraction algorithms at runtime via config
+    \item Useful for adaptive selection based on environment
+    \item Example: Use SIFT in low-texture, ORB elsewhere for speed
+\end{itemize}
+
+\subsection{Collaborative Localization (Multi-Robot)}
+\begin{itemize}
+    \item Share pose graph constraints across network using ROS topics
+    \item Requires synchronization and outlier filtering
+    \item Significantly improves global map accuracy
+    \item See \texttt{examples/multi\_robot\_slam.cpp}
+\end{itemize}
+
+\subsection{Real-Time Scheduling and Priority}
+\begin{itemize}
+    \item Camera capture thread: \texttt{SCHED\_FIFO} priority 90
+    \item Feature extraction: \texttt{SCHED\_FIFO} priority 80
+    \item Optimization: \texttt{SCHED\_OTHER} priority 0 (can be interrupted)
+    \item See \texttt{src/thread\_manager.cpp} for priority configuration
+\end{itemize}
+
+
+
+
+

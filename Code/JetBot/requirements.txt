@@ -1,0 +1,42 @@
+# OS: Ubuntu 18.04 (JetPack 4.3 / L4T R32.3.1)
+# ROS: Melodic (ROS 1)
+# Python 3.6 (default on Ubuntu 18.04)
+# ROS runtime dependencies are managed via apt/catkin; see package.xml.
+# System/ROS packages (install via apt/rosdep, not pip):
+#   ros-melodic-rospy
+#   ros-melodic-std-msgs
+#   ros-melodic-sensor-msgs
+#   ros-melodic-geometry-msgs
+#   ros-melodic-orb-slam2-ros
+#   ros-melodic-tf
+#   python3-opencv (JetPack provides libopencv)
+#   python3-numpy (if using system numpy)
+# CNN model is an ONNX file provided via ~model_path; no extra pip package.
+
+# JetPack 4.3 provides OpenCV 4.1.1 pre-installed (libopencv).
+# Core numerical and image-processing
+numpy>=1.17
+opencv-python>=4.5
+
+# ROS Python client libraries (ROS Melodic on Jetson Nano)
+rosdep>=0.11.8           # system-level, not installed via pip on the Nano
+catkin_pkg>=0.4          # if you ever use catkin-based Python tools
+rospy                    # provided by ROS, not pip-installed
+rosgraph                 # via ROS
+rosmsg                   # via ROS
+rostopic                 # via ROS
+
+# Data and file utilities
+argparse                 # part of Python standard library
+csv                      # standard library
+json                     # standard library
+hashlib                  # standard library
+os                       # standard library
+time                     # standard library
+threading                # standard library
+math                     # standard library
+shutil                   # standard library
+
+# (Optional) plotting/analysis if you use them in notebooks
+matplotlib               # only if you add plots
+pandas                   # only if you do log analysis in Python

@@ -1,0 +1,179 @@
+% =====================================================================
+% 5 TikZ diagrams for MobileRobot-3.tex (JetBot monocular vSLAM thesis)
+% Landscape-flow version, tuned for a 10pt A4paper beamer document.
+%
+% Preamble requirements (add once, alongside existing packages):
+%   \usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+%   \usepackage{graphicx}   % almost certainly already loaded by beamer
+%
+% All five diagrams now flow LEFT-TO-RIGHT instead of top-to-bottom.
+% A landscape A4 beamer frame is much wider than it is tall, so a
+% horizontal flow uses the available slide real-estate far better than
+% a vertical flowchart squeezed by \textheight. Every diagram is wrapped
+% in \resizebox{\textwidth}{!}{...} -- a single width-driven scale now
+% works uniformly for all five, since none of them is tall/portrait
+% anymore.
+% Paste the block you need directly inside the matching \STANDARD{...}{ ... }.
+% =====================================================================
+
+% ---------- shared style definitions (put once, before first diagram) ----------
+\tikzset{
+	block/.style   = {rectangle, rounded corners, draw=black, thick, fill=blue!8,
+		minimum width=2.1cm, minimum height=0.75cm, align=center, font=\tiny},
+	slam/.style    = {rectangle, rounded corners, draw=black!70, thick, fill=orange!12,
+		minimum width=1.9cm, minimum height=0.65cm, align=center, font=\tiny},
+	cnn/.style     = {rectangle, rounded corners, draw=black!70, thick, fill=green!12,
+		minimum width=1.9cm, minimum height=0.65cm, align=center, font=\tiny},
+	decision/.style= {diamond, draw=black, thick, fill=red!10, aspect=2.4, align=center,
+		font=\tiny, inner sep=0.5pt},
+	hw/.style      = {rectangle, draw=black, thick, fill=gray!10, minimum width=1.9cm,
+		minimum height=0.65cm, align=center, font=\tiny},
+	sensor/.style  = {rectangle, draw=black, thick, fill=yellow!15, minimum width=1.8cm,
+		minimum height=0.6cm, align=center, font=\tiny},
+	arr/.style     = {-{Stealth[length=1.6mm]}, thick},
+	darr/.style    = {-{Stealth[length=1.6mm]}, thick, dashed},
+}
+
+% =====================================================================
+% DIAGRAM 1 -- System Architecture (\STANDARD{System Architecture})
+% Camera on the left, two horizontal branches (vSLAM / CNN), fused into
+% decision node on the right, cmd_vel as the final output.
+% =====================================================================
+\begin{center}
+	\resizebox{\textwidth}{!}{%
+		\begin{tikzpicture}[node distance=6mm and 10mm]
+			\node[sensor] (cam) {Monocular\\camera IMX219};
+			\node[slam, above right=6mm and 10mm of cam] (orb) {ORB features};
+			\node[cnn,  below right=6mm and 10mm of cam] (pre) {Preprocess\\$224\times224$};
+			\node[slam, right=of orb] (pose) {Pose $+$ sparse\\map points};
+			\node[cnn,  right=of pre] (onnx) {ONNX inference\\\texttt{collision\_node.py}};
+			\node[block, right=14mm of $(pose)!0.5!(onnx)$] (dec) {\texttt{decision\_node.py}\\fuse pose $+$ risk};
+			\node[hw, right=of dec] (cmd) {\texttt{cmd\_vel}};
+			\node[hw, above=8mm of pose] (occ) {\texttt{occupancy\_grid\_node.py}};
+			\node[hw, right=of occ] (map) {\texttt{map\_persistence\_node.py}};
+			\node[hw, below=8mm of onnx] (tel) {\texttt{telemetry\_logger\_node.py}};
+			
+			\draw[arr] (cam) |- (orb);
+			\draw[arr] (cam) |- (pre);
+			\draw[arr] (orb) -- (pose);
+			\draw[arr] (pre) -- (onnx);
+			\draw[arr] (pose.east) -| (dec.north);
+			\draw[arr] (onnx.east) -| (dec.south);
+			\draw[arr] (dec) -- (cmd);
+			\draw[arr] (pose) -- (occ);
+			\draw[arr] (occ) -- (map);
+			\draw[darr] (onnx) -- (tel);
+			\draw[darr] (dec) |- (tel);
+	\end{tikzpicture}}
+\end{center}
+
+% =====================================================================
+% DIAGRAM 2 -- Flowchart of Proposed Solution (\STANDARD{Flowchart of Proposed Solution})
+% Horizontal processing chain; parallel perception stacked at the same
+% pipeline stage; anomaly decision branches up/down instead of left/right.
+% =====================================================================
+\begin{center}
+	\resizebox{\textwidth}{!}{%
+		\begin{tikzpicture}[node distance=6mm and 6mm]
+			\node[block] (app) {1. Application:\\JetBot v2.1};
+			\node[block, right=of app] (acq) {2. Data acquisition:\\camera 20--30 fps};
+			\node[slam, above right=4mm and 6mm of acq] (slamb) {vSLAM: ORB $\rightarrow$\\pose $\rightarrow$ map};
+			\node[cnn,  below right=4mm and 6mm of acq] (cnnb)  {CNN: frame $\rightarrow$\\$p(\text{blocked})$};
+			\node[block, right=14mm of $(slamb)!0.5!(cnnb)$] (out) {4. Outlier handling:\\RANSAC / smoothing};
+			\node[block, right=of out] (mon) {5. Monitoring:\\$N_{\mathrm{tracks}}(t)$, $\max_k p$};
+			\node[decision, right=of mon] (anom) {Anomaly?};
+			\node[block, above=8mm of anom] (resp) {6. Slow / stop /\\retrain / reinit};
+			\node[block, right=of anom] (ctrl) {7. Motion control:\\pose $+$ avoidance $\rightarrow$ \texttt{cmd\_vel}};
+			
+			\draw[arr] (app) -- (acq);
+			\draw[arr] (acq) |- (slamb);
+			\draw[arr] (acq) |- (cnnb);
+			\draw[arr] (slamb.east) -| (out.north);
+			\draw[arr] (cnnb.east) -| (out.south);
+			\draw[arr] (out) -- (mon);
+			\draw[arr] (mon) -- (anom);
+			\draw[arr] (anom) -- node[right,font=\tiny] {yes} (resp);
+			\draw[arr] (resp) -| node[above,font=\tiny,pos=0.3] {retry} (acq.north);
+			\draw[arr] (anom) -- node[above,font=\tiny] {no} (ctrl);
+	\end{tikzpicture}}
+\end{center}
+
+% =====================================================================
+% DIAGRAM 3 -- Hardware Platform (\STANDARD{Hardware Platform})
+% (background box drawn directly -- no "backgrounds" library needed since
+% the fit box is unfilled and draw order does not matter visually)
+% =====================================================================
+\begin{center}
+	\resizebox{\textwidth}{!}{%
+		\begin{tikzpicture}[node distance=7mm and 12mm]
+			\node[sensor] (cam) {IMX219 CSI camera\\8MP, 20--30 fps};
+			\node[hw, fill=blue!12, right=of cam, minimum width=3.0cm, minimum height=0.9cm] (nano)
+			{Jetson Nano A02\\\tiny Cortex-A57 @1.43GHz, 128-core GPU, 4GB LPDDR4};
+			\node[hw, fill=yellow!15, right=of nano] (batt) {Eunicell battery\\10000\,mAh};
+			\node[hw, above right=8mm and -2mm of nano] (oled) {Micro OLED};
+			\node[hw, below right=8mm and -2mm of nano] (qwiic) {Qwiic pHAT v2.0};
+			\node[hw, below=of qwiic] (motor) {Qwiic motor driver};
+			\node[hw, below=of motor] (motors) {DC motors\\(differential drive)};
+			
+			\draw[arr] (cam) -- node[above,font=\tiny] {CSI (single)} (nano);
+			\draw[arr] (nano) -- node[above,font=\tiny] {5V} (batt);
+			\draw[arr] (nano) |- node[left,font=\tiny,pos=0.75] {I2C/Qwiic} (qwiic);
+			\draw[arr] (nano) |- (oled);
+			\draw[arr] (qwiic) -- (motor);
+			\draw[arr] (motor) -- node[left,font=\tiny] {PWM} (motors);
+			\draw[arr] (batt) |- (motor.east);
+			
+			\node[draw=black!40, dashed, rounded corners, fit=(cam)(nano)(batt)(oled)(qwiic)(motor)(motors),
+			inner sep=5mm, label={[font=\tiny]above:SparkFun JetBot v2.1}] {};
+	\end{tikzpicture}}
+\end{center}
+
+% =====================================================================
+% DIAGRAM 4 -- Methodology: CRISP-DM / KDD / ML pipeline (\STANDARD{Methodology})
+% Kept as three horizontal, left-aligned nested bands (already landscape-friendly).
+% =====================================================================
+\begin{center}
+	\resizebox{\textwidth}{!}{%
+		\begin{tikzpicture}[node distance=5mm]
+			\node[block, fill=blue!6, minimum width=13cm, minimum height=2.1cm] (crisp) {};
+			\node[font=\tiny\bfseries, above=1mm of crisp.north] {CRISP-DM (engineering-level project structure)};
+			\node[block, fill=orange!10, minimum width=10cm, minimum height=1.3cm, below=5mm of crisp.north] (kdd) {};
+			\node[font=\tiny\bfseries, above=1mm of kdd.north] {KDD (raw sensor data $\rightarrow$ usable knowledge)};
+			\node[block, fill=green!10, minimum width=6.5cm, minimum height=0.7cm, below=5mm of kdd.north] (ml) {ML pipeline (CNN implementation)};
+			
+			\node[below=1mm of crisp.south, font=\tiny, align=center]
+			{Business Understanding $\rightarrow$ Data Understanding $\rightarrow$ Data Prep $\rightarrow$ Modeling $\rightarrow$ Evaluation $\rightarrow$ Deployment};
+			
+			\draw[arr, blue!60!black] ([yshift=2mm]crisp.south west) to[bend left=15]
+			node[left, font=\tiny] {iterate} ([yshift=-2mm]crisp.north west);
+	\end{tikzpicture}}
+\end{center}
+
+% =====================================================================
+% DIAGRAM 5 -- Deployment Orchestration (\STANDARD{Deployment -- Orchestration})
+% Horizontal control-flow chain of run_jetbot_all.sh; the checks-only
+% branch peels off upward and rejoins near the end instead of running
+% down the page.
+% =====================================================================
+\begin{center}
+	\resizebox{\textwidth}{!}{%
+		\begin{tikzpicture}[node distance=6mm and 6mm]
+			\node[block] (s1) {1. Parse CLI args,\\set feature flags};
+			\node[decision, right=of s1] (s2) {Checks-\\only?};
+			\node[block, above=8mm of s2] (s2y) {Run \texttt{--camera-test}\\\texttt{--calibrate}\\\texttt{--qwiic-test}};
+			\node[block, right=of s2] (s3) {3. Deploy CNN\\if \texttt{--model-path}};
+			\node[block, right=of s3] (s4) {4. Start camera\\publisher};
+			\node[block, right=of s4] (s5) {5. Launch \texttt{system.launch}:\\camera, SLAM, occupancy,\\collision, decision, telemetry};
+			\node[block, right=of s5] (s6) {6. Optional\\\texttt{--monitor}/\texttt{--collect-data}};
+			\node[block, right=of s6] (s7) {7. Wait for\\\texttt{roslaunch}, clean up};
+			
+			\draw[arr] (s1) -- (s2);
+			\draw[arr] (s2) -- node[above,font=\tiny] {no} (s3);
+			\draw[arr] (s2) -- node[right,font=\tiny] {yes} (s2y);
+			\draw[arr] (s2y) -| (s7.north);
+			\draw[arr] (s3) -- (s4);
+			\draw[arr] (s4) -- (s5);
+			\draw[arr] (s5) -- (s6);
+			\draw[arr] (s6) -- (s7);
+	\end{tikzpicture}}
+\end{center}

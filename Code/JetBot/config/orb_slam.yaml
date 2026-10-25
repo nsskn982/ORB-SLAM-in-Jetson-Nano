@@ -1,0 +1,68 @@
+%YAML:1.0
+#--------------------------------------------------------------------------------------------
+# ORB-SLAM2 monocular settings for the SparkFun JetBot v2.1-based mobile robot
+# Camera: IMX219 (CSI) on the NVIDIA Jetson Nano Developer Kit A02.
+#
+#  !!!  REQUIRED ACTION BEFORE ANY AUTONOMOUS RUN  !!!
+#  The intrinsics (Camera.fx/fy/cx/cy) and distortion (k1..k3, p1, p2) below are
+#  GENERIC PLACEHOLDERS for a 640x480 stream and WILL cause tracking failures,
+#  scale drift, and wrong poses. Run:
+#     python3 scripts/imx219_camera_calibrate.py --source csi --sensor-id 0 \
+#         --board-cols 9 --board-rows 6 --square-size 0.024
+#  and replace the values below with your calibrated output. Keep these
+#  intrinsics consistent with the resolution actually streamed to ORB-SLAM2.
+#--------------------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------------------
+# Camera Parameters (PLACEHOLDERS replace with calibrated values)
+#--------------------------------------------------------------------------------------------
+Camera.fx: 530.0
+Camera.fy: 530.0
+Camera.cx: 320.0
+Camera.cy: 240.0
+
+Camera.k1: 0.0
+Camera.k2: 0.0
+Camera.p1: 0.0
+Camera.p2: 0.0
+Camera.k3: 0.0
+
+# Image resolution streamed to ORB-SLAM2 (must match the camera publisher).
+Camera.width: 640
+Camera.height: 480
+
+# Camera frames per second
+Camera.fps: 30.0
+
+# Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
+Camera.RGB: 1
+
+#--------------------------------------------------------------------------------------------
+# ORB Parameters
+#--------------------------------------------------------------------------------------------
+# Number of features per image
+ORBextractor.nFeatures: 1000
+
+# Scale factor between levels in the scale pyramid
+ORBextractor.scaleFactor: 1.2
+
+# Number of levels in the scale pyramid
+ORBextractor.nLevels: 8
+
+# FAST detector thresholds (initial, then minimum fallback)
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters (used only when a GUI viewer is enabled)
+#--------------------------------------------------------------------------------------------
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize: 2
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -1.8
+Viewer.ViewpointF: 500

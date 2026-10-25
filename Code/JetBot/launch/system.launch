@@ -1,0 +1,145 @@
+<launch>
+  <arg name="camera_topic" default="/camera/image_raw"/>
+  <arg name="pose_topic" default="/pose"/>
+  <arg name="cmd_vel_topic" default="/cmd_vel"/>
+  <arg name="map_topic" default="/map"/>
+  <arg name="map_yaml" default=""/>
+  <arg name="use_map_server" default="false"/>
+  <arg name="use_map_collision" default="true"/>
+  <arg name="run_cnn" default="false"/>
+  <arg name="use_occupancy_grid" default="true"/>
+  <arg name="use_encoders" default="true"/>
+  <arg name="use_motor_feedback" default="true"/>
+  <arg name="enable_battery_monitor" default="true"/>
+  <arg name="enable_telemetry" default="true"/>
+  <arg name="enable_map_persistence" default="false"/>
+  <arg name="collision_model_path" default="$(find jetbot_vslam)/models/collision.onnx"/>
+  <arg name="collision_topic" default="/collision/probability"/>
+  <arg name="base_frame" default="base_link"/>
+  <arg name="camera_frame" default="camera_link"/>
+
+  <!-- Keep frame chain consistent: map -> base_link -> camera_link.
+       Update xyz/rpy if the camera mount is offset from base_link. -->
+  <node pkg="tf" type="static_transform_publisher" name="base_to_camera_tf"
+        args="0.0 0.0 0.0 0.0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 100"/>
+
+  <include file="$(find jetbot_vslam)/launch/map_server.launch" if="$(arg use_map_server)">
+    <arg name="map_yaml" value="$(arg map_yaml)"/>
+  </include>
+
+  <include file="$(find jetbot_vslam)/launch/orb_slam2_mono.launch">
+    <arg name="camera_topic" value="$(arg camera_topic)"/>
+    <arg name="pose_topic" value="$(arg pose_topic)"/>
+  </include>
+
+  <!-- Occupancy grid publisher from SLAM point cloud -->
+  <node pkg="jetbot_vslam" type="occupancy_grid_node.py" name="occupancy_grid_node" output="screen" respawn="true" if="$(arg use_occupancy_grid)">
+    <param name="grid_width" value="20"/>
+    <param name="grid_height" value="20"/>
+    <param name="grid_resolution" value="0.05"/>
+    <param name="publish_freq" value="2.0"/>
+    <param name="max_height" value="0.5"/>
+    <param name="min_height" value="-0.1"/>
+    <param name="inflation_radius" value="0.15"/>
+  </node>
+
+  <!-- Encoder feedback node -->
+  <node pkg="jetbot_vslam" type="encoder_node.py" name="encoder_node" output="screen" respawn="true" if="$(arg use_encoders)">
+    <param name="wheel_diameter" value="0.066"/>
+    <param name="wheelbase" value="0.090"/>
+    <param name="ticks_per_revolution" value="64"/>
+    <param name="encoder_topic" value="/jetbot/encoder_ticks"/>
+    <param name="publish_freq" value="20.0"/>
+  </node>
+
+  <!-- Motor velocity feedback controller -->
+  <node pkg="jetbot_vslam" type="motor_feedback_controller.py" name="motor_feedback_controller" output="screen" respawn="true" if="$(arg use_motor_feedback)">
+    <param name="wheel_diameter" value="0.066"/>
+    <param name="wheelbase" value="0.090"/>
+    <param name="ticks_per_revolution" value="64"/>
+    <param name="kp" value="0.5"/>
+    <param name="ki" value="0.1"/>
+    <param name="kd" value="0.05"/>
+    <param name="max_correction" value="0.1"/>
+    <param name="publish_freq" value="20.0"/>
+  </node>
+
+  <!-- Battery monitor node -->
+  <node pkg="jetbot_vslam" type="battery_monitor_node.py" name="battery_monitor_node" output="screen" respawn="true" if="$(arg enable_battery_monitor)">
+    <param name="adc_channel" value="0"/>
+    <param name="voltage_scale" value="2.0"/>
+    <param name="max_voltage" value="8.4"/>
+    <param name="min_voltage" value="6.0"/>
+    <param name="warning_voltage" value="6.5"/>
+    <param name="critical_voltage" value="6.0"/>
+    <param name="publish_freq" value="1.0"/>
+  </node>
+
+  <!-- Telemetry logger node -->
+  <node pkg="jetbot_vslam" type="telemetry_logger_node.py" name="telemetry_logger_node" output="screen" respawn="true" if="$(arg enable_telemetry)">
+    <param name="enable_logging" value="true"/>
+    <param name="log_dir" value="$(env HOME)/jetbot_logs"/>
+  </node>
+
+  <!-- Map persistence node -->
+  <node pkg="jetbot_vslam" type="map_persistence_node.py" name="map_persistence_node" output="screen" respawn="true" if="$(arg enable_map_persistence)">
+    <param name="map_dir" value="$(env HOME)/jetbot_maps"/>
+    <param name="map_name" value="default_map"/>
+    <param name="save_interval" value="30.0"/>
+    <param name="load_on_startup" value="false"/>
+  </node>
+
+  <!-- Map-based collision avoidance -->
+  <node pkg="jetbot_vslam" type="map_collision_node.py" name="map_collision_node" output="screen" respawn="true" if="$(arg use_map_collision)">
+    <param name="map_topic" value="$(arg map_topic)"/>
+    <param name="pose_topic" value="$(arg pose_topic)"/>
+    <param name="inference_hz" value="5.0"/>
+    <param name="collision_threshold" value="0.60"/>
+    <param name="occupied_threshold" value="50"/>
+    <param name="forward_distance" value="0.80"/>
+    <param name="stop_distance" value="0.25"/>
+    <param name="robot_width" value="0.30"/>
+    <param name="sample_step" value="0.05"/>
+    <param name="treat_unknown_as_obstacle" value="true"/>
+    <param name="map_timeout" value="2.0"/>
+    <param name="pose_timeout" value="0.5"/>
+    <param name="queue_size" value="1"/>
+  </node>
+
+  <!-- CNN-based collision detection (optional) -->
+  <node pkg="jetbot_vslam" type="collision_node.py" name="collision_node" output="screen" respawn="true" if="$(arg run_cnn)">
+    <param name="image_topic" value="$(arg camera_topic)"/>
+    <param name="model_path" value="$(arg collision_model_path)"/>
+    <param name="input_width" value="224"/>
+    <param name="input_height" value="224"/>
+    <param name="inference_hz" value="10.0"/>
+    <param name="collision_threshold" value="0.60"/>
+    <param name="expected_image_width" value="640"/>
+    <param name="expected_image_height" value="480"/>
+    <param name="queue_size" value="1"/>
+    <remap from="/collision/probability" to="/collision/probability_cnn"/>
+    <remap from="/collision/risky" to="/collision/risky_cnn"/>
+  </node>
+
+  <!-- Motion control node -->
+  <node pkg="jetbot_vslam" type="decision_node.py" name="decision_node" output="screen" respawn="true">
+    <param name="pose_topic" value="$(arg pose_topic)"/>
+    <param name="collision_topic" value="$(arg collision_topic)"/>
+    <param name="cmd_vel_topic" value="$(arg cmd_vel_topic)"/>
+    <param name="control_hz" value="10.0"/>
+    <param name="collision_stop_threshold" value="0.60"/>
+    <param name="collision_slow_threshold" value="0.35"/>
+    <param name="collision_timeout" value="1.0"/>
+    <param name="pose_timeout" value="0.50"/>
+    <param name="linear_speed" value="0.12"/>
+    <param name="turn_speed" value="0.80"/>
+    <param name="recovery_timeout" value="2.5"/>
+    <param name="allow_reverse" value="true"/>
+    <param name="reverse_speed" value="0.05"/>
+    <param name="reverse_timeout" value="1.0"/>
+    <param name="max_linear_speed" value="0.15"/>
+    <param name="max_angular_speed" value="1.00"/>
+    <param name="angular_smoothing_alpha" value="0.35"/>
+    <param name="queue_size" value="1"/>
+  </node>
+</launch>

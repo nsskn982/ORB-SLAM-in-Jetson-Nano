@@ -1,0 +1,55 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: SafetyGuidelines.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Safety Guidelines}
+
+\section{Development Environment Safety}
+
+\begin{itemize}
+    \item Never modify core localization algorithms without testing in simulator first
+    \item Always implement emergency stop handlers in new code
+    \item Use feature flags (configuration options) rather than code comments for experimental features
+    \item Include error handling and graceful degradation for sensor failures
+\end{itemize}
+
+\section{Testing Safety Practices}
+
+\begin{itemize}
+    \item Create unit tests that verify safety guarantees (e.g., max acceleration limits)
+    \item Test error recovery paths, not just happy paths
+    \item Simulate sensor failures and verify appropriate robot response
+    \item Use safety limits (max speed, max turn rate) in all motion commands
+\end{itemize}
+
+\section{Code Review Standards}
+
+\begin{itemize}
+    \item All changes to motion control require at least two approvals
+    \item Safety-critical sections must have comprehensive comments
+    \item Require evidence of both unit testing and hardware testing
+    \item Document any relaxing of safety constraints and provide justification
+\end{itemize}
+
+\section{Performance and Reliability}
+
+\begin{itemize}
+    \item Monitor real-time thread priorities; ensure safety loops run at highest priority
+    \item Implement watchdog timers to detect system hangs
+    \item Test code under high CPU load to verify safety features remain responsive
+    \item Use mutex and spinlock carefully to avoid deadlocks that could leave motors running
+\end{itemize}
+
+
+
+
+

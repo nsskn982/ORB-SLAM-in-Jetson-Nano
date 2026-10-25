@@ -1,0 +1,65 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: Specifications.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Specifications}
+
+\section{Algorithm Specifications}
+
+\subsection{Feature Extraction}
+\begin{itemize}
+    \item Default: ORB (Oriented FAST and Rotated BRIEF)
+    \item Alternative: SIFT for higher accuracy (slower)
+    \item Max features per frame: 500
+    \item Feature descriptor size: 256 bits
+\end{itemize}
+
+\subsection{Feature Matching}
+\begin{itemize}
+    \item Matching strategy: k-NN (k=2) with Lowe's ratio test
+    \item Ratio test threshold: 0.7 (default)
+    \item Max descriptor distance: 100 (for ORB, hamming distance)
+    \item Min matches required: 8 for valid pose estimation
+\end{itemize}
+
+\subsection{Pose Graph Optimization}
+\begin{itemize}
+    \item Optimizer: g2o with Levenberg-Marquardt
+    \item Max iterations: 20 per optimization pass
+    \item Convergence epsilon: 1e-4
+    \item Chi-square threshold for outlier rejection: 5.991
+\end{itemize}
+
+\section{Resource Requirements}
+
+\begin{itemize}
+    \item Jetson Nano GPU Memory: ~800 MB for feature extraction
+    \item Jetson Nano CPU Memory: ~1.5 GB for pose graphs and maps
+    \item Storage: ~10 MB per minute of continuous mapping
+    \item Network: Optional (for remote dashboard)
+\end{itemize}
+
+\section{Build Configuration}
+
+\begin{itemize}
+    \item Compiler: GCC 7.3+ or Clang 6.0+
+    \item C++ Standard: C++14 minimum
+    \item Build System: CMake 3.10+
+    \item Optional: CUDA Compute Capability 5.3 (Maxwell) for GPU acceleration
+\end{itemize}
+
+
+
+
+
+
+

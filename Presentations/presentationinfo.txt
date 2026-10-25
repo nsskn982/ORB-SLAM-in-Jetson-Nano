@@ -1,0 +1,223 @@
+everything in one folder
+post in GitHub
+1. presentation localization (state of the art)
+2. presentation NVIDIA Jetson Nano
+next Wednesday 10 am
+3. ppt Raspberry Pi Camera
+4. ppt Mobile Robot
+5. ppt floor localization
+possible solutions presentation
+7. write a manual
+how we want  to use it
+how it works
+finding its position
+indoor photo
+6. make a documentation about the floor (floor aging, changing of floor)
+an led for the floor
+and capture ground
+concentrate on the floor
+raspberry pi camera not lens
+
+
+clear name of hardware raspberry pi camera module v2
+NVIDIA Jetson Nano keep it same throughout documentation
+KDD process after the documentation
+
+new todo
+9. separate ppt research for the localization algorithm for the indoor localization project
+8. IRSNet for indoor localization
+in camera ppt
+check applications in camera applications
+add colour for camera introduction
+chapter caliberation code and testing of the camera
+one chapter for caliberation of the camera
+chapter where is the raspberry pi camera v2 mention jetson nano for connection and check for io
+4. ppt Mobile Robot
+
+floorlocalization - overcrowded content
+Localization - state of the art localization algorithms => feedback: make separate algo ppt
+LocalizationAlgorithmComparison - completed with VSLAM and IRSNet
+GroundLocalization - to be made
+MobileRobot - need more information
+NVIDIAJetsonNano - added test code and OS installation
+RaspberryPiCameraModuleV2 - completed with code
+ROS2Nav - started add next steps
+IssacSim - started/check compatibility
+Assumption of Liability - need details on Jetson nano components
+
+raspberry pi hq cam
+https://www.berrybase.de/8-50mm-zoom-objektiv-c-mount
+https://www.reichelt.de/de/de/shop/produkt/raspberry_pi_-_kamera_12mp_75_c-_cs-fassung-276919
+https://www.berrybase.de/en/raspberry-pi-hq-camera-usb-webcam-bundle
+
+raspberry pi cs cam
+https://www.reichelt.de/de/de/shop/produkt/raspberry_pi_-_kamera_1_6mp_shutter_c-_cs-fassung-345205
+https://www.berrybase.de/en/16mm-telephoto-lens-c-mount
+
+raspberry pi cam v2
+https://www.reichelt.de/de/de/shop/produkt/raspberry_pi_-_kamera_8mp_67_v2-170853
+https://www.berrybase.de/flexkabel-fuer-raspberry-pi-zero-und-kameramodul/laenge-15-cm
+
+jetson nano developer kit
+https://www.welectron.com/NVIDIA-Jetson-Nano-4GB-Developer-Kit-A02_1
+https://www.seeedstudio.com/Jetson-10-1-A0-p-5336.html
+
+mobile robot
+chassis and wheels
+https://www.berrybase.de/adafruit-height-metal-caster-bearing-wheel-stahlkugel-rollenlager-15.7mm-raddurchmesser-20mm-hoch
+https://www.berrybase.de/waveshare-smart-mobile-robot-chassis-kit-4x-raeder-4x-tt-motor-metall-chassis-stossdaempfend
+antenna
+https://www.berrybase.de/ism-433-mhz-antenne-sma-2-5-dbi-omnidirektional-flexibel-schwarz
+sparkfunqwiic dev boards
+https://www.berrybase.de/sparkfun-qwiic-phat-fuer-raspberry-pi-v2.0
+https://www.berrybase.de/sparkfun-qwiic-motor-treiber
+https://www.berrybase.de/sparkfun-micro-oled-breakout-64x48-pixel-qwiic-i2c-10ma-adressierbar-3.3v
+connector cables
+https://www.berrybase.de/sparkfun-qwiic-kabel-kit
+wifi card
+https://www.welectron.com/Waveshare-16578-Wireless-AC8265
+
+
+
+ROS2 NAV2
+https://github.com/ros-navigation/navigation2
+
+
+notices
+NVIDIA Jetson Nano Developer Kit
+picture of the system
+list of sensors and connections to pins picture add tests
+\textsuperscript for I^2 C and I^2 S
+19 page make enumeration list
+add pictures of installation of OS
+make a presentation on JetPack SDK
+Raspberry Pi Camera V1.3
+mobile robot change camera pic angle 90
+Find application based on NVIDIA Jetson Nano Developer Kit
+
+Raspberry Pi Camera V2 add Calibration results for the code and how to use the calibration file for future
+add next steps
+
+Mobile Robot
+Camera V1.3  in the presentation
+check antenna mechanical part  and mention it
+add wheel odometry 48:1
+add next steps
+
+
+REVIEW ALL THE PRESENTATIONS
+
+
+
+
+Goal: Indoor mobile robot that performs SLAM and autonomous navigation using wheel odometry + visual odometry on an NVIDIA Jetson Nano A02 (4GB). Raspberry Pi Camera v2 is used for vision (Jetson is the only compute unit).
+
+Main hardware: Jetson Nano, Raspberry Pi Camera v2, TT 48:1 gearbox motors (differential drive), SparkFun Qwiic pHAT (40-pin) + Qwiic Motor Driver, SparkFun Micro OLED (status), optional 433 MHz antenna for telemetry.
+
+Software stack: NVIDIA JetPack (for Jetson), ROS 2 (recommended Humble or the NVIDIA-supported distro), Isaac ROS (optional/accelerated), Navigation2 (Nav2) for planning, and a visual SLAM/VO package (e.g., ORB-SLAM2/3 or RTAB-Map). Use robot_localization (EKF/UKF) to fuse wheel odom and visual odom.
+
+Localization approach:
+
+Publish wheel-encoder odometry (nav_msgs/Odometry) from the motor driver.
+
+Run monocular visual SLAM/VO on camera frames to produce pose and map.
+
+Fuse both sources in robot_localization so Nav2 gets a robust pose estimate; SLAM provides the /map for Nav2.
+
+OLED & Qwiic usage: Qwiic pHAT provides I²C connectivity for the motor driver and OLED. OLED shows status/debug (pose, errors, mode).
+
+Key implementation steps:
+
+Mechanically assemble chassis, mount Jetson + camera; wire motors to Qwiic motor driver and Qwiic pHAT.
+
+Flash Jetson with JetPack; install ROS 2 and Isaac/SLAM packages.
+
+Implement/configure motor driver node (I²C) and wheel-encoder odom publisher.
+
+Calibrate camera intrinsics and launch camera ROS node.
+
+Launch visual SLAM/VO node and verify map + camera pose in RViz.
+
+Configure robot_localization to fuse wheel and visual odom.
+
+Launch Nav2 with the generated map for planning and obstacle avoidance.
+
+Test and iterate: tune wheel parameters, SLAM settings, and EKF covariances. Optionally simulate in Isaac Sim first.
+
+Notes / recommendations: Calibrate wheel radius and baseline, tune sensor covariances in robot_localization, and reduce camera resolution/frame rate if Jetson performance needs easing. If monocular scale drift becomes an issue, consider stereo/depth sensors.
+ notices
+ add next steps
+why implementing ros on mobile robot
+mention links
+ideas to why implement ros and turtlesim
+next step
+
+Lucas-Kanade tracker
+https://github.com/opencv/opencv_attic/blob/a6078cc8477ff055427b67048a95547b3efe92a5/opencv/samples/python2/lk_track.py
+https://github.com/opencv/opencv_attic/blob/a6078cc8477ff055427b67048a95547b3efe92a5/opencv/samples/python2/lk_homography.py
+
+GITHUB FOR Ground Localization
+https://github.com/zhangaigh/micro-gps-cpp
+https://github.com/ronaldahmed/robot-navigation
+https://github.com/boscosiu/Whisker
+https://github.com/epfl-mobots/thymio-ground-localisation
+
+IMU in jetson via i2c https://www.youtube.com/watch?v=-ttgPvu2yN8
+but we need imu via usb
+https://www.youtube.com/watch?v=gok9pvUzZeY ORIGINAL JetBot used for this project was meant for collision detection
+Indoor Dataset https://universe.roboflow.com/kyu-odfix/indoor-ktyzt/dataset/4     main purpose - detection
+https://github.com/NVIDIA-AI-IOT/jetbot/wiki
+https://github.com/NVIDIA-AI-IOT/jetbot/wiki/examples - example codes
+https://github.com/tum-vision/mono_dataset_code
+https://www.youtube.com/watch?v=mrIjtBdDQ5A aws jetbot integration
+Assembly
+https://learn.sparkfun.com/tutorials/assembly-guide-for-sparkfun-jetbot-ai-kit-v20/3-accessory-installation-to-main-chassis
+https://www.sparkfun.com/lithium-ion-battery-pack-10ah-3a-1a-usb-ports.html
+https://learn.sparkfun.com/tutorials/jetson-nano--sphero-rvr-mash-up-part-2/jetbot-image-introduction
+
+20/02/2026
+What to do after manual? Readme.md draft
+picture of ground localization and location of the camera on the robot
+add hardware specifications as well
+handle the antenna in the jetbot system (m)
+which angle and a picture of the camera placement
+for the developer change the manual to a mobile robot
+connect to the battery mention in the manual
+manual to mention the final autonomous functioning of the mobile robot
+
+MSR username and Password MSR
+manual for the user to keep the mobile robot autonomous
+add bumper to the front of the mobile robot
+add texture in the manual
+add application and test for the user in the manual
+starting the mobile robot and removing the camera lid
+connection from the battery to the movile robot
+add pictures in the manual
+two manuals one for the user and one for the DIY Mobile robot
+add the specs for the battery
+BILL OF MATERIALS FOR THE JETBOT
+
+add bumper solid works project bottom to top
+ 
+database
+https://www.cvlibs.net/datasets/kitti/eval_odometry.php
+https://www.mathworks.com/help/vision/ug/monocular-visual-inertial-odometry-using-factor-graph.html
+https://wiki.ros.org/rgbdslam_electric/evaluation
+https://cvg.cit.tum.de/data/datasets/rgbd-dataset
+https://www.mathworks.com/help/vision/ug/monocular-visual-simultaneous-localization-and-mapping.html
+DO I HAVE TO ADD DOCUMENTATION DEVELOPER AS A SEPARATE FOLDER
+Jetbot v2.0 and battery datasheet acquired
+username jetbot pwd jetbot 
+4gb jetson a02 model and 64gb sd card 
+make configuration for ros melodic and putty connection acquired 
+jetbot repo cmake v3.1
+https://jetbot.org/master/index.html
+initial sparkfun jetbot repo 
+aws robomaker and aws green grass
+https://web.archive.org/web/20201030190331/https://www.sparkfun.com/products/15769#documents-tab
+dusty package for nvidia agx 
+https://www.cvlibs.net/datasets/kitti/eval_odometry.php visual odometry 2012 kitti vision benchmark suite 
+https://svncvpr.in.tum.de/cvpr-ros-pkg/trunk/rgbd_benchmark/rgbd_benchmark_tools/data/rgbdslam/ tum rgb dslam
+https://github.com/YahboomTechnology/jetbot-mini - complete tutorial 
+https://eckstein-shop.de/SparkFun-Micro-6DoF-IMU-Breakout-BMI270-Qwiic-3-Axial-Accelerometer-Gyroscope-EN
+example imu for sparkfun 

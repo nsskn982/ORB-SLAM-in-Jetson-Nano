@@ -1,0 +1,133 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% $Autor: Srikanth N  $
+% $Datum: 2025-10-06 05:23:14Z $
+% $Pfad: GitHub/ML26-07-QR-Code-Recognition-with-an-Arduino-Portenta-H7/AssumptionOfLiability/AssumptionOfLiability.tex $
+% $Version: 4621 $
+%
+% $Project: ML26-07 QR code Recognition with an Arduino Portenta H7 $
+%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,a4paper]{article}
+
+\input{General/packages}
+
+\newcommand{\SystemName}{250901-Jetson-Nano-Ground}
+\newcommand{\StudentName}{Srikanth Nanda}
+\newcommand{\StudentNumber}{7026002}
+\newcommand{\Date}{\today}
+
+\NewDocumentCommand{\ListOfMaterials}{O{0.9}}{%
+	\begin{table}[h]
+		\centering
+		\small
+		\setlength{\tabcolsep}{6pt}
+		\renewcommand{\arraystretch}{1.2}
+		\begin{tabularx}{\textwidth}{|c|>{\centering\arraybackslash}m{2cm}|X|r|p{3.2cm}|}
+			\hline
+			\textbf{Qty} & \textbf{Image} & \textbf{Component} & \textbf{Price (€)} & \textbf{Source / Link} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/RPiHQCam.jpg} &
+			Raspberry Pi High Quality Camera (12 MP, C/CS) &
+			59.90 &
+			\href{https://www.berrybase.de/en/raspberry-pi-high-quality-kamera}{BerryBase – RPI-HQ-CAM} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/ZoomLens8MP.jpg} &
+			8-50 mm Zoom Lens, C-Mount &
+			36.90 &
+			\href{https://www.berrybase.de/8-50mm-zoom-objektiv-c-mount}{BerryBase – CLENS-8Z50} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/RPiCam12MP.jpg} &
+			Raspberry Pi Camera Module 12 MP (C/CS-mount) &
+			51.90 &
+			\href{https://www.reichelt.de/de/de/shop/produkt/raspberry_pi_-_kamera_12mp_75_c-_cs-fassung-276919}{Reichelt} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/RPiCSCam1.jpg} &
+			Raspberry Pi CS-Mount Camera 1.6 MP (global shutter) &
+			58.90 &
+			\href{https://www.reichelt.de/de/de/shop/produkt/raspberry_pi_-_kamera_1_6mp_shutter_c-_cs-fassung-345205}{Reichelt} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/TeleLens16mm.jpg} &
+			16 mm Telephoto Lens, C-Mount &
+			59.90 &
+			\href{https://www.berrybase.de/en/16mm-telephoto-lens-c-mount}{BerryBase – CLENS-16TEL} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/RPiCamV2.jpg} &
+			Raspberry Pi Camera Module V2 (8 MP) &
+			16.90 &
+			\href{https://www.reichelt.de/de/de/shop/produkt/raspberry_pi_-_kamera_8mp_67_v2-170853}{Reichelt} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/FlexCable15cm.jpg} &
+			15 cm Flex Cable (for Pi Zero & Camera) &
+			2.30 & 
+			\href{https://www.berrybase.de/flexkabel-fuer-raspberry-pi-zero-und-kameramodul/laenge-15-cm}{BerryBase} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/JetsonNanoKit.jpg} &
+			NVIDIA Jetson Nano Developer Kit &
+			295.48 &
+			\href{https://developer.nvidia.com/embedded/jetson-nano-developer-kit}{NVIDIA} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/ChassisKit.jpg} &
+			Smart Mobile Robot Chassis Kit (4× wheels, 4× TT motors) &
+			54.90 &
+			\href{https://www.berrybase.de/waveshare-smart-mobile-robot-chassis-kit-4x-raeder-4x-tt-motor-metall-chassis-stossdaempfend}{BerryBase} \\ \hline
+			
+			2 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/CasterWheel15.jpg} &
+			Metal Caster Bearing Wheel 15.7 mm &
+			7.90 each &
+			\href{https://www.berrybase.de/adafruit-height-metal-caster-bearing-wheel-stahlkugel-rollenlager-15.7mm-raddurchmesser-20mm-hoch}{BerryBase} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/Antenna433MHz.jpg} &
+			ISM 433 MHz SMA Omnidirectional Antenna &
+			8.50 &
+			\href{https://www.berrybase.de/ism-433-mhz-antenne-sma-2-5-dbi-omnidirektional-flexibel-schwarz}{BerryBase} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/QwiicPHAT.jpg} &
+			SparkFun Qwiic pHAT v2.0 for Raspberry Pi &
+			8.50 &
+			\href{https://www.berrybase.de/sparkfun-qwiic-phat-fuer-raspberry-pi-v2.0}{BerryBase} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/QwiicMotorDriver.jpg} &
+			SparkFun Qwiic Motor Driver &
+			12.90 &
+			\href{https://www.berrybase.de/sparkfun-qwiic-motor-treiber}{BerryBase} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/MicroOLED_Qwiic.jpg} &
+			SparkFun Micro OLED Breakout 64×48 (Qwiic) &
+			14.90 &
+			\href{https://www.berrybase.de/sparkfun-micro-oled-breakout-64x48-pixel-qwiic-i2c-10ma-adressierbar-3.3v}{BerryBase} \\ \hline
+			
+			1 &
+			\includegraphics[width=#1\linewidth, keepaspectratio]{Images/QwiicCableKit.jpg} &
+			SparkFun Qwiic Cable Kit &
+			6.90 &
+			\href{https://www.berrybase.de/sparkfun-qwiic-kabel-kit}{BerryBase} \\ \hline
+			
+			\multicolumn{3}{|r|}{\textbf{Total:}} & \textbf{ <strong>~645.58</strong>} & \\ \hline
+			
+		\end{tabularx}
+		\caption{\textbf{Bill of Materials with Images}}
+	\end{table}
+}
+
+\begin{document}
+	
+	\input{Contents/TextEnglish}
+	%\input{Contents/TextDeutsch}
+	
+\end{document}

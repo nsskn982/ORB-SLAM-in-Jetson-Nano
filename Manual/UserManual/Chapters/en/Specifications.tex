@@ -1,0 +1,62 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: Specifications.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Specifications}
+
+\section{Localization System Performance}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Metric} & \textbf{Outdoor} & \textbf{Indoor} \\
+\hline
+Typical ATE & \textless 5\% distance & \textless 3\% distance \\
+\hline
+Update Rate & 30 Hz & 30 Hz \\
+\hline
+Tracking Range & ~50 m & ~20 m \\
+\hline
+Loop Closure Distance & ~2 m & ~5 m \\
+\hline
+Max Linear Velocity & 0.5 m/s & 0.5 m/s \\
+\hline
+Max Angular Velocity & 1 rad/s & 1 rad/s \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Operating Modes}
+
+\begin{itemize}
+    \item \textbf{Visual Odometry}: Estimates relative pose at 30 Hz
+    \item \textbf{Continuous Mapping}: Builds feature map during operation
+    \item \textbf{Localization Against Map}: Position-only estimation when map exists
+    \item \textbf{Loop Closure Detection}: Triggered when environment revisited
+\end{itemize}
+
+\section{Output Data Format}
+
+\begin{itemize}
+    \item Estimated Position: (x, y, theta) in meters and radians
+    \item Confidence: 0.0--1.0 (1.0 = fully confident)
+    \item Covariance: 3x3 pose uncertainty matrix
+    \item Timestamp: Synchronized with camera frame capture
+\end{itemize}
+
+
+
+
+
+
+

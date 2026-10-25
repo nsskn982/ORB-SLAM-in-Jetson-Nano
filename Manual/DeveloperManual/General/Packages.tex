@@ -1,0 +1,100 @@
+%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2020-01-18 11:15:45Z $
+% $Pfad: WuSt/Skript/Produktspezifikation/powerpoint/ImageProcessing.tex $
+% $Version: 4620 $
+%
+%%%%%%
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\ifdefined\isGerman
+\usepackage[ngerman]{babel}
+\else
+\ifdefined\isEnglish
+\usepackage[english]{babel}
+\else
+\usepackage[ngerman]{babel}
+\fi
+\fi
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+% Paket Internetrefferenzen
+\usepackage{hyperref}
+
+\usepackage{blindtext}
+\usepackage{upgreek}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{listings}
+
+\usepackage{enumitem,amssymb}
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
+
+\usepackage{color,soul}
+%\usepackage{ulem} % farbiges unterstreichen
+
+% Farben
+\usepackage{xcolor}
+
+
+%% Palette
+\definecolor{chassis}  {RGB}{22,22,22}
+\definecolor{plateedge}{RGB}{55,55,55}
+\definecolor{yellow}   {RGB}{242,182,0}
+\definecolor{tire}     {RGB}{20,20,20}
+\definecolor{heatsink} {RGB}{50,52,56}
+\definecolor{sfred}    {RGB}{210,35,42}
+\definecolor{nanopcb}  {RGB}{24,42,24}
+\definecolor{nanoedge} {RGB}{40,80,40}
+\definecolor{usbblue}  {RGB}{45,95,200}
+\definecolor{flex}     {RGB}{190,125,10}
+\definecolor{flexlabel}{RGB}{245,240,225}
+\definecolor{standoff} {RGB}{175,165,130}
+\definecolor{wireR}    {RGB}{210,30,30}
+\definecolor{wireY}    {RGB}{220,185,20}
+\definecolor{wireB}    {RGB}{30,80,200}
+\definecolor{wireK}    {RGB}{40,40,40}
+\definecolor{connblue} {RGB}{25,50,175}
+\definecolor{ballgray} {RGB}{155,155,155}
+\definecolor{motorgray}{RGB}{65,68,72}
+\definecolor{motoryel} {RGB}{195,158,0}
+\definecolor{oledblue} {RGB}{20,30,80}
+\usepackage{alltt,xcolor}
+
+
+% Automatisches erstellen und referenzieren eines Abkürzungsverzeichnisses
+\usepackage[tooltip]{acro}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, patterns, calc, decorations.pathreplacing, backgrounds, fit, shadows.blur}
+
+% Automatisches erstellen und referenzieren eines Abkürzungsverzeichnisses
+\usepackage[tooltip]{acro}
+
+
+
+\usepackage[left=2.50cm, right=2.50cm, top=2.00cm, bottom=2.00cm,
+bindingoffset=8mm, includehead, includefoot]{geometry} % Loesung 8.2
+
+\usepackage{blindtext}
+
+
+\usepackage[style=ieee-alphabetic]{biblatex}
+
+
+
+\usepackage{makeidx}
+\makeindex
+
+\usepackage[intoc]{nomencl}
+\renewcommand{\nomname}{Symbolverzeichnis}
+\renewcommand{\nomlabel}[1]{#1 \dotfill}
+\makenomenclature
+

@@ -1,0 +1,34 @@
+%%%
+%
+% $Autor: Wings $
+% $Datum: 2021-05-14 $
+% $Pfad: GitLab/CornerBLending $
+% $Dateiname: Hints
+% $Version: 4620 $
+%
+% !TeX spellcheck = de_DE/GB
+%
+%%%
+
+\chapter{Hints}
+
+\section{Operating Best Practices}
+
+\begin{itemize}
+    \item Initialize the localization system in a well-lit environment for optimal visual feature detection
+    \item Allow calibration time (typically 5-10 seconds) before trusting position estimates
+    \item Keep the environment consistent during long test runs to minimize loop closure challenges
+    \item Monitor battery voltage; localization accuracy degrades with insufficient power
+    \item Record baseline trajectories for ground truth comparison
+    \item Document environmental conditions (lighting, texture, scale features) for experiment reproducibility
+\end{itemize}
+
+\section{Localization Reliability}
+
+\begin{itemize}
+    \item High-texture environments yield better feature matching
+    \item Large open spaces require more robust loop closure detection
+    \item Rapid rotations may cause temporary tracking loss
+    \item Repeated patterns can confuse feature matching; mark unique landmarks
+\end{itemize}
+

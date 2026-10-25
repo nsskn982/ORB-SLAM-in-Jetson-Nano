@@ -1,0 +1,270 @@
+%%%%%%
+%
+% $Autor: Srikanth Nanda$
+% $Datum: 2020-01-18 11:15:45Z $
+% $Pfad: githubtemplate/Template/Presentations/Template/slides/rename.tex $
+% $Version: 4620 $
+%
+%
+% !TeX encoding = utf8
+% !TeX root = Rename
+%
+%%%%%%
+
+%%%%%%%%%%%% FASTSLAM %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Mysection{FastSLAM}
+
+\STANDARD{Idea}{
+Based on the AAAI-02 paper, FastSLAM introduces a \textbf{factored representation
+of the SLAM (Simultaneous Localization and Mapping) posterior}:
+
+\[
+p(x_{1:t}, m \mid z_{1:t}, u_{1:t})
+= p(x_{1:t} \mid z_{1:t}, u_{1:t})
+\prod_{k} p(m_k \mid x_{1:t}, z_{1:t})
+\]
+
+This exploits the conditional independence between landmarks and robot
+trajectory. The algorithm combines a \textbf{particle filter for robot paths}
+with \textbf{independent EKFs for landmarks}. A tree-based structure enables
+\textbf{logarithmic map updates}, achieving scalability to tens of thousands
+of features.\cite{Montemerlo:2002}
+}
+
+\STANDARD{Conceptual Structure}{
+\begin{center}
+\begin{tikzpicture}
+  \node (pf) [rectangle, draw, minimum width=3.5cm] {Particle Filter (Path)};
+  \node (l1) [circle, draw, below left=1.2cm of pf] {EKF};
+  \node (l2) [circle, draw, below=1.2cm of pf] {EKF};
+  \node (l3) [circle, draw, below right=1.2cm of pf] {EKF};
+  \draw[<->] (pf) -- (l1);
+  \draw[<->] (pf) -- (l2);
+  \draw[<->] (pf) -- (l3);
+\end{tikzpicture}
+\end{center}
+}
+
+\STANDARD{Hyperparameters}{
+\begin{itemize}
+  \item Number of particles
+  \item Motion and measurement noise
+  \item Landmark initialization covariance
+  \item Tree resolution for map updates\cite{Montemerlo:2002}
+\end{itemize}
+}
+
+\STANDARD{Applications}{
+Large-scale outdoor SLAM, robot navigation in high-feature environments.\cite{Montemerlo:2002}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% ACTIVE SLAM %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Mysection{Active SLAM}
+
+\STANDARD{Idea}{
+From the IEEE/ASME T-Mech paper, Active SLAM frames SLAM as a
+\textbf{dual-mode MPC problem}:
+
+\textbf{Mode 1: SLAM-uncertainty reduction}\\
+Uses convex relaxation, graph topology, and Fisher Information eigenvalue
+bounds to approximate future uncertainty. \cite{Chen:2018}
+
+\textbf{Mode 2: Coverage}\\
+Sequential quadratic programming ensures environment coverage while
+maintaining safe trajectories.
+
+The authors employ \textbf{Linear SLAM} (submap joining) for fast covariance
+recovery and scalable planning. \cite{Chen:2018}
+}
+
+\STANDARD{Conceptual Structure}{
+\begin{center}
+\begin{tikzpicture}
+  \node (robot) [circle, draw] {Robot};
+  \node (mpc) [rectangle, draw, right=2.5cm of robot] {MPC Modes};
+  \node (info) [rectangle, draw, above=1.2cm of mpc] {Uncertainty Model};
+  \node (cov)  [rectangle, draw, below=1.2cm of mpc] {Coverage Model};
+  \node (sub)  [rectangle, draw, right=2.5cm of mpc] {Submap Joining};
+  \draw[->] (robot) -- (mpc);
+  \draw[->] (mpc) -- (info);
+  \draw[->] (mpc) -- (cov);
+  \draw[->] (mpc) -- (sub);
+\end{tikzpicture}
+\end{center}
+}
+
+\STANDARD{Hyperparameters}{
+\begin{itemize}
+  \item MPC horizon
+  \item Convex relaxation parameters
+  \item SLAM measurement noise
+  \item Control bounds \cite{Chen:2018}
+\end{itemize}
+}
+
+\STANDARD{Applications}{
+Autonomous UAV exploration, obstacle-aware navigation, area scanning. \cite{Chen:2018}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% MONOSLAM %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Mysection{MonoSLAM }
+
+\STANDARD{Idea}{
+The PAMI 2007 paper presents the first real-time monocular SLAM with drift-free
+performance. MonoSLAM uses:
+
+\begin{itemize}
+  \item \textbf{EKF joint state}: camera pose + 3D features
+  \item \textbf{Active measurement search}: predicts feature uncertainty ellipses
+  \item \textbf{General 3D motion model} for smooth tracking
+  \item \textbf{Inverse-depth feature initialization}
+\end{itemize}
+
+The emphasis is on robust localization for tasks such as humanoid robot
+control and augmented reality.\cite{Davison:2007}
+}
+
+\STANDARD{Conceptual Structure}{
+\begin{center}
+\begin{tikzpicture}
+  \node (cam)  [circle, draw] {Camera};
+  \node (track) [rectangle, draw, right=2.5cm of cam] {Feature Tracking};
+  \node (ekf)  [rectangle, draw, right=2.5cm of track] {EKF State};
+  \node (map)  [rectangle, draw, below=1.3cm of ekf] {Persistent Map};
+  \draw[->] (cam) -- (track);
+  \draw[->] (track) -- (ekf);
+  \draw[->] (track) -- (map);
+\end{tikzpicture}
+\end{center}
+}
+
+\STANDARD{Hyperparameters}{
+Process noise, measurement noise, feature search windows, initialization depth.\cite{Davison:2007}
+}
+
+\STANDARD{Applications}{
+Augmented reality, humanoid robots, embedded monocular SLAM.\cite{Davison:2007}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% ORB-SLAM %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Mysection{ORB-SLAM }
+
+\STANDARD{Idea}{
+According to the IEEE Transactions on Robotics paper, ORB-SLAM is designed
+for real-time, robust large-scale operation:
+
+\begin{itemize}
+  \item \textbf{ORB features} for all SLAM tasks
+  \item \textbf{Covisibility graph} for local mapping
+  \item \textbf{Essential graph} for global optimization
+  \item \textbf{Automatic initialization} via model selection
+  \item \textbf{Survival-of-the-fittest} keyframe policy \cite{MurArtal:2015}
+\end{itemize}
+
+It achieves state-of-the-art accuracy across 27 sequences.
+}
+
+\STANDARD{Conceptual Structure}{
+\begin{center}
+\begin{tikzpicture}
+  \node (track) [rectangle, draw] {Tracking};
+  \node (local) [rectangle, draw, right=2.0cm of track] {Local Mapping};
+  \node (loop)  [rectangle, draw, right=2.0cm of local] {Loop Closing};
+  \node (graph) [rectangle, draw, below=1.3cm of local] {Essential Graph};
+  \draw[->] (track) -- (local);
+  \draw[->] (local) -- (loop);
+  \draw[->] (local) -- (graph);
+\end{tikzpicture}
+\end{center}
+}
+
+\STANDARD{Hyperparameters}{
+Number of ORB features, BA window size, keyframe thresholds, loop closure limits. \cite{MurArtal:2015}
+}
+
+\STANDARD{Applications}{
+AR/VR localization, robotics, drone navigation, lifelong SLAM. \cite{MurArtal:2015}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% VISUAL-SLAM SURVEYS %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Mysection{Visual SLAM Surveys }
+
+\STANDARD{Idea}{
+Document insights reveal three dominant categories:
+
+\begin{itemize}
+  \item \textbf{Feature-based SLAM} (ORB-SLAM, MonoSLAM)
+  \item \textbf{Direct SLAM} (LSD-SLAM, DSO)
+  \item \textbf{RGB-D SLAM} (ElasticFusion, Kintinuous) \cite{MacarioBarros:2022, Taketomi:2017}
+\end{itemize}
+
+Major evaluation dimensions include:
+tracking robustness, drift handling, loop closure, computational efficiency. \cite{Taketomi:2017}
+}
+
+\STANDARD{Conceptual Structure}{
+\begin{center}
+\begin{tikzpicture}
+  \node (f) [circle, draw] {Feature};
+  \node (d) [circle, draw, right=2.3cm of f] {Direct};
+  \node (r) [circle, draw, right=2.3cm of d] {RGB-D};
+  \draw[->] (f) -- (d) -- (r);
+  
+\end{tikzpicture}
+\end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% SLAM OVERVIEW %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Mysection{SLAM Overview }
+
+\STANDARD{Idea}{
+The overview document explains SLAM in terms of:
+
+\begin{itemize}
+  \item \textbf{Front-end}: feature extraction, scan matching, data association
+  \item \textbf{Back-end}: optimization (EKF, smoothing, pose graphs)
+  \item \textbf{Sensors}: LiDAR, camera, IMU, GNSS integration
+  \item \textbf{Failure modes}: drift, wrong associations, poor initialization \cite{Alsadik:2021}
+\end{itemize}
+}
+
+\STANDARD{Conceptual Structure}{
+\begin{center}
+\begin{tikzpicture}
+  \node (front) [rectangle, draw] {Front-End};
+  \node (back)  [rectangle, draw, right=3.2cm of front] {Back-End Optimization};
+  \draw[<->] (front) -- (back);
+\end{tikzpicture}
+\end{center}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Mysection{SLAM Algorithms Code Implementation}
+
+\STANDARD{Python Implementation SLAM Algorithms}{
+\lstinputlisting[
+  language=Python,
+  style=mystyle,
+  firstline=1,
+  caption={Python Implementation SLAM Algorithms}
+]{Code/SLAM.py}
+}
+
+
+

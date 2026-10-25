@@ -1,0 +1,95 @@
+%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2020-01-18 11:15:45Z $
+% $Pfad: WuSt/Skript/Produktspezifikation/powerpoint/ImageProcessing.tex $
+% $Version: 4620 $
+%
+%%%%%%
+
+\definecolor{MapleColor}{rgb}{1,0.0,0.}
+\definecolor{PythonColor}{rgb}{0,0.5,1.}
+\definecolor{ShellColor}{rgb}{1,0,0.5}
+\definecolor{FileColor}{rgb}{0.5,0.5,1.}
+
+\newcommand{\MapleCommand}[1]{\textcolor{MapleColor}{\texttt{#1}}}
+\newcommand{\PYTHON}[1]{\textcolor{PythonColor}{\texttt{\justify#1}}}
+\newcommand{\SHELL}[1]{#1}%\textcolor{ShellColor}{\texttt{\justify#1}}}
+\newcommand{\FILE}[1]{\textcolor{FileColor}{\texttt{\justify#1}}}
+
+
+\newcommand{\QUELLE}{\textcolor{red}{hier Quelle finden}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}} % linksbündig mit Breitenangabe
+
+\newcommand{\GRAFIK}{\textcolor{red}{Grafik einfügen}}
+
+\newcommand{\DEF}[1]{\fcolorbox{blue}{blue!10}{\begin{minipage}{\textwidth}\textbf{Definition.}#1\end{minipage}}}
+
+\newcommand{\BEISPIEL}[1]{\fcolorbox{blue}{blue!10}{\begin{minipage}{\textwidth}\textbf{Beispiel.}#1\end{minipage}}}
+
+\newcommand{\SATZ}[1]{\fcolorbox{blue}{blue!10}{\begin{minipage}{\textwidth}\textbf{Satz.}#1\end{minipage}}}
+
+\newcommand{\Bemerkung}[1]{\fcolorbox{blue}{blue!10}{\begin{minipage}{\textwidth}\textbf{Bemerkung.}#1\end{minipage}}}
+
+
+\newcommand{\Po}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+
+\DeclareMathOperator{\Atan2}{Atan2}
+\DeclareMathOperator{\sign}{sign}
+
+% Auswahl der Sprache
+% 1.Argument ist der Pfad ohne "en" oder "de"
+% 2.Argument ist der Dateiname
+\newcommand{\InputLanguage}[2]{
+    \ifdefined\isGerman
+    \input{#1de/#2}
+    \else
+    \ifdefined\isEnglish
+    \input{#1en/#2}
+    \else
+    \input{#1de/#2}
+    \fi
+    \fi
+}
+
+\newcommand{\TRANS}[2]{
+    \ifdefined\isGerman
+    #1%
+    \else
+    \ifdefined\isEnglish
+    #2%
+    \else
+    #1%
+    \fi
+    \fi
+}
+
+
+% muss für Akronyme \ac statt see verwendet werden.
+\newcommand{\Siehe}{
+    \ifdefined\isGerman
+    \emph{siehe}
+    \else
+    \ifdefined\isEnglish
+    \emph{see}
+    \else
+    \emph{siehe}
+    \fi
+    \fi
+}
+
+%todo Die Kommandos sind für das Endprodukt zu entfernen. Die entsprechenden Stellen sind zu bearbeiten bzw. zu löschen
+\newcommand{\Mynote}[1]{\marginnote{\textcolor{red}{WS:#1}}}
+\newcommand{\Ausblenden}[1]{}
+\newcommand{\ToDo}[1]{\textcolor{red}{\section{ToDo} #1}}
+% Fehlerzähler
+\setul{0.5ex}{0.3ex}
+\setulcolor{red}
+\newcounter{fehlernummer}
+\setcounter{fehlernummer}{11}
+\newcommand{\FEHLER}[1]{\ul{#1}\stepcounter{fehlernummer}\textsuperscript{\textcolor{red}{\arabic{fehlernummer}}}}
+%\renewcommand{\FEHLER}[1]{\ul{#1}\stepcounter{fehlernummer}\marginnote{\textcolor{red}{\arabic{fehlernummer}}}} geht leider nicht
+%\renewcommand{\FEHLER}[1]{\ul{#1}\stepcounter{fehlernummer}\footnote{\textcolor{red}{\arabic{fehlernummer}.Fehler}}} geht leider nicht
+

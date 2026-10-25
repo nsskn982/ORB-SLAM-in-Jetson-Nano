@@ -1,0 +1,61 @@
+%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2019-03-05 08:03:15Z $
+% $Pfad: Functions.tex $
+% $Version: 4250 $
+% !TeX spellcheck = en_GB/de_DE
+% !TeX encoding = utf8
+% !TeX root = manual 
+% !TeX TXS-program:bibliography = txs:///biber
+%
+%%%%%%%%%%%%
+
+\chapter{Functions}
+
+\section{Core Localization Features}
+
+\subsection{Visual Odometry Mode}
+\begin{itemize}
+    \item Estimates robot motion from consecutive camera frames
+    \item Output: Relative pose transformation (translation and rotation)
+    \item Good for short-term trajectory (< 20 meters)
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		feat/.style={rectangle, draw=purple!60, fill=purple!5, thick, text width=4cm, text centered, rounded corners, minimum height=2.5cm, align=center},
+		node distance=1cm
+		]
+		\node[feat] (f1) {\textbf{Visual Odometry}\\Estimates motion from frames\\Output: relative pose\\Range: $<$20m};
+		\node[feat, right=of f1] (f2) {\textbf{Mapping Mode}\\Builds spatial map\\Output: 2D grid / 3D map\\Reference for loop closure};
+		\node[feat, right=of f2] (f3) {\textbf{Localization Against Map}\\Matches frame to known map\\Output: global position\\Recovers from drift};
+	\end{tikzpicture}
+	\caption{Comparison of the three core localization features and their outputs}
+	\label{fig:localization-features}
+\end{figure}
+
+\subsection{Mapping Mode}
+\begin{itemize}
+    \item Builds spatial map of environment from visual features
+    \item Creates reference database for loop closure detection
+    \item Output: 2D occupancy grid or 3D feature map
+\end{itemize}
+
+\subsection{Localization Against Map}
+\begin{itemize}
+    \item Matches current camera frame against known map
+    \item Estimates global position even without encoder data
+    \item Enables recovery from encoder drift
+\end{itemize}
+
+\section{Output Data}
+
+\begin{itemize}
+    \item Current position (x, y, theta) in world coordinates
+    \item Confidence estimate for position accuracy
+    \item Trajectory history (points visited)
+    \item Loop closure events (when revisiting areas)
+\end{itemize}
+
+

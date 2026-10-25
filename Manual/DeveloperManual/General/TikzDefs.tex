@@ -1,0 +1,182 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% $Autor: Wings $
+% $Datum: 2020-07-24 09:05:07Z $
+% $Pfad: GDV/Vortraege/latex - Ausarbeitung/Allgemein/tikzdefs.tex $
+% $Version: 4732 $
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Definitionen für tikz
+
+\usepackage{pgfplots}
+\usepackage{pgf,tikz}
+\usepackage{mathrsfs}
+
+\usetikzlibrary{shapes,shapes.symbols,shapes.misc, shapes.multipart, shapes.geometric,arrows,angles,quotes,babel,positioning, calc,math,
+backgrounds}
+
+
+\tikzset{
+  input2/.style={ % requires library shapes.geometric
+    draw,
+    trapezium,
+    trapezium left angle=60,
+    trapezium right angle=120,
+  },
+  process rectangle outer width/.initial=0.15cm,
+  predefined process/.style={
+    rectangle,
+    draw,
+    append after command={
+      \pgfextra{
+        \draw [fill=blue!20]
+        ($(\tikzlastnode.north west)-(0,0.5\pgflinewidth)$)--
+        ($(\tikzlastnode.north west)-(\pgfkeysvalueof{/tikz/process rectangle outer width},0.5\pgflinewidth)$)--
+        ($(\tikzlastnode.south west)+(-\pgfkeysvalueof{/tikz/process rectangle outer width},+0.5\pgflinewidth)$)--
+        ($(\tikzlastnode.south west)+(0,0.5\pgflinewidth)$);
+        \draw [fill=blue!20]
+        ($(\tikzlastnode.north east)-(0,0.5\pgflinewidth)$)--
+        ($(\tikzlastnode.north east)+(\pgfkeysvalueof{/tikz/process rectangle outer width},-0.5\pgflinewidth)$)--
+        ($(\tikzlastnode.south east)+(\pgfkeysvalueof{/tikz/process rectangle outer width},0.5\pgflinewidth)$)--
+        ($(\tikzlastnode.south east)+(0,0.5\pgflinewidth)$);
+      }  
+    },
+    text width=#1,
+    align=center, fill=blue!20,  minimum height=4em
+  },
+  predefined process/.default=20mm,
+  data1/.style={
+    trapezium, 
+    trapezium left angle=70, 
+    trapezium right angle=110, 
+    text width=1.5cm, 
+    inner ysep=17pt,
+    align=center, 
+    line width=2pt,
+    fill=blue!20
+  },      
+}
+
+
+% Parameter
+% #1: Skalierung
+% #2: Winkel; 0..179
+\newcommand{\HermiteSym}[2]{%
+   \pgfmathsetmacro{\RADIUS}{6}
+  
+   \begin{scope}[scale=#1]
+
+     % angle 
+     \begin{scope}[shift={(\RADIUS,0cm)}]
+       \draw[fill=green!30] (0,0) -- (180:0.25*\RADIUS) arc (180:#2:0.25*\RADIUS);
+       \draw ({0.5*(180+#2)}:{0.175*\RADIUS}) node {$\beta$};
+       \draw ({0.5*(#2)}:{0.175*\RADIUS}) node {$\alpha$}; %$\pi-\alpha$
+     \end{scope}
+
+     \coordinate[label=left:$P_0$]  (P0) at (0,0);
+     \coordinate  (t0) at (0.25*\RADIUS,0);
+     \coordinate[label=below:$S$]  (S) at (\RADIUS,0);
+     \coordinate  (s0) at (1.3*\RADIUS,0);
+     \coordinate[label=left:$P_1$] (P1) at ({\RADIUS+\RADIUS*cos(#2)},{\RADIUS*sin(#2)});
+     \coordinate (t1) at ({\RADIUS+ 1.25*\RADIUS*cos(#2)},{1.25*\RADIUS*sin(#2)});
+  
+     \coordinate[label=below:$\vec{t}_0$](T0) at ($ (P0)!.5!(t0) $);
+     \coordinate[label=right:$\vec{t}_1$](T1) at ($ (P1)!.5!(t1) $);
+
+     \draw [black,line width=0.5pt,domain=0:#2,->] plot ({\RADIUS+0.25*\RADIUS*cos(\x)}, {0+0.25*\RADIUS*sin(\x)});
+
+     \draw [line width=1.5pt] (P0) -- (S) --(P1);
+     \draw [line width=2pt,->,color=red] (P0) -- (t0);
+     \draw [line width=2pt,->,color=red] (P1) -- (t1);
+     \draw [line width=0.2pt,dotted] (S) --(s0);
+     \node (P00) at (P0) {$\bullet$};
+     \node (P11) at (P1) {$\bullet$};
+  \end{scope}
+}
+
+
+% Parameter
+% #1: Skalierung
+% #2: Winkel; 0..-179
+\newcommand{\HermiteSymNeg}[2]{%
+  \pgfmathsetmacro{\RADIUS}{6}
+  
+  \begin{scope}[scale=#1]
+    
+    % angle 
+    \begin{scope}[shift={(\RADIUS,0cm)}]
+      \draw[fill=green!30] (0,0) -- (-180:0.25*\RADIUS) arc (-180:#2:0.25*\RADIUS);
+      \draw ({0.5*(-180+#2)}:{0.175*\RADIUS}) node {$\beta$};
+      \draw ({0.5*(#2)}:{0.175*\RADIUS}) node {$\alpha$}; %$\pi-\alpha$
+    \end{scope}
+    
+    \coordinate[label=left:$P_0$]  (P0) at (0,0);
+    \coordinate  (t0) at (0.25*\RADIUS,0);
+    \coordinate[label=above:$S$]  (S) at (\RADIUS,0);
+    \coordinate  (s0) at (1.3*\RADIUS,0);
+    \coordinate[label=left:$P_1$] (P1) at ({\RADIUS+\RADIUS*cos(#2)},{\RADIUS*sin(#2)});
+    \coordinate (t1) at ({\RADIUS+ 1.25*\RADIUS*cos(#2)},{1.25*\RADIUS*sin(#2)});
+    
+    \coordinate[label=below:$\vec{t}_0$](T0) at ($ (P0)!.5!(t0) $);
+    \coordinate[label=right:$\vec{t}_1$](T1) at ($ (P1)!.5!(t1) $);
+    
+    \draw [black,line width=0.5pt,domain=0:#2,->] plot ({\RADIUS+0.25*\RADIUS*cos(\x)}, {0+0.25*\RADIUS*sin(\x)});
+    
+    \draw [line width=1.5pt] (P0) -- (S) --(P1);
+    \draw [line width=2pt,->,color=red] (P0) -- (t0);
+    \draw [line width=2pt,->,color=red] (P1) -- (t1);
+    \draw [line width=0.2pt,dotted] (S) --(s0);
+    \node (P00) at (P0) {$\bullet$};
+    \node (P11) at (P1) {$\bullet$};
+  \end{scope}
+}
+
+% Beispiele
+%
+%\begin{center}
+%  \begin{tikzpicture}
+%  \HermiteSym{1}{120}
+%  \end{tikzpicture}
+%\end{center}
+%
+%\begin{center}
+%  \begin{tikzpicture}
+%  \HermiteSym{1}{70}
+%  \end{tikzpicture}
+%\end{center}
+%
+%\begin{center}
+%  \begin{tikzpicture}
+%  \HermiteSym{1}{20}
+%  \end{tikzpicture}
+%\end{center}
+%
+%\begin{center}
+%  \begin{tikzpicture}
+%  \HermiteSym{1}{0}
+%  \end{tikzpicture}
+%\end{center}
+%
+%
+%\begin{center}
+%  \begin{tikzpicture}
+%  \HermiteSymNeg{1}{-20}
+%  \end{tikzpicture}
+%\end{center}
+%
+%\begin{center}
+%  \begin{tikzpicture}
+%  \HermiteSymNeg{1}{-70}
+%  \end{tikzpicture}
+%\end{center}
+%
+%
+%\begin{center}
+%  \begin{tikzpicture}
+%  \HermiteSymNeg{1}{-120}
+%  \end{tikzpicture}
+%\end{center}
+%
